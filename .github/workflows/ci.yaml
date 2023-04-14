@@ -6,11 +6,11 @@ on:
       checkov-output-format:
         required: false
         type: string
-        default: cli
+        # default: cli
       checkov-dir:
         required: false
         type: string
-        default: .
+        # default: .
   workflow_dispatch:
 
 env:
@@ -29,6 +29,6 @@ jobs:
     - name: Checkov GitHub Action
       uses: bridgecrewio/checkov-action@v12
       with:
-        directory: ${{ inputs.checkov-output-format }}
-        output_format: ${{ inputs.checkov-dir }}
+        directory: ${{ inputs.checkov-dir }}
+        output_format: ${{ inputs.checkov-output-format }}
 
