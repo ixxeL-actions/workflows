@@ -42,4 +42,5 @@ jobs:
       with:
         img-name: ${{ inputs.img-name }}
         tag: ${{ inputs.tag }}
+        github-api-rest-token: ${{ inputs.github-api-rest-token }}
 
