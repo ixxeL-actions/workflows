@@ -13,9 +13,9 @@ on:
         # default: .
   workflow_dispatch:
 
-env:
-  CHECKOV_OUTPUT_FORMAT: ${{ inputs.checkov-output-format }}
-  CHECKOV_DIR: ${{ inputs.checkov-dir }}
+# env:
+#   CHECKOV_OUTPUT_FORMAT: ${{ inputs.checkov-output-format }}
+#   CHECKOV_DIR: ${{ inputs.checkov-dir }}
 
 jobs:
   prepare:
