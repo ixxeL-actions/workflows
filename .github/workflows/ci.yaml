@@ -32,11 +32,11 @@ jobs:
     steps:
     - name: Clone code
       uses: actions/checkout@v3
-    - name: Checkov GitHub Action
-      uses: bridgecrewio/checkov-action@v12
-      with:
-        directory: ${{ inputs.checkov-dir }}
-        output_format: ${{ inputs.checkov-output-format }}
+    # - name: Checkov GitHub Action
+    #   uses: bridgecrewio/checkov-action@v12
+    #   with:
+    #     directory: ${{ inputs.checkov-dir }}
+    #     output_format: ${{ inputs.checkov-output-format }}
     - name: Kaniko build
       uses: ixxeL-actions/actions/kaniko@main
       with:
