@@ -29,6 +29,6 @@ jobs:
     - name: Checkov GitHub Action
       uses: bridgecrewio/checkov-action@v12
       with:
-        directory: ${CHECKOV_DIR}
-        output_format: ${CHECKOV_OUTPUT_FORMAT}
+        directory: ${{ inputs.checkov-output-format }}
+        output_format: ${{ inputs.checkov-dir }}
 
