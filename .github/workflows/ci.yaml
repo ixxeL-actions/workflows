@@ -17,6 +17,13 @@ on:
       tag:
         required: true
         type: string
+      github-api-rest-token:
+        required: false
+        type: string
+      github-api-auth:
+        required: false
+        type: string
+        default: 'false'
   workflow_dispatch:
 
 # env:
@@ -43,4 +50,5 @@ jobs:
         img-name: ${{ inputs.img-name }}
         tag: ${{ inputs.tag }}
         github-api-rest-token: ${{ inputs.github-api-rest-token }}
+        github-api-auth: ${{ inputs.github-api-auth }}
 
