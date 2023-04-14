@@ -11,6 +11,12 @@ on:
         required: false
         type: string
         # default: .
+      img-name:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
   workflow_dispatch:
 
 # env:
@@ -31,4 +37,9 @@ jobs:
       with:
         directory: ${{ inputs.checkov-dir }}
         output_format: ${{ inputs.checkov-output-format }}
+    - name: Kaniko build
+      uses: ixxeL-actions/actions/actions/kaniko/action.yaml@main
+      with:
+        img-name: ${{ inputs.img-name }}
+        tag: ${{ inputs.tag }}
 
