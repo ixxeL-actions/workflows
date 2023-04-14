@@ -38,7 +38,7 @@ jobs:
         directory: ${{ inputs.checkov-dir }}
         output_format: ${{ inputs.checkov-output-format }}
     - name: Kaniko build
-      uses: ixxeL-actions/actions/actions/kaniko/action.yaml@main
+      uses: ixxeL-actions/actions/kaniko@main
       with:
         img-name: ${{ inputs.img-name }}
         tag: ${{ inputs.tag }}
