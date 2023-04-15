@@ -1,0 +1,75 @@
+---
+name: Custom Image Builder CI
+on:
+  workflow_call:
+    inputs:
+    # General
+      workingdir:
+        required: false
+        default: .
+    # Checkov
+      artefact:
+        required: true
+      # checkov-dir:
+      #   required: false
+      #   type: string
+      #   default: .
+      compact:
+        required: false
+      quiet:
+        required: false
+      no-guide:
+        required: false
+      format:
+        required: false
+      threshold:
+        required: false
+      soft-fail:
+        required: false
+      gate:
+        required: false
+      # Kaniko
+      img-name:
+        required: true
+      tag:
+        required: true
+      github-api-rest-token:
+        required: false
+      github-api-auth:
+        required: false
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-20.04
+    container:
+      image: ixxel/cd-toolbox:latest
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
+    # - name: Checkov GitHub Action
+    #   uses: bridgecrewio/checkov-action@v12
+    #   with:
+    #     directory: ${{ inputs.workingdir }}
+    #     output_format: ${{ inputs.checkov-output-format }}
+    - name: Checkov scan
+      uses: ixxeL-actions/actions/checkov@main
+      with:
+        workingdir: ${{ inputs.workingdir}}
+        artefact: ${{ inputs.artefact}}
+        compact: ${{ inputs.compact}}
+        quiet: ${{ inputs.quiet}}
+        no-guide: ${{ inputs.no-guide}}
+        format: ${{ inputs.format}}
+        threshold: ${{ inputs.threshold}}
+        soft-fail: ${{ inputs.soft-fail}}
+        gate: ${{ inputs.gate}}
+    - name: Kaniko build
+      uses: ixxeL-actions/actions/kaniko@main
+      with:
+        img-name: ${{ inputs.img-name }}
+        tag: ${{ inputs.tag }}
+        github-api-rest-token: ${{ inputs.github-api-rest-token }}
+        github-api-auth: ${{ inputs.github-api-auth }}
+
