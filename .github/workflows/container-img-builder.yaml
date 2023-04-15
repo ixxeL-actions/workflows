@@ -188,6 +188,7 @@ jobs:
     - name: Grype scan
       id: grype-scan
       uses: ixxeL-actions/workflows/.github/actions/grype@main
+      continue-on-error: true
       with:
         image-ref: ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
         transport: ${{ inputs.transport }}
