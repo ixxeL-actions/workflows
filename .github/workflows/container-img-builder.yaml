@@ -93,6 +93,41 @@ on:
         required: false
         default: true
         type: boolean
+      # Grype
+      image-ref:
+        description: image reference
+        required: true
+        type: string
+      transport:
+        description: transport type for destination (docker,docker-archive,oci-dir,oci-archive,dir,sbom,registry)
+        required: false
+        default: docker-archive
+        type: string
+      fail-on:
+        description: set the return code to 1 if a vulnerability is found with a severity >= the given severity
+        required: false
+        default: critical
+        type: string
+      output:
+        description: report output formatter, formats=[json table cyclonedx template]
+        required: false
+        default: table
+        type: string
+      scope:
+        description: selection of layers to analyze, options=[Squashed AllLayers]
+        required: false
+        default: Squashed
+        type: string
+      template:
+        description: specify the path to a Go template file (requires template output to be selected)
+        required: false
+        default: '""'
+        type: string
+      verbose:
+        description: increase verbosity (-v = info, -vv = debug)
+        required: false
+        default: ''
+        type: string
 
   workflow_dispatch:
 
@@ -150,3 +185,14 @@ jobs:
         no-push: ${{ inputs.no-push }}
         verbosity: ${{ inputs.verbosity }}
         compressed-caching: ${{ inputs.compressed-caching }}
+    - name: Grype scan
+      id: grype-scan
+      uses: ixxeL-actions/workflows/.github/actions/grype@main
+      with:
+        image-ref: ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
+        transport: ${{ inputs.transport }}
+        fail-on: ${{ inputs.fail-on }}
+        output: ${{ inputs.output }}
+        scope: ${{ inputs.scope }}
+        template: ${{ inputs.template }}
+        verbose: ${{ inputs.verbose }}
