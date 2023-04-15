@@ -12,10 +12,6 @@ on:
       artefact:
         required: true
         type: string
-      # checkov-dir:
-      #   required: false
-      #   type: string
-      #   default: .
       compact:
         required: false
         type: string
