@@ -79,7 +79,7 @@ jobs:
     #     soft-fail: ${{ inputs.soft-fail}}
     #     gate: ${{ inputs.gate}}
     - name: Kaniko build
-      uses: ixxeL-actions/workflows/actions/kaniko@main
+      uses: ixxeL-actions/workflows/.github/actions/kaniko@main
       with:
         img-name: ${{ inputs.img-name }}
         tag: ${{ inputs.tag }}
