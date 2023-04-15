@@ -72,7 +72,7 @@ runs:
           echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
           echo "${BUILD_ARGS}"
       fi
-      mkdir -p ${{ inputs.target-dir}}
+      mkdir -p ${{ inputs.target-dir }}
 
       if [[ ${{ inputs.github-api-auth }} = true ]]
       then
@@ -105,7 +105,7 @@ runs:
         echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag }}.${BLANK}"
         executor --context ${{ inputs.workingdir }} \
                   --dockerfile ${{ inputs.file }} \
-                  --tarPath=${{ inputs.target-dir}}/${{ inputs.img-name }}.tar \
+                  --tarPath=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
                   --destination=${{ inputs.img-name }}:${{ inputs.tag }} \
                   --skip-tls-verify-pull \
                   --skip-tls-verify \
@@ -133,7 +133,7 @@ runs:
       then
         if [[ ${{ inputs.no-push }} = true ]]
         then
-          size=$(du -sh ${{ inputs.target-dir}}/${{ inputs.img-name }}.tar | awk '{print $1}')
+          size=$(du -sh ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar | awk '{print $1}')
           echo -e "${GREEN}[ SUCCESS ] > Docker image ${YELLOW}${{ inputs.img-name }}:${{ inputs.tag }}${GREEN} successfully built with Kaniko. SIZE --> [ ${PURPLE}${size}${GREEN} ]${BLANK}"
         else
           echo -e "${GREEN}[ SUCCESS ] > Docker image ${YELLOW}${{ inputs.img-name }}:${{ inputs.tag }}${GREEN} successfully pushed with Kaniko to ${DST_REGISTRY}/${{ inputs.img-name }}:${{ inputs.tag }}${BLANK}"
