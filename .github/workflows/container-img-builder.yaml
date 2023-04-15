@@ -54,7 +54,7 @@ jobs:
     #     directory: ${{ inputs.workingdir }}
     #     output_format: ${{ inputs.checkov-output-format }}
     - name: Checkov scan
-      uses: ixxeL-actions/actions/checkov@main
+      uses: ixxeL-actions/workflows/actions/checkov@main
       with:
         workingdir: ${{ inputs.workingdir}}
         artefact: ${{ inputs.artefact}}
@@ -66,7 +66,7 @@ jobs:
         soft-fail: ${{ inputs.soft-fail}}
         gate: ${{ inputs.gate}}
     - name: Kaniko build
-      uses: ixxeL-actions/actions/kaniko@main
+      uses: ixxeL-actions/workflows/actions/kaniko@main
       with:
         img-name: ${{ inputs.img-name }}
         tag: ${{ inputs.tag }}
