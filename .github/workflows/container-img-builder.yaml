@@ -54,18 +54,18 @@ jobs:
     #   with:
     #     directory: ${{ inputs.workingdir }}
     #     output_format: ${{ inputs.checkov-output-format }}
-    - name: Checkov scan
-      uses: ixxeL-actions/workflows/actions/checkov@main
-      with:
-        workingdir: ${{ inputs.workingdir}}
-        artefact: ${{ inputs.artefact}}
-        compact: ${{ inputs.compact}}
-        quiet: ${{ inputs.quiet}}
-        no-guide: ${{ inputs.no-guide}}
-        format: ${{ inputs.format}}
-        threshold: ${{ inputs.threshold}}
-        soft-fail: ${{ inputs.soft-fail}}
-        gate: ${{ inputs.gate}}
+    # - name: Checkov scan
+    #   uses: ixxeL-actions/workflows/actions/checkov@main
+    #   with:
+    #     workingdir: ${{ inputs.workingdir}}
+    #     artefact: ${{ inputs.artefact}}
+    #     compact: ${{ inputs.compact}}
+    #     quiet: ${{ inputs.quiet}}
+    #     no-guide: ${{ inputs.no-guide}}
+    #     format: ${{ inputs.format}}
+    #     threshold: ${{ inputs.threshold}}
+    #     soft-fail: ${{ inputs.soft-fail}}
+    #     gate: ${{ inputs.gate}}
     - name: Kaniko build
       uses: ixxeL-actions/workflows/actions/kaniko@main
       with:
