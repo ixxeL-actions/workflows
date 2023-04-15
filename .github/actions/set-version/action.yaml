@@ -7,6 +7,13 @@ inputs:
     description: Check certificates
     required: false
     default: false
+outputs:
+  PROJECT_VERSION:
+    description: version tag
+    value: ${{ steps.set-version.outputs.PROJECT_VERSION }}
+  PROJECT_SHORT_VERSION:
+    description: short version tag
+    value: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
 
 runs:
   using: composite
