@@ -101,7 +101,7 @@ jobs:
     name: Prepare
     runs-on: ubuntu-20.04
     container:
-      image: ixxel/cd-toolbox:latest
+      image: ixxel/ci-toolbox:latest
     steps:
     - name: Clone code
       uses: actions/checkout@v3
@@ -122,6 +122,14 @@ jobs:
         threshold: ${{ inputs.threshold }}
         soft-fail: ${{ inputs.soft-fail }}
         gate: ${{ inputs.gate }}
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    container:
+      image: ixxel/cd-toolbox:latest
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
     - name: Kaniko build
       uses: ixxeL-actions/workflows/.github/actions/kaniko@main
       with:
