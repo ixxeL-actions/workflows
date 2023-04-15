@@ -17,7 +17,7 @@ runs:
       if [[ "$GITHUB_REF_NAME" =~ ^(release\/)([0-9]+\.[0-9]+)$ ]]
       then
         echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
-        # git config --global --add safe.directory $CI_PROJECT_DIR
+        git config --global --add safe.directory $GITHUB_WORKSPACE
         # git config --global user.email "${GITLAB_USER_EMAIL}"
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global http.sslVerify ${{ inputs.tls-verify }}
