@@ -73,7 +73,7 @@ runs:
           echo "${BUILD_ARGS}"
       fi
       echo "target dir ${{ inputs.target-dir }}"
-      mkdir -p ${{ inputs.target-dir }}
+      # mkdir -p ${{ inputs.target-dir }}
 
       if [[ ${{ inputs.github-api-auth }} = true ]]
       then
