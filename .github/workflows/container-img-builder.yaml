@@ -49,39 +49,47 @@ on:
         type: string
       github-api-auth:
         required: false
+        default: false
         type: boolean
       file:
         required: false
+        default: ./Dockerfile
         type: string
       build-arg:
         required: false
         type: string
       target-dir:
         required: false
+        default: test
         type: string
       single-snapshot:
         required: false
+        default: false
         type: boolean
       new-run:
         required: false
+        default: true
         type: boolean
       skip-unused-stages:
         required: false
+        default: true
         type: boolean
       snapshot-mode:
         required: false
+        default: full
         type: string
       no-push:
         required: false
+        default: true
         type: boolean
       verbosity:
         required: false
+        default: info
         type: string
       compressed-caching:
         required: false
+        default: true
         type: boolean
-
-
 
   workflow_dispatch:
 
