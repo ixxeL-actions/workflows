@@ -17,7 +17,7 @@ inputs:
     description: argument=value to supply to the builder
     required: false
     default: ''
-  working-dir:
+  workingdir:
     description: directory in which to find the Dockerfile
     required: false
     default: .
@@ -28,31 +28,31 @@ inputs:
   github-api-auth:
     description: Authenticate to github API
     required: false
-    default: 'true'
+    default: true
   github-api-rest-token:
     description: Github API token
     required: false
   single-snapshot:
     required: false
-    default: 'false'
+    default: false
   new-run:
     required: false
-    default: 'false'
+    default: false
   skip-unused-stages:
     required: false
-    default: 'true'
+    default: true
   snapshot-mode:
     required: false
     default: full
   no-push:
     required: false
-    default: 'true'
+    default: true
   verbosity:
     required: false
     default: info
   compressed-caching:
     required: false
-    default: 'true'
+    default: true
 
 runs:
   using: composite
@@ -74,24 +74,24 @@ runs:
       fi
       mkdir -p ${{ inputs.target-dir}}
 
-      if [[ ${{ inputs.github-api-auth }} = "true" ]]
+      if [[ ${{ inputs.github-api-auth }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Authenticating to Github API${BLANK}"
         curl -sSfL -H "Authorization: token ${{ inputs.github-api-rest-token }}" https://api.github.com
       fi
 
       OPTIONS=""
-      if [[ ${{ inputs.single-snapshot }} = "true" ]]
+      if [[ ${{ inputs.single-snapshot }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Using single snapshot.${BLANK}"
         OPTIONS+=" --single-snapshot"
       fi
-      if [[ ${{ inputs.new-run }}  = "true" ]]
+      if [[ ${{ inputs.new-run }}  = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Using the experimental run implementation for detecting changes without requiring file system snapshots (--use-new-run option).${BLANK}"
         OPTIONS+=" --use-new-run"
       fi
-      if [[ ${{ inputs.skip-unused-stages }}  = "true" ]]
+      if [[ ${{ inputs.skip-unused-stages }}  = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Build only used stages (--skip-unused-stages option).${BLANK}"
         OPTIONS+=" --skip-unused-stages"
@@ -100,10 +100,10 @@ runs:
       echo -e "${CYAN}[ INFO ] > Snapshot mode ==> ${{ inputs.snapshot-mode }} ${BLANK}"
       echo -e "${CYAN}[ INFO ] > NoPush mode ==> ${{ inputs.no-push }} ${BLANK}"
 
-      if [[ ${{ inputs.no-push }} = "true" ]]
+      if [[ ${{ inputs.no-push }} = true ]]
       then
         echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag }}.${BLANK}"
-        executor --context ${{ inputs.working-dir }} \
+        executor --context ${{ inputs.workingdir }} \
                   --dockerfile ${{ inputs.file }} \
                   --tarPath=${{ inputs.target-dir}}/${{ inputs.img-name }}.tar \
                   --destination=${{ inputs.img-name }}:${{ inputs.tag }} \
@@ -117,7 +117,7 @@ runs:
                   ${OPTIONS}
       else
         echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag }}.${BLANK}"
-        executor --context ${{ inputs.working-dir }} \
+        executor --context ${{ inputs.workingdir }} \
                   --dockerfile ${{ inputs.file }} \
                   --destination=${{ inputs.img-name }}:${{ inputs.tag }} \
                   --skip-tls-verify-pull \
@@ -131,7 +131,7 @@ runs:
 
       if [[ $? = 0 ]]
       then
-        if [[ ${{ inputs.no-push }} = "true" ]]
+        if [[ ${{ inputs.no-push }} = true ]]
         then
           size=$(du -sh ${{ inputs.target-dir}}/${{ inputs.img-name }}.tar | awk '{print $1}')
           echo -e "${GREEN}[ SUCCESS ] > Docker image ${YELLOW}${{ inputs.img-name }}:${{ inputs.tag }}${GREEN} successfully built with Kaniko. SIZE --> [ ${PURPLE}${size}${GREEN} ]${BLANK}"
