@@ -126,15 +126,18 @@ jobs:
       image: ixxel/cd-toolbox:latest
     steps:
     - name: Clone code
+      id: clone
       uses: actions/checkout@v3
     - name: Set version
+      id: set-version
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
     - name: Kaniko build
+      id: kaniko-build
       uses: ixxeL-actions/workflows/.github/actions/kaniko@main
       with:
         workingdir: ${{ inputs.workingdir }}
         img-name: ${{ inputs.img-name }}
-        tag: ${{ inputs.tag }}
+        tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
         github-api-rest-token: ${{ inputs.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         file: ${{ inputs.file }}
