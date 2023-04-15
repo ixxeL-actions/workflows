@@ -36,6 +36,7 @@ runs:
   steps:
   - id: grype-scan
     run: |
+      set +e
       echo -e "${BLUE}[ STEP - VULNERABILITIES CHECK ] > Scanning ${{ inputs.image-ref }} for vulnerabilities.${BLANK}"
       echo -e "${CYAN}[ INFO ] > Grype version.${BLANK}"
       grype version | grep -i "^version"
