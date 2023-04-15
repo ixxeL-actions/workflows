@@ -72,6 +72,7 @@ runs:
           echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
           echo "${BUILD_ARGS}"
       fi
+      echo "target dir ${{ inputs.target-dir }}"
       mkdir -p ${{ inputs.target-dir }}
 
       if [[ ${{ inputs.github-api-auth }} = true ]]
