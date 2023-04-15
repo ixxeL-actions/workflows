@@ -6,39 +6,30 @@ inputs:
   artefact:
     description: Name of the file or directory to scan
     required: true
-    type: string
   compact:
     required: false
     default: 'true'
-    type: string
   quiet:
     required: false
     default: 'false'
-    type: string
   no-guide:
     required: false
     default: 'false'
-    type: string
   format:
     required: false
     default: cli
-    type: string
   threshold:
     required: false
     default: critical
-    type: string
   soft-fail:
     required: false
     default: 'true'
-    type: string
   gate:
     required: false
     default: '50'
-    type: string
   workingdir:
     required: false
     default: .
-    type: string
 
 runs:
   using: composite

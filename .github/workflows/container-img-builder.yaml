@@ -7,6 +7,7 @@ on:
       workingdir:
         required: false
         default: .
+        type: string
     # Checkov
       artefact:
         required: true
@@ -17,27 +18,38 @@ on:
       #   default: .
       compact:
         required: false
+        type: string
       quiet:
         required: false
+        type: string
       no-guide:
         required: false
+        type: string
       format:
         required: false
+        type: string
       threshold:
         required: false
+        type: string
       soft-fail:
         required: false
+        type: string
       gate:
         required: false
+        type: string
       # Kaniko
       img-name:
         required: true
+        type: string
       tag:
         required: true
+        type: string
       github-api-rest-token:
         required: false
+        type: string
       github-api-auth:
         required: false
+        type: string
   workflow_dispatch:
 
 jobs:

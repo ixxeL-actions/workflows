@@ -6,67 +6,53 @@ inputs:
   img-name:
     description: name of the image
     required: true
-    type: string
   tag:
     description: tagged name to apply to the built image
     required: true
-    type: string
   file:
     description: pathname or URL of a Dockerfile
     required: false
     default: ./Dockerfile
-    type: string
   build-arg:
     description: argument=value to supply to the builder
     required: false
     default: ''
-    type: string
   working-dir:
     description: directory in which to find the Dockerfile
     required: false
     default: .
-    type: string
   target-dir:
     description: directory in which to build the archive
     required: false
     default: test
-    type: string
   github-api-auth:
     description: Authenticate to github API
     required: false
     default: 'true'
-    type: string
   github-api-rest-token:
     description: Github API token
     required: false
-    type: string
   single-snapshot:
     required: false
     default: 'false'
-    type: string
   new-run:
     required: false
     default: 'false'
   skip-unused-stages:
     required: false
     default: 'true'
-    type: string
   snapshot-mode:
     required: false
     default: full
-    type: string
   no-push:
     required: false
     default: 'true'
-    type: string
   verbosity:
     required: false
     default: info
-    type: string
   compressed-caching:
     required: false
     default: 'true'
-    type: string
 
 runs:
   using: composite
