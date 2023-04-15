@@ -127,6 +127,8 @@ jobs:
     steps:
     - name: Clone code
       uses: actions/checkout@v3
+    - name: Set version
+      uses: ixxeL-actions/workflows/.github/actions/set-version@main
     - name: Kaniko build
       uses: ixxeL-actions/workflows/.github/actions/kaniko@main
       with:
