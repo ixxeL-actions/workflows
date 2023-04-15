@@ -94,10 +94,10 @@ on:
         default: true
         type: boolean
       # Grype
-      image-ref:
-        description: image reference
-        required: true
-        type: string
+      # image-ref:
+      #   description: image reference
+      #   required: true
+      #   type: string
       transport:
         description: transport type for destination (docker,docker-archive,oci-dir,oci-archive,dir,sbom,registry)
         required: false
