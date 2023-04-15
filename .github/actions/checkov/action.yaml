@@ -8,13 +8,13 @@ inputs:
     required: true
   compact:
     required: false
-    default: 'true'
+    default: true
   quiet:
     required: false
-    default: 'false'
+    default: false
   no-guide:
     required: false
-    default: 'false'
+    default: false
   format:
     required: false
     default: cli
@@ -23,7 +23,7 @@ inputs:
     default: critical
   soft-fail:
     required: false
-    default: 'true'
+    default: true
   gate:
     required: false
     default: '50'
@@ -42,23 +42,23 @@ runs:
       checkov --version
 
       OPTIONS=""
-      if [ ${{ inputs.quiet }} = "true" ]
+      if [ ${{ inputs.quiet }} = true ]
       then
         echo -e "${CYAN}[ INFO ] > Displaying errors only.${BLANK}"
         OPTIONS+=" --quiet"
       fi
 
-      if [[ ${{ inputs.no-guide }} = "true" ]]
+      if [[ ${{ inputs.no-guide }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Displaying without guide.${BLANK}"
         OPTIONS+=" --no-guide"
       fi
-      if [[ ${{ inputs.compact }} = "true" ]]
+      if [[ ${{ inputs.compact }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Displaying with compact mode.${BLANK}"
         OPTIONS+=" --compact"
       fi
-      if [[ ${{ inputs.soft-fail }} = "true" ]]
+      if [[ ${{ inputs.soft-fail }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Using soft-fail mode.${BLANK}"
         OPTIONS+=" --soft-fail"
