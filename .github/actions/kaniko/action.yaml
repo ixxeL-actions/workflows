@@ -28,7 +28,7 @@ inputs:
   github-api-auth:
     description: Authenticate to github API
     required: false
-    default: true
+    default: false
   github-api-rest-token:
     description: Github API token
     required: false
