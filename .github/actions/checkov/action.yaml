@@ -87,7 +87,7 @@ runs:
       fi
       if [[ "${{ inputs.skip-check }}" ]]
       then
-        export SKIP_CHECK="${{ inputs.skip-path }}"
+        export SKIP_CHECK="${{ inputs.skip-check }}"
         [[ ! "$SKIP_CHECK" =~ ^\|.+ ]] || SKIP_CHECK="${SKIP_CHECK:1}"
         full_str=${SKIP_CHECK//|/ --skip-check }
         SKIP_CHECKS="--skip-check $full_str"
