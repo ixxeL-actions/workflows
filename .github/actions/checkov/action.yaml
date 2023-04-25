@@ -68,7 +68,7 @@ runs:
       if [[ "${{ inputs.skip-path }}" ]]
       then
         echo "--skip path ${{ inputs.skip-path }}"
-        export SKIP_PATH=${{ inputs.skip-path }}
+        export SKIP_PATH="${{ inputs.skip-path }}"
         echo "SKIP_PATH $SKIP_PATH"
         [[ ! "$SKIP_PATH" =~ ^\|.+ ]] || SKIP_PATH="${SKIP_PATH:1}"
         full_str=${SKIP_PATH//|/ --skip-path }
