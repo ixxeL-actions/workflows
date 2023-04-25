@@ -91,4 +91,4 @@ runs:
       PURPLE: \033[1;35m
       CYAN: \033[1;36m
       BLANK: \033[0m
-      HELM_PLUGINS: /root/.local/share/helm/plugins
+      # HELM_PLUGINS: /root/.local/share/helm/plugins
