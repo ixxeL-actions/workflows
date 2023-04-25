@@ -76,6 +76,9 @@ on:
       check:
         required: false
         type: string
+      framework:
+        required: false
+        type: string
     # helm template
       strict:
         description: use strict mode
@@ -194,6 +197,7 @@ jobs:
         skip-framework: ${{ inputs.skip-framework }}
         skip-check: ${{ inputs.skip-check }}
         check: ${{ inputs.check }}
+        framework: ${{ inputs.framework }}
   helm-unittest:
     name: helm-unittest
     timeout-minutes: 10

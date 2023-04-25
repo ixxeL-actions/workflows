@@ -27,12 +27,16 @@ inputs:
   skip-path:
     required: false
   skip-framework:
+    description: Filter scan to skip specific infrastructure as code frameworks
     required: false
   skip-check:
     description: Each item may be either a Checkov check ID (CKV_AWS_123), a BC check ID (BC_AWS_GENERAL_123), or a severity (LOW, MEDIUM, HIGH, CRITICAL)
     required: false
   check:
     description: Each item may be either a Checkov check ID (CKV_AWS_123), a BC check ID (BC_AWS_GENERAL_123), or a severity (LOW, MEDIUM, HIGH, CRITICAL)
+    required: false
+  framework:
+    description: Filter scan to run only on specific infrastructure code frameworks
     required: false
   workingdir:
     required: false
@@ -73,6 +77,11 @@ runs:
       then
         echo -e "${CYAN}[ INFO ] > Skiping framework --> ${{ inputs.skip-framework }}${BLANK}"
         OPTIONS+=" --skip-framework=${{ inputs.skip-framework }}"
+      fi
+      if [[ "${{ inputs.framework }}" ]]
+      then
+        echo -e "${CYAN}[ INFO ] > Framework --> ${{ inputs.framework }}${BLANK}"
+        OPTIONS+=" --framework=${{ inputs.framework }}"
       fi
       if [[ "${{ inputs.skip-path }}" ]]
       then
