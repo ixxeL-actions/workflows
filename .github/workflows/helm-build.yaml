@@ -8,6 +8,66 @@ on:
         required: false
         default: .
         type: string
+    # helm template
+      strict:
+        description: use strict mode
+        required: false
+        default: true
+        type: boolean
+      chart-name:
+        description: name of the chart
+        required: false
+      values-file:
+        description: name of the values.yaml file
+        required: false
+        default: values.yaml
+        type: string
+      add-repo:
+        description: weither or not to add a repo
+        required: false
+        default: false
+        type: boolean
+      repo-url:
+        description: url of the helm repo to add
+        required: false
+        type: string
+      repo-name:
+        description: name of the helm repo to add
+        required: false
+        default: temp-repo
+        type: string
+      repo-user:
+        description: user of the helm repo to add
+        required: false
+        type: string
+      repo-pwd:
+        description: password of the helm repo to add
+        required: false
+        type: string
+      set:
+        description: argument to pass to helm chart as --set command
+        required: false
+        type: string
+      stdout-mode:
+        description: output template to stdout
+        required: false
+        default: true
+        type: boolean
+      display-mode:
+        description: display template result to stdout
+        required: false
+        default: true
+        type: boolean
+      output-dir:
+        description: output directory name for template file
+        required: false
+        default: helm-tpl-result
+        type: string
+      output-file:
+        description: output file name for template file
+        required: false
+        default: result.yaml
+        type: string
 
   workflow_dispatch:
 
@@ -36,6 +96,19 @@ jobs:
       id: clone
       uses: actions/checkout@v3
     - name: Helm linting
-      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-template@main
       with:
         workingdir: ${{ inputs.workingdir }}
+        strict: ${{ inputs.strict }}
+        chart-name: ${{ inputs.chart-name }}
+        values-file: ${{ inputs.values-file }}
+        add-repo: ${{ inputs.add-repo }}
+        repo-url: ${{ inputs.repo-url }}
+        repo-name: ${{ inputs.repo-name }}
+        repo-user: ${{ inputs.repo-user }}
+        repo-pwd: ${{ inputs.repo-pwd }}
+        set: ${{ inputs.set }}
+        stdout-mode: ${{ inputs.stdout-mode }}
+        display-mode: ${{ inputs.display-mode }}
+        output-dir: ${{ inputs.output-dir }}
+        output-file: ${{ inputs.output-file }}
