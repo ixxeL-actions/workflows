@@ -65,7 +65,7 @@ runs:
         echo -e "${CYAN}[ INFO ] > Using soft-fail mode.${BLANK}"
         OPTIONS+=" --soft-fail"
       fi
-      if [[ ${{ inputs.skip-path }} != "" ]]
+      if [[ -n "${{ inputs.skip-path }}" ]]
       then
         echo -e "${CYAN}[ INFO ] > Using skip path on ${{ inputs.skip-path }}.${BLANK}"
         OPTIONS+=" --skip-path=${{ inputs.skip-path }}"
