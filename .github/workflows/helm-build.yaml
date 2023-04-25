@@ -117,7 +117,7 @@ jobs:
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
-      image: ixxel/ci-toolbox:latest
+      image: ixxel/ci-toolbox:v1.5.0
     steps:
     - name: Clone code
       id: clone
