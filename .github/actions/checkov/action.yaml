@@ -91,16 +91,16 @@ runs:
         [[ ! "$SKIP_CHECK" =~ ^\|.+ ]] || SKIP_CHECK="${SKIP_CHECK:1}"
         full_str=${SKIP_CHECK//|/ --skip-check }
         SKIP_CHECKS="--skip-check $full_str"
-        echo -e "${CYAN}[ INFO ] > Skip check are the following${BLANK}"
+        echo -e "${CYAN}[ INFO ] > Skip checks are the following${BLANK}"
         echo "${SKIP_CHECKS}"
         OPTIONS+=" ${SKIP_CHECKS}"
       fi
       if [[ "${{ inputs.check }}" ]]
       then
         export CHECK="${{ inputs.check }}"
-        [[ ! "$CHECK" =~ ^\|.+ ]] || CHECK="${SKIP_CHECK:1}"
+        [[ ! "$CHECK" =~ ^\|.+ ]] || CHECK="${CHECK:1}"
         full_str=${CHECK//|/ --check }
-        CHECKS="--skip-check $full_str"
+        CHECKS="--check $full_str"
         echo -e "${CYAN}[ INFO ] > Checks are the following${BLANK}"
         echo "${CHECKS}"
         OPTIONS+=" ${CHECKS}"
