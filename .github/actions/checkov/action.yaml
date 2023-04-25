@@ -29,6 +29,8 @@ inputs:
     default: '50'
   skip-path:
     required: false
+  skip-framework:
+    required: false
   workingdir:
     required: false
     default: .
@@ -64,6 +66,11 @@ runs:
       then
         echo -e "${CYAN}[ INFO ] > Using soft-fail mode.${BLANK}"
         OPTIONS+=" --soft-fail"
+      fi
+      if [[ "${{ inputs.skip-framework }}" ]]
+      then
+        echo -e "${CYAN}[ INFO ] > Skiping framework --> ${{ inputs.skip-framework }}${BLANK}"
+        OPTIONS+=" --skip-framework=${{ inputs.skip-framework }}"
       fi
       if [[ "${{ inputs.skip-path }}" ]]
       then
