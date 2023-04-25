@@ -15,8 +15,8 @@ inputs:
     description: name of the values.yaml file
     required: false
     default: values.yaml
-  with-subcharts:
-    description: include subcharts
+  with-subchart:
+    description: include subchart
     required: false
     default: true
   tests-dir:
@@ -69,7 +69,7 @@ runs:
 
       echo -e "${YELLOW}[ EXECUTING ] > Helm unit testing on chart ${CHART_NAME}.${BLANK}"
       helm unittest ${{ inputs.workingdir }} -f ${{ inputs.tests-dir }} \
-                              --with-subcharts=${{ inputs.with-subcharts }} \
+                              --with-subchart=${{ inputs.with-subchart }} \
                               --color \
                               --strict=${{ inputs.strict }}
       if [[ $? = 0 ]]

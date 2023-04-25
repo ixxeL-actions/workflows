@@ -26,8 +26,8 @@ on:
         default: main
         type: string
     # helm unit tests
-      with-subcharts:
-        description: include subcharts
+      with-subchart:
+        description: include subchart
         required: false
         default: true
         type: boolean
@@ -129,7 +129,7 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
       with:
         workingdir: ${{ inputs.workingdir }}
-        with-subcharts: ${{ inputs.with-subcharts }}
+        with-subchart: ${{ inputs.with-subchart }}
         tests-dir: ${{ inputs.tests-dir }}
   helm-template:
     name: helm-template
