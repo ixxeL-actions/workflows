@@ -89,7 +89,7 @@ runs:
           checkov -f ${{ inputs.workingdir }}/${{ inputs.artefact }} --output=${{ inputs.format }} ${OPTIONS} | jq -C
         fi
       else
-        echo -e "${RED}[ FAIL ] > Parameter '{{ inputs.artefact }}' not valid !${BLANK}"
+        echo -e "${RED}[ FAIL ] > Parameter '{{ inputs.artefact }}' --> ${{ inputs.artefact }} not valid !${BLANK}"
         exit 1
       fi
       EXIT_CODE="${PIPESTATUS[0]}"
