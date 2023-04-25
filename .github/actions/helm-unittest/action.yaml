@@ -46,6 +46,7 @@ runs:
       echo -e "${CYAN}[ INFO ] > Displaying plugins list.${BLANK}"
       helm plugin list
       echo "HELM_PLUGINS path --> $HELM_PLUGINS"
+      echo "path -> $PATH"
 
       echo -e "${YELLOW}[ EXECUTING ] > Checking helm chart ${{ inputs.workingdir }}.${BLANK}"
       if [[ -d ${{ inputs.workingdir }} ]]
