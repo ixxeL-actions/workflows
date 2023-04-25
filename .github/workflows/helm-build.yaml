@@ -46,7 +46,7 @@ on:
         type: string
       quiet:
         required: false
-        default: false
+        default: true
         type: string
       skip-download:
         required: false

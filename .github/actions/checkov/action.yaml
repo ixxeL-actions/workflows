@@ -11,7 +11,7 @@ inputs:
     default: true
   quiet:
     required: false
-    default: false
+    default: true
   skip-download:
     required: false
     default: false
