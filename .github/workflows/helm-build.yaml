@@ -113,7 +113,7 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm linting
-      uses: '${TPL_REPO}/helm-lint@${TPL_REF}'
+      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
   helm-unittest:
@@ -126,7 +126,7 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm unit testing
-      uses: '${TPL_REPO}/helm-unittest@${TPL_REF}'
+      uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
       with:
         workingdir: ${{ inputs.workingdir }}
         with-subcharts: ${{ inputs.with-subcharts }}
@@ -142,7 +142,7 @@ jobs:
       id: clone
       uses: actions/checkout@v3
     - name: Helm templating
-      uses: '${TPL_REPO}/helm-template@${TPL_REF}'
+      uses: ixxeL-actions/workflows/.github/actions/helm-template@main
       with:
         workingdir: ${{ inputs.workingdir }}
         strict: ${{ inputs.strict }}
