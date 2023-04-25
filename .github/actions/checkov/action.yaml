@@ -67,10 +67,14 @@ runs:
       fi
       if [[ -n "${{ inputs.skip-path }}" ]]
       then
-        echo -e "${CYAN}[ INFO ] > Using skip path on ${{ inputs.skip-path }}.${BLANK}"
-        OPTIONS+=" --skip-path=${{ inputs.skip-path }}"
+          SKIP_PATH=${{ inputs.skip-path }}
+          [[ ! "$SKIP_PATH" =~ ^\|.+ ]] || SKIP_PATH="${SKIP_PATH:1}"
+          full_str=${SKIP_PATH//|/ --build-arg }
+          SKIP_PATHS="--skip-path=$full_str"
+          echo -e "${CYAN}[ INFO ] > Skip paths are the following${BLANK}"
+          echo "${SKIP_PATHS}"
+          OPTIONS+=" ${SKIP_PATHS}"
       fi
-
 
       echo -e "${YELLOW}[ EXECUTING ] > Executing static code analyzis on ${{ inputs.workingdir }}/${{ inputs.artefact }}${BLANK}"
       if [[ -d ${{ inputs.workingdir }}/${{ inputs.artefact }} ]]
