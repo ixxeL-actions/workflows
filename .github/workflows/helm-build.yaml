@@ -68,6 +68,9 @@ on:
         required: false
         default: '0'
         type: string
+      skip-path:
+        required: false
+        type: string
     # helm template
       strict:
         description: use strict mode
@@ -183,6 +186,7 @@ jobs:
         threshold: ${{ inputs.threshold }}
         soft-fail: ${{ inputs.soft-fail }}
         gate: ${{ inputs.gate }}
+        skip-path: ${{ inputs.skip-path }}
   helm-unittest:
     name: helm-unittest
     timeout-minutes: 10

@@ -27,6 +27,8 @@ inputs:
   gate:
     required: false
     default: '50'
+  skip-path:
+    required: false
   workingdir:
     required: false
     default: .
@@ -62,6 +64,11 @@ runs:
       then
         echo -e "${CYAN}[ INFO ] > Using soft-fail mode.${BLANK}"
         OPTIONS+=" --soft-fail"
+      fi
+      if [[ ${{ inputs.skip-path }} != "" ]]
+      then
+        echo -e "${CYAN}[ INFO ] > Using skip path on ${{ inputs.skip-path }}.${BLANK}"
+        OPTIONS+=" --skip-path=${{ inputs.skip-path }}"
       fi
 
 
