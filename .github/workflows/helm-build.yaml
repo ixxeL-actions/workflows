@@ -46,7 +46,7 @@ on:
         type: string
       quiet:
         required: false
-        default: true
+        default: false
         type: string
       skip-download:
         required: false
@@ -55,10 +55,6 @@ on:
       format:
         required: false
         default: cli
-        type: string
-      threshold:
-        required: false
-        default: critical
         type: string
       soft-fail:
         required: false
@@ -192,7 +188,6 @@ jobs:
         quiet: ${{ inputs.quiet }}
         skip-download: ${{ inputs.skip-download }}
         format: ${{ inputs.format }}
-        threshold: ${{ inputs.threshold }}
         soft-fail: ${{ inputs.soft-fail }}
         gate: ${{ inputs.gate }}
         skip-path: ${{ inputs.skip-path }}

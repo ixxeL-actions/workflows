@@ -11,7 +11,7 @@ inputs:
     default: true
   quiet:
     required: false
-    default: true
+    default: false
   skip-download:
     required: false
     default: false
@@ -29,8 +29,10 @@ inputs:
   skip-framework:
     required: false
   skip-check:
+    description: Each item may be either a Checkov check ID (CKV_AWS_123), a BC check ID (BC_AWS_GENERAL_123), or a severity (LOW, MEDIUM, HIGH, CRITICAL)
     required: false
   check:
+    description: Each item may be either a Checkov check ID (CKV_AWS_123), a BC check ID (BC_AWS_GENERAL_123), or a severity (LOW, MEDIUM, HIGH, CRITICAL)
     required: false
   workingdir:
     required: false
