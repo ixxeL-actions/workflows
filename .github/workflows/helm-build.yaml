@@ -1,6 +1,8 @@
 ---
 name: Helm chart build
 on:
+  workflow_dispatch:
+
   workflow_call:
     inputs:
     # General
@@ -80,8 +82,6 @@ on:
         required: false
         default: result.yaml
         type: string
-
-  workflow_dispatch:
 
 jobs:
   helm-lint:
