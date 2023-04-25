@@ -18,9 +18,6 @@ inputs:
   format:
     required: false
     default: cli
-  threshold:
-    required: false
-    default: critical
   soft-fail:
     required: false
     default: true
@@ -135,12 +132,19 @@ runs:
       fi
       EXIT_CODE="${PIPESTATUS[0]}"
       echo "${result}" > checkov-test.xml
+      passed=$(echo ${json_result} | jq '.summary.passed')
+      failed=$(echo ${json_result} | jq '.summary.failed')
+      total=$(echo | awk "{print ${passed}+${failed}}")
+      ratio=$(echo | awk "{print ${passed}/${total}}")
+      SCAN_RATIO=$(echo | awk "{print ${ratio}*100}")
 
       if [[ ${EXIT_CODE} -ne 0 ]]
       then
         echo -e "${RED}[ FAIL ] > Checkov scan failed !${BLANK}"
+        echo -e "${RED}[ FAIL ] > Result scanning is ${PURPLE}${SCAN_RATIO}%${BLANK}"
       else
         echo -e "${GREEN}[ SUCCESS ] > Checkov scan succeeded !${BLANK}"
+        echo -e "${GREEN}[ SUCCESS ] > Result scanning is ${YELLOW}${SCAN_RATIO}%${BLANK}"
       fi
 
       if [[ ${{ inputs.gate }} -ne 0 ]]
