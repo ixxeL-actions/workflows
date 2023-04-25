@@ -36,6 +36,38 @@ on:
         required: false
         default: tests/*.yaml
         type: string
+    # Checkov
+      artefact:
+        required: true
+        type: string
+      compact:
+        required: false
+        default: true
+        type: string
+      quiet:
+        required: false
+        default: false
+        type: string
+      no-guide:
+        required: false
+        default: false
+        type: string
+      format:
+        required: false
+        default: cli
+        type: string
+      threshold:
+        required: false
+        default: critical
+        type: string
+      soft-fail:
+        required: false
+        default: true
+        type: string
+      gate:
+        required: false
+        default: '0'
+        type: string
     # helm template
       strict:
         description: use strict mode
@@ -130,6 +162,27 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
       with:
         workingdir: ${{ inputs.workingdir }}
+  checkov:
+    name: checkov-scan
+    timeout-minutes: 3
+    runs-on: ubuntu-20.04
+    container:
+      image: ${{ inputs.ci-image }}
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
+    - name: Checkov Helm scan
+      uses: ixxeL-actions/workflows/.github/actions/checkov@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        artefact: ${{ inputs.artefact }}
+        compact: ${{ inputs.compact }}
+        quiet: ${{ inputs.quiet }}
+        no-guide: ${{ inputs.no-guide }}
+        format: ${{ inputs.format }}
+        threshold: ${{ inputs.threshold }}
+        soft-fail: ${{ inputs.soft-fail }}
+        gate: ${{ inputs.gate }}
   helm-unittest:
     name: helm-unittest
     timeout-minutes: 10
