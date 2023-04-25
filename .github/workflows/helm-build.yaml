@@ -98,6 +98,10 @@ on:
         default: result.yaml
         type: string
 
+env:
+  TPL_REPO: ${{ inputs.template-repo }}
+  TPL_REF: ${{ inputs.template-ref }}
+
 jobs:
   helm-lint:
     name: helm-lint
@@ -109,7 +113,7 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm linting
-      uses: ${{ inputs.template-repo }}/helm-lint@${{ inputs.template-ref }}
+      uses: $TPL_REPO/helm-lint@$TPL_REF
       with:
         workingdir: ${{ inputs.workingdir }}
   helm-unittest:
@@ -122,7 +126,7 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm unit testing
-      uses: ${{ inputs.template-repo }}/helm-unittest@${{ inputs.template-ref }}
+      uses: $TPL_REPO/helm-unittest@$TPL_REF
       with:
         workingdir: ${{ inputs.workingdir }}
         with-subcharts: ${{ inputs.with-subcharts }}
@@ -138,7 +142,7 @@ jobs:
       id: clone
       uses: actions/checkout@v3
     - name: Helm templating
-      uses: ${{ inputs.template-repo }}/helm-template@${{ inputs.template-ref }}
+      uses: $TPL_REPO/helm-template@$TPL_REF
       with:
         workingdir: ${{ inputs.workingdir }}
         strict: ${{ inputs.strict }}
