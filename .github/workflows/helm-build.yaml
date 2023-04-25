@@ -48,7 +48,7 @@ on:
         required: false
         default: false
         type: string
-      no-guide:
+      skip-download:
         required: false
         default: false
         type: string
@@ -181,7 +181,7 @@ jobs:
         artefact: ${{ inputs.artefact }}
         compact: ${{ inputs.compact }}
         quiet: ${{ inputs.quiet }}
-        no-guide: ${{ inputs.no-guide }}
+        skip-download: ${{ inputs.skip-download }}
         format: ${{ inputs.format }}
         threshold: ${{ inputs.threshold }}
         soft-fail: ${{ inputs.soft-fail }}

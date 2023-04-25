@@ -12,7 +12,7 @@ inputs:
   quiet:
     required: false
     default: false
-  no-guide:
+  skip-download:
     required: false
     default: false
   format:
@@ -50,10 +50,10 @@ runs:
         OPTIONS+=" --quiet"
       fi
 
-      if [[ ${{ inputs.no-guide }} = true ]]
+      if [[ ${{ inputs.skip-download }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Displaying without guide.${BLANK}"
-        OPTIONS+=" --no-guide"
+        OPTIONS+=" --skip-download"
       fi
       if [[ ${{ inputs.compact }} = true ]]
       then
