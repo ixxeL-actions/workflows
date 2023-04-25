@@ -43,6 +43,8 @@ runs:
       echo -e "${BLUE}[ STEP - Helm-chart unittest ] > Unit testing Helm chart.${BLANK}"
       echo -e "${CYAN}[ INFO ] > Helm version.${BLANK}"
       helm version --short
+      echo -e "${CYAN}[ INFO ] > Displaying plugins list.${BLANK}"
+      helm plugin list
 
       echo -e "${YELLOW}[ EXECUTING ] > Checking helm chart ${{ inputs.workingdir }}.${BLANK}"
       if [[ -d ${{ inputs.workingdir }} ]]
