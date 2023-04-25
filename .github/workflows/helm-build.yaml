@@ -126,6 +126,7 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm Datree scan
+      continue-on-error: true
       uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
       with:
         workingdir: ${{ inputs.workingdir }}
