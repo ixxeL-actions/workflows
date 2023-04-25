@@ -1,0 +1,41 @@
+---
+name: Helm chart build
+on:
+  workflow_call:
+    inputs:
+    # General
+      workingdir:
+        required: false
+        default: .
+        type: string
+
+  workflow_dispatch:
+
+jobs:
+  helm-lint:
+    name: helm-lint
+    timeout-minutes: 3
+    runs-on: ubuntu-20.04
+    container:
+      image: ixxel/ci-toolbox:latest
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
+    - name: Helm linting
+      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+  helm-template:
+    name: helm-template
+    timeout-minutes: 3
+    runs-on: ubuntu-20.04
+    container:
+      image: ixxel/ci-toolbox:latest
+    steps:
+    - name: Clone code
+      id: clone
+      uses: actions/checkout@v3
+    - name: Helm linting
+      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
