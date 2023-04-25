@@ -116,6 +116,19 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
+  helm-datree:
+    name: helm-datree
+    timeout-minutes: 3
+    runs-on: ubuntu-20.04
+    container:
+      image: ${{ inputs.ci-image }}
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
+    - name: Helm Datree scan
+      uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
   helm-unittest:
     name: helm-unittest
     timeout-minutes: 10
