@@ -10,6 +10,11 @@ on:
         required: false
         default: .
         type: string
+      ci-image:
+        description: Docker image used for CI jobs
+        required: false
+        default: ixxel/ci-toolbox:v1.5.0
+        type: string
     # helm unit tests
       with-subcharts:
         description: include subcharts
@@ -89,7 +94,7 @@ jobs:
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
-      image: ixxel/ci-toolbox:latest
+      image: ${{ inputs.ci-image }}
     steps:
     - name: Clone code
       uses: actions/checkout@v3
@@ -102,7 +107,7 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-20.04
     container:
-      image: ixxel/ci-toolbox:latest
+      image: ${{ inputs.ci-image }}
     steps:
     - name: Clone code
       uses: actions/checkout@v3
@@ -117,7 +122,7 @@ jobs:
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
-      image: ixxel/ci-toolbox:v1.5.0
+      image: ${{ inputs.ci-image }}
     steps:
     - name: Clone code
       id: clone
