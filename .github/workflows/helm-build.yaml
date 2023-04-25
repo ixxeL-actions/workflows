@@ -8,6 +8,17 @@ on:
         required: false
         default: .
         type: string
+    # helm unit tests
+      with-subcharts:
+        description: include subcharts
+        required: false
+        default: true
+        type: boolean
+      tests-dir:
+        description: tests directory relative to workingdir
+        required: false
+        default: tests/*.yaml
+        type: string
     # helm template
       strict:
         description: use strict mode
@@ -86,6 +97,21 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
+  helm-unittest:
+    name: helm-unittest
+    timeout-minutes: 10
+    runs-on: ubuntu-20.04
+    container:
+      image: ixxel/ci-toolbox:latest
+    steps:
+    - name: Clone code
+      uses: actions/checkout@v3
+    - name: Helm unit testing
+      uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        with-subcharts: ${{ inputs.with-subcharts }}
+        tests-dir: ${{ inputs.tests-dir }}
   helm-template:
     name: helm-template
     timeout-minutes: 3

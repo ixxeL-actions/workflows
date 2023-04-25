@@ -1,6 +1,6 @@
 ---
-name: Helm lint
-description: Lint Helm chart with helm CLI
+name: Helm unit test
+description: Unit test Helm chart with helm unittest plugin
 author: ixxeL
 inputs:
   workingdir:
@@ -15,33 +15,41 @@ inputs:
     description: name of the values.yaml file
     required: false
     default: values.yaml
+  with-subcharts:
+    description: include subcharts
+    required: false
+    default: true
+  tests-dir:
+    description: tests directory relative to workingdir
+    required: false
+    default: tests/*.yaml
 outputs:
   CHART_NAME:
     description: chart name
-    value: ${{ steps.helm-lint.outputs.CHART_NAME }}
+    value: ${{ steps.helm-unittest.outputs.CHART_NAME }}
   CHART_VERSION:
     description: chart version
-    value: ${{ steps.helm-lint.outputs.CHART_VERSION }}
+    value: ${{ steps.helm-unittest.outputs.CHART_VERSION }}
   CHART_APP_VERSION:
     description: chart appVersion
-    value: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
+    value: ${{ steps.helm-unittest.outputs.CHART_APP_VERSION }}
 
 runs:
   using: composite
   steps:
-  - id: helm-lint
+  - id: helm-unittest
     run: |
       set +e
-      echo -e "${BLUE}[ STEP - Helm-chart linting ] > Linting Helm chart.${BLANK}"
+      echo -e "${BLUE}[ STEP - Helm-chart unittest ] > Unit testing Helm chart.${BLANK}"
       echo -e "${CYAN}[ INFO ] > Helm version.${BLANK}"
       helm version --short
 
       echo -e "${YELLOW}[ EXECUTING ] > Checking helm chart ${{ inputs.workingdir }}.${BLANK}"
       if [[ -d ${{ inputs.workingdir }} ]]
       then
-        echo -e "${GREEN}[ CHECK SUCCESS ] > Directory exists, proceeding linting.${BLANK}"
+        echo -e "${GREEN}[ CHECK SUCCESS ] > Directory exists, proceeding unit tests.${BLANK}"
       else
-        echo -e "${RED}[ CHECK ERROR ] > Directory doesn't exist, canceling linting.${BLANK}"
+        echo -e "${RED}[ CHECK ERROR ] > Directory doesn't exist, canceling unit tests.${BLANK}"
         exit 1
       fi
       if [[ -f ${{ inputs.workingdir }}/Chart.yaml ]]
@@ -56,18 +64,20 @@ runs:
         echo -e "${PURPLE}[ WARNING ] > Chart.yaml file NOT detected.${BLANK}"
         exit 1
       fi
-      echo -e "${YELLOW}[ EXECUTING ] > Checking Helm linting on chart ${CHART_NAME}.${BLANK}"
-      helm lint ${{ inputs.workingdir }} --with-subcharts \
-                              --values=${{ inputs.workingdir }}/${{ inputs.values-file }} \
+
+      echo -e "${YELLOW}[ EXECUTING ] > Helm unit testing on chart ${CHART_NAME}.${BLANK}"
+      helm unittest ${{ inputs.workingdir }} -f ${{ inputs.tests-dir }} \
+                              --with-subcharts=${{ inputs.with-subcharts }} \
+                              --color \
                               --strict=${{ inputs.strict }}
       if [[ $? = 0 ]]
       then
-        echo -e "${GREEN}[ CHECK SUCCESS ] > Helm Lint succeeded without any error.${BLANK}"
+        echo -e "${GREEN}[ CHECK SUCCESS ] > Helm Unit tests succeeded without any error.${BLANK}"
         echo "CHART_NAME=$CHART_NAME" >> $GITHUB_OUTPUT
         echo "CHART_VERSION=$CHART_VERSION" >> $GITHUB_OUTPUT
         echo "CHART_APP_VERSION=$CHART_APP_VERSION" >> $GITHUB_OUTPUT
       else
-        echo -e "${PURPLE}[ CHECK ERROR ] > Helm Lint didn't succeed, please review your helm chart.${BLANK}"
+        echo -e "${PURPLE}[ CHECK ERROR ] > Helm Unit tests didn't succeed, please review your helm chart.${BLANK}"
         exit 1
       fi
     shell: bash
