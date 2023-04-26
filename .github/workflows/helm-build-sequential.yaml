@@ -20,6 +20,11 @@ on:
         required: false
         default: ixxel/ci-toolbox:latest
         type: string
+      cd-image:
+        description: Docker image used for CD jobs
+        required: false
+        default: ixxel/cd-toolbox:latest
+        type: string
       template-repo:
         description: repository of the ci/cd template to use
         required: false
@@ -224,7 +229,7 @@ jobs:
     timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
-      image: ${{ inputs.ci-image }}
+      image: ${{ inputs.cd-image }}
     steps:
     - name: prepare k3d
       id: prepare-k3d
