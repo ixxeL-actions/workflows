@@ -233,6 +233,7 @@ jobs:
       image: rancher/k3d:5.3.0-dind
       options: --privileged
     steps:
+    - run: sudo sysctl -w net/netfilter/nf_conntrack_max=131072
     - name: prepare k3d
       id: prepare-k3d
       run: |
