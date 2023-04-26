@@ -238,17 +238,23 @@ jobs:
         apk add npm
         npm install -g github-files-fetcher
         fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
-        echo "${{ github.action_path }}"
-        ls -la
-    - name: k3s create cluster
-      id: k3s-create-cluster
-      uses: AbsaOSS/k3d-action@v2
-      with:
-        k3d-version: v5.4.9
-        cluster-name: test-cluster-1
-        args: >-
-          --agents 1
-          --k3s-arg "--no-deploy=traefik"
+    - name: execute k3d
+      id: execute-k3d
+      run: |
+        ./run.sh deploy
+      env:
+        CLUSTER_NAME: test-cluster-1
+        ARGS: --agents 1
+        K3D_VERSION: v5.4.9
+    # - name: k3s create cluster
+    #   id: k3s-create-cluster
+    #   uses: AbsaOSS/k3d-action@v2
+    #   with:
+    #     k3d-version: v5.4.9
+    #     cluster-name: test-cluster-1
+    #     args: >-
+    #       --agents 1
+    #       --k3s-arg "--no-deploy=traefik"
     - name: kubectl-test
       id: kubectl-test
       run: |
