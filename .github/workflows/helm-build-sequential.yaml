@@ -235,6 +235,8 @@ jobs:
       id: prepare-k3d
       run: |
         curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+        apk add npm
+        npm install -g github-files-fetcher
         fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
         echo "${{ github.action_path }}"
         ls -la
