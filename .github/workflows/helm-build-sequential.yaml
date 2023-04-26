@@ -247,7 +247,8 @@ jobs:
     - name: execute k3d
       id: execute-k3d
       run: |
-        ./run.sh deploy
+        k3d cluster create
+        # ./run.sh deploy
       env:
         CLUSTER_NAME: test-cluster-1
         ARGS: "--servers=1 --no-lb --k3s-arg '--no-deploy=traefik'"
