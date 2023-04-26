@@ -158,9 +158,14 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v3
     - name: Helm linting
+      id: helm-lint
       uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
+    outputs:
+      chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
+      chart-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
+      chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
   helm-datree:
     name: helm-datree
     # needs: [prepare]
@@ -261,7 +266,7 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-package@main
       with:
         workingdir: ${{ inputs.workingdir }}
-        chart-name: ${{ needs.helm-lint.outputs.CHART_NAME }}
-        chart-version: ${{ needs.helm-lint.outputs.CHART_VERSION }}
-        chart-appversion: ${{ needs.helm-lint.outputs.CHART_APP_VERSION }}
+        chart-name: ${{ needs.helm-lint.outputs.chart-name }}
+        chart-version: ${{ needs.helm-lint.outputs.chart-version }}
+        chart-appversion: ${{ needs.helm-lint.outputs.chart-appversion }}
         values-file: ${{ inputs.values-file }}
