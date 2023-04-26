@@ -249,6 +249,9 @@ jobs:
       id: execute-k3d
       run: |
         k3d cluster create
+        sleep 1
+        docker ps
+        kubectl cluster-info
         # ./run.sh deploy
       env:
         CLUSTER_NAME: test-cluster-1
@@ -263,10 +266,10 @@ jobs:
     #     args: >-
     #       --agents 1
     #       --k3s-arg "--no-deploy=traefik"
-    - name: kubectl-test
-      id: kubectl-test
-      run: |
-        kubectl get pods -A
+    # - name: kubectl-test
+    #   id: kubectl-test
+    #   run: |
+    #     kubectl get pods -A
 
     # - name: Helm Full Build
     #   id: helm-full-build
