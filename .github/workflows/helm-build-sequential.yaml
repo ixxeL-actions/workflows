@@ -147,9 +147,8 @@ on:
         type: string
 
 jobs:
-  helm-lint:
-    name: helm-lint
-    # needs: [prepare]
+  helm-build:
+    name: helm-build
     timeout-minutes: 3
     runs-on: ${{ inputs.runs-on }}
     container:
@@ -211,6 +210,14 @@ jobs:
         display-mode: ${{ inputs.display-mode }}
         output-dir: ${{ inputs.output-dir }}
         output-file: ${{ inputs.output-file }}
+    - name: Helm Packaging
+      uses: ixxeL-actions/workflows/.github/actions/helm-package@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
+        chart-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
+        chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
+        values-file: ${{ inputs.values-file }}
     # - name: Helm Full Build
     #   id: helm-full-build
     #   uses: ixxeL-actions/workflows/.github/composition/helm-build@main
