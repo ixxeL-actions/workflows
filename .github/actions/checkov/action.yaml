@@ -143,10 +143,19 @@ runs:
       fi
       EXIT_CODE="${PIPESTATUS[0]}"
       echo "${result}" > checkov-test.xml
-      passed=$(echo ${json_result} | jq '.summary.passed')
-      failed=$(echo ${json_result} | jq '.summary.failed')
-      total=$(echo | awk "{print ${passed}+${failed}}")
-      ratio=$(echo | awk "{print ${passed}/${total}}")
+
+      passed=$(echo ${json_result} | jq 'if type == "array" then .[] else . end | .summary?.passed?')
+      failed=$(echo ${json_result} | jq 'if type == "array" then .[] else . end | .summary?.failed?')
+      totalPassed=0
+      for pass in ${passed[@]}; do
+        totalPassed=$(echo | awk "{print ${pass}+${totalPassed}}")
+      done
+      totalFailed=0
+      for fail in ${failed[@]}; do
+        totalFailed=$(echo | awk "{print ${fail}+${totalFailed}}")
+      done
+      total=$(echo | awk "{print ${totalPassed}+${totalFailed}}")
+      ratio=$(echo | awk "{print ${totalPassed}/${total}}")
       SCAN_RATIO=$(echo | awk "{print ${ratio}*100}")
 
       if [[ ${EXIT_CODE} -ne 0 ]]
@@ -161,11 +170,6 @@ runs:
       if [[ ${{ inputs.gate }} -ne 0 ]]
       then
         echo -e "${YELLOW}[ EXECUTING ] > Evaluating gate --> Threshold set at ${{ inputs.gate }}%${BLANK}"
-        passed=$(echo ${json_result} | jq '.summary.passed')
-        failed=$(echo ${json_result} | jq '.summary.failed')
-        total=$(echo | awk "{print ${passed}+${failed}}")
-        ratio=$(echo | awk "{print ${passed}/${total}}")
-        SCAN_RATIO=$(echo | awk "{print ${ratio}*100}")
         echo -e "${CYAN}[ INFO ] > Result scanning is ${SCAN_RATIO}%${BLANK}"
 
         if [[ $(echo "${SCAN_RATIO} > ${{ inputs.gate }}" | bc) -ne 0 ]]
