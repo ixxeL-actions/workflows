@@ -184,7 +184,7 @@ jobs:
   checkov:
     name: checkov-scan
     # needs: [prepare]
-    timeout-minutes: 3
+    timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
@@ -210,7 +210,7 @@ jobs:
   helm-unittest:
     name: helm-unittest
     # needs: [prepare]
-    timeout-minutes: 10
+    timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
