@@ -7,10 +7,15 @@ inputs:
     description: directory in which to find the Dockerfile
     required: false
     default: .
-  strict:
-    description: use strict mode
+  chart-name:
+    description: name of the chart
     required: false
-    default: true
+  chart-version:
+    description: version of the chart
+    required: false
+  chart-appversion:
+    description: appversion of the chart
+    required: false
   values-file:
     description: name of the values.yaml file
     required: false
