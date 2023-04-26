@@ -250,12 +250,10 @@ jobs:
       run: |
         k3d cluster create
         sleep 1
-        whoami 
-        k3d kubeconfig merge -d -s
-        k3d kubeconfig merge -s -o /root/.kube/config
-        cat /github/home/.kube/config
+        k3d kubeconfig merge -s -o ./config
         docker ps
-        kubectl cluster-info
+        kubectl cluster-info --kubeconfig ./config
+        kubectl get pods -A --kubeconfig ./config
         # ./run.sh deploy
       env:
         CLUSTER_NAME: test-cluster-1
