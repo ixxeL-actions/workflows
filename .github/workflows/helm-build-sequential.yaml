@@ -234,6 +234,7 @@ jobs:
     - name: prepare k3d
       id: prepare-k3d
       run: |
+        curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
         apk add npm
         npm install -g github-files-fetcher
         fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
@@ -244,7 +245,7 @@ jobs:
         ./run.sh deploy
       env:
         CLUSTER_NAME: test-cluster-1
-        ARGS: --agents=1
+        ARGS: "--agents=1 --no-lb --k3s-arg '--no-deploy=traefik'"
         K3D_VERSION: v5.4.9
     # - name: k3s create cluster
     #   id: k3s-create-cluster
