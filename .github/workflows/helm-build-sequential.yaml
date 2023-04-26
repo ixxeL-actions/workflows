@@ -225,7 +225,7 @@ jobs:
   #       chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
   #       values-file: ${{ inputs.values-file }}
   k3s-test:
-    name: k3s-tes
+    name: k3s-test
     timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
@@ -254,9 +254,7 @@ jobs:
         k3d kubeconfig merge -s -o ./config
         cat config
         docker ps
-        kubectl cluster-info --kubeconfig ./config
-        kubectl get pods -A --kubeconfig ./config
-        sed -i 's/0.0.0.0/127.0.0.1/' config
+        docker logs k3d-k3s-default-server-0
         kubectl cluster-info --kubeconfig ./config
         kubectl get pods -A --kubeconfig ./config
         # ./run.sh deploy
