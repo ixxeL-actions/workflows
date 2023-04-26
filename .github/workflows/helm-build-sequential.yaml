@@ -248,7 +248,7 @@ jobs:
       id: execute-k3d
       run: |
         set +e
-        k3d cluster create
+        k3d cluster create --k3s-server-arg '--kube-proxy-arg=conntrack-max-per-core=0' --k3s-agent-arg '--kube-proxy-arg=conntrack-max-per-core=0'
         sleep 1
         k3d kubeconfig merge -s -o ./config
         cat config
