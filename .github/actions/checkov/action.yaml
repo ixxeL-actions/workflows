@@ -171,14 +171,14 @@ runs:
 
       if [[ ${{ inputs.gate }} -ne 0 ]]
       then
-        echo -e "${YELLOW}[ EXECUTING ] > Evaluating gate --> Threshold set at ${{ inputs.gate }}%${BLANK}"
-        echo -e "${CYAN}[ INFO ] > Result scanning is ${SCAN_RATIO}%${BLANK}"
+        echo -e "${YELLOW}[ EXECUTING ] > Evaluating gate --> Threshold set at ${{ inputs.gate }} %${BLANK}"
+        echo -e "${CYAN}[ INFO ] > Result scanning is ${SCAN_RATIO} %${BLANK}"
 
         if [[ $(echo "${SCAN_RATIO} > ${{ inputs.gate }}" | bc) -ne 0 ]]
         then
-          echo -e "${GREEN}[ SUCCESS ] > Checkov gate succeeded ! ${{ inputs.gate }}% threshold =< ${SCAN_RATIO}% result ${BLANK}"
+          echo -e "${GREEN}[ SUCCESS ] > Checkov gate succeeded ! ${{ inputs.gate }} % threshold =< ${SCAN_RATIO} % result ${BLANK}"
         else
-          echo -e "${RED}[ FAIL ] > Checkov gate failed ! ${{ inputs.gate }}% threshold > ${SCAN_RATIO}% result ${BLANK}"
+          echo -e "${RED}[ FAIL ] > Checkov gate failed ! ${{ inputs.gate }} % threshold > ${SCAN_RATIO} % result ${BLANK}"
           exit 1
         fi
       else
