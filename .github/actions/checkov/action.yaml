@@ -163,10 +163,10 @@ runs:
       if [[ ${EXIT_CODE} -ne 0 ]]
       then
         echo -e "${RED}[ FAIL ] > Checkov scan failed !${BLANK}"
-        echo -e "${RED}[ FAIL ] > Result scanning is ${PURPLE}${SCAN_RATIO}%${BLANK}"
+        echo -e "${RED}[ FAIL ] > Result scanning is ${PURPLE}${SCAN_RATIO} %${BLANK}"
       else
         echo -e "${GREEN}[ SUCCESS ] > Checkov scan succeeded !${BLANK}"
-        echo -e "${GREEN}[ SUCCESS ] > Result scanning is ${YELLOW}${SCAN_RATIO}%${BLANK}"
+        echo -e "${GREEN}[ SUCCESS ] > Result scanning is ${YELLOW}${SCAN_RATIO} %${BLANK}"
       fi
 
       if [[ ${{ inputs.gate }} -ne 0 ]]
