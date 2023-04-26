@@ -76,12 +76,12 @@ runs:
       if [[ "${{ inputs.skip-framework }}" ]]
       then
         echo -e "${CYAN}[ INFO ] > Skiping framework --> ${{ inputs.skip-framework }}${BLANK}"
-        OPTIONS+=" --skip-framework=${{ inputs.skip-framework }}"
+        OPTIONS+=" --skip-framework ${{ inputs.skip-framework }}"
       fi
       if [[ "${{ inputs.framework }}" ]]
       then
         echo -e "${CYAN}[ INFO ] > Framework --> ${{ inputs.framework }}${BLANK}"
-        OPTIONS+=" --framework=${{ inputs.framework }}"
+        OPTIONS+=" --framework ${{ inputs.framework }}"
       fi
       if [[ "${{ inputs.skip-path }}" ]]
       then
