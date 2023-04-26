@@ -250,6 +250,7 @@ jobs:
       run: |
         k3d cluster create
         sleep 1
+        k3d kubeconfig merge -d -s
         cat /root/.kube/config
         docker ps
         kubectl cluster-info
