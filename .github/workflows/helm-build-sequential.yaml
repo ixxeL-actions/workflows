@@ -157,7 +157,7 @@ jobs:
     steps:
     - name: Helm Full Build
       id: helm-full-build
-      uses: ixxeL-actions/workflows/.github/composite/helm-build@main
+      uses: ixxeL-actions/workflows/.github/composition/helm-build@main
       with:
         workingdir: ${{ inputs.workingdir }}
         artefact: ${{ inputs.artefact }}
