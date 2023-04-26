@@ -256,7 +256,7 @@ jobs:
         docker ps
         kubectl cluster-info --kubeconfig ./config
         kubectl get pods -A --kubeconfig ./config
-        sed -i 's/0.0.0.0/host.docker.internal/' config
+        sed -i 's/0.0.0.0/127.0.0.1/' config
         kubectl cluster-info --kubeconfig ./config
         kubectl get pods -A --kubeconfig ./config
         # ./run.sh deploy
