@@ -223,9 +223,13 @@ jobs:
     name: k3s-tes
     timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
-    # container:
-    #   image: ${{ inputs.ci-image }}
+    container:
+      image: ${{ inputs.ci-image }}
     steps:
+    - name: prepare k3d
+      id: prepare-k3d
+      run: |
+        curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
     - name: k3s create cluster
       id: k3s-create-cluster
       uses: AbsaOSS/k3d-action@v2
@@ -233,13 +237,11 @@ jobs:
         k3d-version: v5.4.9
         cluster-name: test-cluster-1
         args: --agents 1
-        # args: >-
-        #   -p "8083:80@server:0:direct"
-        #   -p "8443:443@server:0:direct"
-        #   -p "5053:53/udp@server:0:direct"
-        #   --servers 1
-        #   --no-lb
-        #   --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
+    - name: kubectl-test
+      id: kubectl-test
+      run: |
+        kubectl get pods -A
+
     # - name: Helm Full Build
     #   id: helm-full-build
     #   uses: ixxeL-actions/workflows/.github/composition/helm-build@main
