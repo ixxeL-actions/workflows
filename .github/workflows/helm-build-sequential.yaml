@@ -231,6 +231,7 @@ jobs:
     container:
       # image: ${{ inputs.cd-image }}
       image: rancher/k3d:5.3.0-dind
+      options: --privileged
     steps:
     - name: prepare k3d
       id: prepare-k3d
