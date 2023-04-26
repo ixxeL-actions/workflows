@@ -246,3 +246,22 @@ jobs:
         display-mode: ${{ inputs.display-mode }}
         output-dir: ${{ inputs.output-dir }}
         output-file: ${{ inputs.output-file }}
+  helm-package:
+    name: helm-package
+    needs: [helm-lint, helm-template, helm-datree, checkov, helm-unittest]
+    timeout-minutes: 3
+    runs-on: ${{ inputs.runs-on }}
+    container:
+      image: ${{ inputs.ci-image }}
+    steps:
+    - name: Clone code
+      id: clone
+      uses: actions/checkout@v3
+    - name: Helm Packaging
+      uses: ixxeL-actions/workflows/.github/actions/helm-package@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        chart-name: ${{ needs.helm-lint.outputs.CHART_NAME }}
+        chart-version: ${{ needs.helm-lint.outputs.CHART_VERSION }}
+        chart-appversion: ${{ needs.helm-lint.outputs.CHART_APP_VERSION }}
+        values-file: ${{ inputs.values-file }}
