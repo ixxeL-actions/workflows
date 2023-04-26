@@ -158,6 +158,8 @@ runs:
       ratio=$(echo | awk "{print ${totalPassed}/${total}}")
       SCAN_RATIO=$(echo | awk "{print ${ratio}*100}")
 
+      echo -e "${CYAN}[ INFO ] > Scan succeeded ${GREEN}${totalPassed}${CYAN} tests and failed ${RED}${totalFailed}${CYAN} tests${BLANK}"
+
       if [[ ${EXIT_CODE} -ne 0 ]]
       then
         echo -e "${RED}[ FAIL ] > Checkov scan failed !${BLANK}"
