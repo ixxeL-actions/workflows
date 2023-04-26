@@ -149,13 +149,13 @@ on:
 jobs:
   helm-build:
     name: helm-build
-    timeout-minutes: 3
+    timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
     - name: Clone code
-      id: clone
+      id: git-clone
       uses: actions/checkout@v3
     - name: Helm linting
       id: helm-lint
@@ -168,7 +168,7 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
       with:
         workingdir: ${{ inputs.workingdir }}
-    - name: Checkov Helm scan
+    - name: Helm Checkov scan
       id: helm-checkov
       uses: ixxeL-actions/workflows/.github/actions/checkov@main
       with:
@@ -185,14 +185,14 @@ jobs:
         skip-check: ${{ inputs.skip-check }}
         check: ${{ inputs.check }}
         framework: ${{ inputs.framework }}
-    - name: Helm unit testing
+    - name: Helm Unit testing
       id: helm-unittest
       uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
       with:
         workingdir: ${{ inputs.workingdir }}
         with-subchart: ${{ inputs.with-subchart }}
         tests-dir: ${{ inputs.tests-dir }}
-    - name: Helm templating
+    - name: Helm Templating
       id: helm-template
       uses: ixxeL-actions/workflows/.github/actions/helm-template@main
       with:
@@ -211,6 +211,7 @@ jobs:
         output-dir: ${{ inputs.output-dir }}
         output-file: ${{ inputs.output-file }}
     - name: Helm Packaging
+      id: helm-package
       uses: ixxeL-actions/workflows/.github/actions/helm-package@main
       with:
         workingdir: ${{ inputs.workingdir }}
