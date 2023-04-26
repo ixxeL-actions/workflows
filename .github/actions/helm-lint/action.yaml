@@ -29,7 +29,8 @@ outputs:
 runs:
   using: composite
   steps:
-  - id: helm-lint
+  - name: helm-lint
+    id: helm-lint
     run: |
       set +e
       echo -e "${BLUE}[ STEP - Helm-chart linting ] > Linting Helm chart.${BLANK}"

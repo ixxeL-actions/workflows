@@ -1,0 +1,189 @@
+---
+name: Helm chart build
+on:
+  workflow_dispatch:
+
+  workflow_call:
+    inputs:
+    # General
+      workingdir:
+        required: false
+        default: .
+        type: string
+      runs-on:
+        description: OS to run jobs on
+        required: false
+        default: ubuntu-latest
+        type: string
+      ci-image:
+        description: Docker image used for CI jobs
+        required: false
+        default: ixxel/ci-toolbox:latest
+        type: string
+      template-repo:
+        description: repository of the ci/cd template to use
+        required: false
+        default: ixxeL-actions/workflows/.github/actions
+        type: string
+      template-ref:
+        description: branch or tag of the ci/cd template to use
+        required: false
+        default: main
+        type: string
+    # helm unit tests
+      with-subchart:
+        description: include subchart
+        required: false
+        default: true
+        type: boolean
+      tests-dir:
+        description: tests directory relative to workingdir
+        required: false
+        default: tests/*.yaml
+        type: string
+    # Checkov
+      artefact:
+        required: true
+        type: string
+      compact:
+        required: false
+        default: true
+        type: string
+      quiet:
+        required: false
+        default: false
+        type: string
+      skip-download:
+        required: false
+        default: false
+        type: string
+      format:
+        required: false
+        default: cli
+        type: string
+      soft-fail:
+        required: false
+        default: true
+        type: string
+      gate:
+        required: false
+        default: '0'
+        type: string
+      skip-path:
+        required: false
+        type: string
+      skip-framework:
+        required: false
+        type: string
+      skip-check:
+        required: false
+        type: string
+      check:
+        required: false
+        type: string
+      framework:
+        required: false
+        type: string
+    # helm template
+      strict:
+        description: use strict mode
+        required: false
+        default: true
+        type: boolean
+      chart-name:
+        description: name of the chart
+        required: false
+        type: string
+      values-file:
+        description: name of the values.yaml file
+        required: false
+        default: values.yaml
+        type: string
+      add-repo:
+        description: weither or not to add a repo
+        required: false
+        default: false
+        type: boolean
+      repo-url:
+        description: url of the helm repo to add
+        required: false
+        type: string
+      repo-name:
+        description: name of the helm repo to add
+        required: false
+        default: temp-repo
+        type: string
+      repo-user:
+        description: user of the helm repo to add
+        required: false
+        type: string
+      repo-pwd:
+        description: password of the helm repo to add
+        required: false
+        type: string
+      set:
+        description: argument to pass to helm chart as --set command
+        required: false
+        type: string
+      stdout-mode:
+        description: output template to stdout
+        required: false
+        default: true
+        type: boolean
+      display-mode:
+        description: display template result to stdout
+        required: false
+        default: true
+        type: boolean
+      output-dir:
+        description: output directory name for template file
+        required: false
+        default: helm-tpl-result
+        type: string
+      output-file:
+        description: output file name for template file
+        required: false
+        default: result.yaml
+        type: string
+
+jobs:
+  helm-lint:
+    name: helm-lint
+    # needs: [prepare]
+    timeout-minutes: 3
+    runs-on: ${{ inputs.runs-on }}
+    container:
+      image: ${{ inputs.ci-image }}
+    steps:
+    - name: Helm Full Build
+      id: helm-full-build
+      uses: ixxeL-actions/workflows/.github/composite/helm-build@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        artefact: ${{ inputs.artefact }}
+        compact: ${{ inputs.compact }}
+        quiet: ${{ inputs.quiet }}
+        skip-download: ${{ inputs.skip-download }}
+        format: ${{ inputs.format }}
+        soft-fail: ${{ inputs.soft-fail }}
+        gate: ${{ inputs.gate }}
+        skip-path: ${{ inputs.skip-path }}
+        skip-framework: ${{ inputs.skip-framework }}
+        skip-check: ${{ inputs.skip-check }}
+        check: ${{ inputs.check }}
+        framework: ${{ inputs.framework }}
+        with-subchart: ${{ inputs.with-subchart }}
+        tests-dir: ${{ inputs.tests-dir }}
+        strict: ${{ inputs.strict }}
+        chart-name: ${{ inputs.chart-name }}
+        values-file: ${{ inputs.values-file }}
+        add-repo: ${{ inputs.add-repo }}
+        repo-url: ${{ inputs.repo-url }}
+        repo-name: ${{ inputs.repo-name }}
+        repo-user: ${{ inputs.repo-user }}
+        repo-pwd: ${{ inputs.repo-pwd }}
+        set: ${{ inputs.set }}
+        stdout-mode: ${{ inputs.stdout-mode }}
+        display-mode: ${{ inputs.display-mode }}
+        output-dir: ${{ inputs.output-dir }}
+        output-file: ${{ inputs.output-file }}
