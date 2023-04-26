@@ -20,6 +20,9 @@ inputs:
     description: name of the values.yaml file
     required: false
     default: values.yaml
+  destination:
+    required: false
+    default: helm_package_dir
 outputs:
   CHART_NAME:
     description: chart name
@@ -41,7 +44,7 @@ runs:
       echo -e "${CYAN}[ INFO ] > Helm version.${BLANK}"
       helm version --short
 
-      echo -e "${YELLOW}[ EXECUTING ] > Checking helm chart ${{ inputs.workingdir }}.${BLANK}"
+      echo -e "${YELLOW}[ EXECUTING ] > Packaging helm chart ${{ inputs.workingdir }}.${BLANK}"
       if [[ -d ${{ inputs.workingdir }} ]]
       then
         echo -e "${GREEN}[ CHECK SUCCESS ] > Directory exists, proceeding Packaging.${BLANK}"
