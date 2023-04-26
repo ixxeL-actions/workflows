@@ -13,7 +13,7 @@ on:
       runs-on:
         description: OS to run jobs on
         required: false
-        default: ubuntu-20.04
+        default: ubuntu-latest
         type: string
       ci-image:
         description: Docker image used for CI jobs
