@@ -141,13 +141,14 @@ on:
         default: result.yaml
         type: string
 
-env:
-  TPL_REPO: ${{ inputs.template-repo }}
-  TPL_REF: ${{ inputs.template-ref }}
-
 jobs:
+  prepare:
+    name: Preparation
+    run: |
+      echo "CI_IMG=OK" >> $GITHUB_ENV
   helm-lint:
     name: helm-lint
+    needs: [prepare]
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
@@ -161,6 +162,7 @@ jobs:
         workingdir: ${{ inputs.workingdir }}
   helm-datree:
     name: helm-datree
+    needs: [prepare]
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
@@ -175,6 +177,7 @@ jobs:
         workingdir: ${{ inputs.workingdir }}
   checkov:
     name: checkov-scan
+    needs: [prepare]
     timeout-minutes: 3
     runs-on: ubuntu-20.04
     container:
