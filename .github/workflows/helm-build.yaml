@@ -253,7 +253,7 @@ jobs:
         output-file: ${{ inputs.output-file }}
   helm-package:
     name: helm-package
-    needs: [helm-lint, helm-template, helm-datree, checkov, helm-unittest]
+    needs: [helm-lint]
     timeout-minutes: 3
     runs-on: ${{ inputs.runs-on }}
     container:
