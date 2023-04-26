@@ -248,9 +248,11 @@ jobs:
     - name: execute k3d
       id: execute-k3d
       run: |
+        set +e
         k3d cluster create
         sleep 1
         k3d kubeconfig merge -s -o ./config
+        cat config
         docker ps
         kubectl cluster-info --kubeconfig ./config
         kubectl get pods -A --kubeconfig ./config
