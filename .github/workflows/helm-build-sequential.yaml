@@ -250,8 +250,9 @@ jobs:
       run: |
         k3d cluster create
         sleep 1
+        whoami 
         k3d kubeconfig merge -d -s
-        cat /root/.kube/config
+        cat /github/home/.kube/config
         docker ps
         kubectl cluster-info
         # ./run.sh deploy
