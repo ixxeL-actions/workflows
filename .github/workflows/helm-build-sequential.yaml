@@ -229,13 +229,18 @@ jobs:
     timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
     container:
-      image: ${{ inputs.cd-image }}
+      # image: ${{ inputs.cd-image }}
+      image: rancher/k3d:5.3.0-dind
     steps:
     - name: prepare k3d
       id: prepare-k3d
       run: |
+        apk add curl npm
+        KUBECTL_VERSION=$(curl -L "https://storage.googleapis.com/kubernetes-release/release/stable.txt")
+        curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        mv ./kubectl /usr/local/bin
         curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-        apk add npm
         npm install -g github-files-fetcher
         fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
         chmod +x ./run.sh
@@ -246,7 +251,7 @@ jobs:
       env:
         CLUSTER_NAME: test-cluster-1
         ARGS: "--servers=1 --no-lb --k3s-arg '--no-deploy=traefik'"
-        K3D_VERSION: v5.4.9
+        K3D_VERSION: v5.3.0
     # - name: k3s create cluster
     #   id: k3s-create-cluster
     #   uses: AbsaOSS/k3d-action@v2
