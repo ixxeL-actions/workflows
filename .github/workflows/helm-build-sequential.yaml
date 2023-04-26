@@ -252,7 +252,7 @@ jobs:
         sleep 1
         whoami 
         k3d kubeconfig merge -d -s
-        k3d kubeconfig merge -d --output /root/.kube/config
+        k3d kubeconfig merge -s -o /root/.kube/config
         cat /github/home/.kube/config
         docker ps
         kubectl cluster-info
