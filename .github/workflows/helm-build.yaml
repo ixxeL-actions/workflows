@@ -10,6 +10,11 @@ on:
         required: false
         default: .
         type: string
+      runs-on:
+        description: OS to run jobs on
+        required: false
+        default: ubuntu:latest
+        type: string
       ci-image:
         description: Docker image used for CI jobs
         required: false
@@ -146,7 +151,7 @@ jobs:
     name: helm-lint
     # needs: [prepare]
     timeout-minutes: 3
-    runs-on: ubuntu-20.04
+    runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
@@ -160,7 +165,7 @@ jobs:
     name: helm-datree
     # needs: [prepare]
     timeout-minutes: 3
-    runs-on: ubuntu-20.04
+    runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
@@ -175,7 +180,7 @@ jobs:
     name: checkov-scan
     # needs: [prepare]
     timeout-minutes: 3
-    runs-on: ubuntu-20.04
+    runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
@@ -201,7 +206,7 @@ jobs:
     name: helm-unittest
     # needs: [prepare]
     timeout-minutes: 10
-    runs-on: ubuntu-20.04
+    runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
@@ -217,7 +222,7 @@ jobs:
     name: helm-template
     # needs: [prepare]
     timeout-minutes: 3
-    runs-on: ubuntu-20.04
+    runs-on: ${{ inputs.runs-on }}
     container:
       image: ${{ inputs.ci-image }}
     steps:
