@@ -256,6 +256,9 @@ jobs:
         docker ps
         kubectl cluster-info --kubeconfig ./config
         kubectl get pods -A --kubeconfig ./config
+        sed -i 's/0.0.0.0/host.docker.internal/' config
+        kubectl cluster-info --kubeconfig ./config
+        kubectl get pods -A --kubeconfig ./config
         # ./run.sh deploy
       env:
         CLUSTER_NAME: test-cluster-1
