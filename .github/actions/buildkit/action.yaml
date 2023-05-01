@@ -24,7 +24,7 @@ inputs:
     default: dockerfile.v0
   compression-format:
     required: false
-    default: tar
+    default: docker-archive
   buildkit-inline-buildinfo-attrs:
     required: false
     default: true
@@ -202,11 +202,12 @@ runs:
           echo -e "${CYAN}[ INFO ] > Tarball mode on. Compressing image ${PURPLE}${{ inputs.img-name }}:${{ inputs.tag}}${YELLOW} to tarball ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar${BLANK}"
           buildctl-daemonless.sh build \
                                 --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache \
-                                --export-cache type=inline \
+                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache,mode=max,push=true \
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
-                                --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
+                                --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
+                                ${BUILD_ARGS}
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
         fi
       else
