@@ -2,6 +2,9 @@
 name: Custom Image Builder CI
 on:
   workflow_call:
+    secrets:
+      github-api-rest-token:
+        required: false
     inputs:
     # General
       workingdir:
@@ -14,9 +17,9 @@ on:
       tag:
         required: false
         type: string
-      github-api-rest-token:
-        required: false
-        type: string
+      # github-api-rest-token:
+      #   required: false
+      #   type: string
       github-api-auth:
         required: false
         default: false
@@ -235,7 +238,7 @@ jobs:
         workingdir: ${{ inputs.workingdir }}
         img-name: ${{ inputs.img-name }}
         tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
-        github-api-rest-token: ${{ inputs.github-api-rest-token }}
+        github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
         build-arg: ${{ inputs.build-arg }}
