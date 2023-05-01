@@ -103,11 +103,24 @@ runs:
           exit 1
         fi
       }
-      whoami
 
-
-      echo -e "${CYAN}[ INFO ] > Exporting Buildkit BUILDKITD_FLAGS --> ${{ inputs.buildkitd-flags }} ${BLANK}"
-      export BUILDKITD_FLAGS=${{ inputs.buildkitd-flags }}
+      who=$(whoami)
+      if [[ ${who} != "root" ]]
+      then
+        echo -e "${CYAN}[ INFO ] > User is not root --> ${who} ${BLANK}"
+        BUILDKITD_FLAGS+=" --oci-worker-no-process-sandbox"
+        mkdir -p ~/.config/buildkit
+        touch ~/.config/buildkit/buildkitd.toml
+        BUILDKIT_CFG=~/.config/buildkit/buildkitd.toml
+      else
+        echo -e "${CYAN}[ INFO ] > User is Root ${BLANK}"
+        mkdir -p /etc/buildkit
+        touch /etc/buildkit/buildkitd.toml
+        BUILDKIT_CFG=/etc/buildkit/buildkitd.toml
+      fi
+      BUILDKITD_FLAGS+=" --config ${BUILDKIT_CFG}"
+      export BUILDKITD_FLAGS=${BUILDKITD_FLAGS}
+      echo -e "${CYAN}[ INFO ] > Displaying Buildkit BUILDKITD_FLAGS --> ${BUILDKITD_FLAGS} ${BLANK}"
 
       mkdir -p ~/.docker
 
@@ -181,6 +194,16 @@ runs:
   - id: buildkit-build
     run: |
       set +e
+      function assert_result()
+      {
+        if [[ $? = 0 ]]
+        then
+          echo -e "${GREEN}[ SUCCESS ] > $1 success ! ${BLANK}"
+        else
+          echo -e "${RED}[ FAIL ] > $1 failed ! ${BLANK}"
+          exit 1
+        fi
+      }
       CACHE_REGISTRY=$(echo ${{ inputs.cache-registry }} | sed 's/\/$//')
       CACHES_REPO=""
       if [[ ${{ inputs.caching }} = true ]]
