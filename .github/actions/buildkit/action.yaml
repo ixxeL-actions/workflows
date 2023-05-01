@@ -206,11 +206,11 @@ runs:
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
-                                --output type=image,name=${{ inputs.img-name }}:${{ inputs.tag}},dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
+                                --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
         fi
       else
-        echo -e "${CYAN}[ INFO ] > No caching option activated${BLANK}"
+        echo -e "${CYAN}[ INFO ] > No caching option activated, no push mode activated${BLANK}"
         echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag}} with buildkit${BLANK}"
         buildctl-daemonless.sh build \
                               --frontend=${{ inputs.dockerfile-frontend }} \
