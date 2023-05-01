@@ -97,6 +97,7 @@ on:
       buildkitd-flags:
         required: false
         default: --oci-worker-no-process-sandbox
+        type: string
       dockerfile-frontend:
         required: false
         default: dockerfile.v0
