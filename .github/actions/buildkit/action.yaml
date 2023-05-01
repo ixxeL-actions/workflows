@@ -145,7 +145,7 @@ runs:
       then
         if [[ ${{ inputs.login-binary }} = "docker" ]]
         then
-          export DOCKER_CONFIG=/root/.docker/config.json
+          export DOCKER_CONFIG=/root/.docker
           echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
           ARGS="--tls-verify=false"
           export CONFIG_FILE="/run/containers/0/auth.json"
@@ -163,10 +163,10 @@ runs:
           echo -e "${CYAN}[ INFO ] > Login to docker.io as user ${{ inputs.docker-io-user }}${BLANK}"
           ${{ inputs.login-binary }} login docker.io -u ${{ inputs.docker-io-user }} -p ${{ inputs.docker-io-pwd }} ${ARGS}
           assert_result "Login"
-          cat ${CONFIG_FILE} | jq '(.auths |= (. + {"https://index.docker.io/v1/":."docker.io"}|del(."docker.io")))' | sponge ${CONFIG_FILE}
+          cat /root/.docker/config.json  | jq '(.auths |= (. + {"https://index.docker.io/v1/":."docker.io"}|del(."docker.io")))' | sponge /root/.docker/config.json 
         fi
-        ln "${CONFIG_FILE}" ${DOCKER_CONFIG}
-        cat ${DOCKER_CONFIG} | jq -C
+        # ln "${CONFIG_FILE}" ${DOCKER_CONFIG}
+        cat /root/.docker/config.json | jq -C
       fi
     shell: bash
     env:
