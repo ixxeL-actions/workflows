@@ -227,6 +227,12 @@ jobs:
       image: ixxel/cd-toolbox:latest
       options: --privileged
     steps:
+    - name: Set variables
+      id: setvars
+      run: |
+        if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
+          echo "PUSH_IMG=false" >> $GITHUB_OUTPUT
+        fi
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
@@ -244,7 +250,7 @@ jobs:
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
         build-arg: ${{ inputs.build-arg }}
-        push: ${{ inputs.push }}
+        push: ${{ steps.setvars.outputs.PUSH_IMG }}
         caching: ${{ inputs.caching }}
         cache-registry: ${{ inputs.cache-registry }}
         force-login: ${{ inputs.force-login }}
