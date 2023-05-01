@@ -100,9 +100,11 @@ on:
       dockerfile-frontend:
         required: false
         default: dockerfile.v0
+        type: string
       compression-format:
         required: false
         default: tar
+        type: string
       buildkit-inline-buildinfo-attrs:
         required: false
         default: true
