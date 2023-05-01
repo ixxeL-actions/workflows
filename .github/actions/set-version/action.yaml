@@ -79,7 +79,8 @@ runs:
           fi
         fi
       else
-        proj_version="unreleased-$GITHUB_SHA"
+        SHORT_SHA=${GITHUB_SHA:0:7}
+        proj_version="$GITHUB_SHA"
         proj_short_version="$GITHUB_SHA"
       fi
       echo -e "${CYAN}[ INFO ] Using ${PURPLE}$proj_version${CYAN} for project version${BLANK}"

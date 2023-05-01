@@ -239,7 +239,7 @@ jobs:
       with:
         workingdir: ${{ inputs.workingdir }}
         img-name: ${{ inputs.img-name }}
-        tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
+        tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
         github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
