@@ -196,6 +196,7 @@ runs:
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
                                 --output type=image,name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},push=${{ inputs.push }} \
+                                --metadata-file metadata.json \
                                 ${BUILD_ARGS}
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
         else
@@ -207,6 +208,7 @@ runs:
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
                                 --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
+                                --metadata-file metadata.json \
                                 ${BUILD_ARGS}
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
         fi
@@ -219,8 +221,10 @@ runs:
                               --local dockerfile=${{ inputs.workingdir }} \
                               --export-cache type=inline \
                               --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
+                              --metadata-file metadata.json \
                               ${BUILD_ARGS}
       fi
+      cat metadata.json | jq
       if [[ $? = 0 ]]
       then
         size=$(du -sh ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar | awk '{print $1}')
