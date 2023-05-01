@@ -84,6 +84,7 @@ runs:
         proj_short_version="$GITHUB_SHA"
       fi
       echo -e "${CYAN}[ INFO ] Using ${PURPLE}$proj_version${CYAN} for project version${BLANK}"
+      echo -e "${CYAN}[ INFO ] Using ${PURPLE}$proj_short_version${CYAN} for short project version${BLANK}"
       echo "PROJECT_VERSION=$proj_version" >> $GITHUB_OUTPUT
       echo "PROJECT_SHORT_VERSION=$proj_short_version" >> $GITHUB_OUTPUT
     shell: bash
