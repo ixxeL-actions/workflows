@@ -68,7 +68,7 @@ on:
         type: string
       target-dir:
         required: false
-        default: test
+        default: artefacts
         type: string
       single-snapshot:
         required: false
@@ -246,6 +246,7 @@ jobs:
         workingdir: ${{ inputs.workingdir }}
         img-name: ${{ inputs.img-name }}
         tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
+        target-dir: ${{ inputs.target-dir }}
         github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
