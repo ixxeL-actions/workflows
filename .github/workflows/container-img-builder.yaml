@@ -5,6 +5,8 @@ on:
     secrets:
       github-api-rest-token:
         required: false
+      docker-io-pwd:
+        required: false
     inputs:
     # General
       workingdir:
@@ -154,9 +156,9 @@ on:
       docker-io-user:
         required: false
         type: string
-      docker-io-pwd:
-        required: false
-        type: string
+      # docker-io-pwd:
+      #   required: false
+      #   type: string
       # Grype
       # image-ref:
       #   description: image reference
@@ -252,7 +254,7 @@ jobs:
         login-registry-pwd: ${{ inputs.login-registry-pwd }}
         docker-hub-login: ${{ inputs.docker-hub-login }}
         docker-io-user: ${{ inputs.docker-io-user }}
-        docker-io-pwd: ${{ inputs.docker-io-pwd }}
+        docker-io-pwd: ${{ secrets.docker-io-pwd }}
     # - name: Kaniko build
     #   id: kaniko-build
     #   uses: ixxeL-actions/workflows/.github/actions/kaniko@main
