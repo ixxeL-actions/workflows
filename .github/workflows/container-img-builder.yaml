@@ -19,9 +19,6 @@ on:
       tag:
         required: false
         type: string
-      # github-api-rest-token:
-      #   required: false
-      #   type: string
       github-api-auth:
         required: false
         default: false
@@ -58,46 +55,6 @@ on:
         required: false
         default: '50'
         type: string
-      # Kaniko
-      file:
-        required: false
-        default: ./Dockerfile
-        type: string
-      build-arg:
-        required: false
-        type: string
-      target-dir:
-        required: false
-        default: artefacts
-        type: string
-      single-snapshot:
-        required: false
-        default: false
-        type: boolean
-      new-run:
-        required: false
-        default: true
-        type: boolean
-      skip-unused-stages:
-        required: false
-        default: true
-        type: boolean
-      snapshot-mode:
-        required: false
-        default: full
-        type: string
-      no-push:
-        required: false
-        default: true
-        type: boolean
-      verbosity:
-        required: false
-        default: info
-        type: string
-      compressed-caching:
-        required: false
-        default: true
-        type: boolean
       # buildkit
       buildkitd-flags:
         required: false
@@ -156,14 +113,6 @@ on:
       docker-io-user:
         required: false
         type: string
-      # docker-io-pwd:
-      #   required: false
-      #   type: string
-      # Grype
-      # image-ref:
-      #   description: image reference
-      #   required: true
-      #   type: string
       transport:
         description: transport type for destination (docker,docker-archive,oci-dir,oci-archive,dir,sbom,registry)
         required: false
@@ -262,25 +211,6 @@ jobs:
         docker-hub-login: ${{ inputs.docker-hub-login }}
         docker-io-user: ${{ inputs.docker-io-user }}
         docker-io-pwd: ${{ secrets.docker-io-pwd }}
-    # - name: Kaniko build
-    #   id: kaniko-build
-    #   uses: ixxeL-actions/workflows/.github/actions/kaniko@main
-    #   with:
-    #     workingdir: ${{ inputs.workingdir }}
-    #     img-name: ${{ inputs.img-name }}
-    #     tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
-    #     github-api-rest-token: ${{ inputs.github-api-rest-token }}
-    #     github-api-auth: ${{ inputs.github-api-auth }}
-    #     file: ${{ inputs.file }}
-    #     build-arg: ${{ inputs.build-arg }}
-    #     target-dir: ${{ inputs.target-dir }}
-    #     single-snapshot: ${{ inputs.single-snapshot }}
-    #     new-run: ${{ inputs.new-run }}
-    #     skip-unused-stages: ${{ inputs.skip-unused-stages }}
-    #     snapshot-mode: ${{ inputs.snapshot-mode }}
-    #     no-push: ${{ inputs.no-push }}
-    #     verbosity: ${{ inputs.verbosity }}
-    #     compressed-caching: ${{ inputs.compressed-caching }}
     - name: Grype scan
       id: grype-scan
       uses: ixxeL-actions/workflows/.github/actions/grype@main
