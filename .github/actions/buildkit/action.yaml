@@ -12,6 +12,9 @@ inputs:
   target-dir:
     required: false
     default: artefacts
+  oci-worker-snapshotter:
+    required: false
+    default: fuse-overlayfs
   build-arg:
     description: argument=value to supply to the builder
     required: false
@@ -118,7 +121,7 @@ runs:
         touch /etc/buildkit/buildkitd.toml
         BUILDKIT_CFG=/etc/buildkit/buildkitd.toml
       fi
-      BUILDKITD_FLAGS+=" --config ${BUILDKIT_CFG}"
+      BUILDKITD_FLAGS+=" --config ${BUILDKIT_CFG} --oci-worker-snapshotter=${{ inputs.oci-worker-snapshotter }}"
       export BUILDKITD_FLAGS=${BUILDKITD_FLAGS}
       echo -e "${CYAN}[ INFO ] > Displaying Buildkit BUILDKITD_FLAGS --> ${BUILDKITD_FLAGS} ${BLANK}"
 
@@ -224,7 +227,7 @@ runs:
                               --metadata-file metadata.json \
                               ${BUILD_ARGS}
       fi
-      cat metadata.json | jq
+      cat metadata.json | jq -C
       if [[ $? = 0 ]]
       then
         size=$(du -sh ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar | awk '{print $1}')
