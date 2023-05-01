@@ -141,7 +141,7 @@ runs:
         if [[ ${{ inputs.login-binary }} = "docker" ]]
         then
           echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
-          ARGS="--tls-verify=${LOGIN_TLS_VERIFY}"
+          ARGS="--tls-verify=false"
           export CONFIG_FILE="/run/containers/0/auth.json"
         else
           export CONFIG_FILE="~/.docker/config.json"
@@ -174,7 +174,7 @@ runs:
 
   - id: buildkit-build
     run: |
-
+      set +e
       CACHE_REGISTRY=$(echo ${{ inputs.cache-registry }} | sed 's/\/$//')
       CACHES_REPO=""
       if [[ ${{ inputs.caching }} = true ]]
