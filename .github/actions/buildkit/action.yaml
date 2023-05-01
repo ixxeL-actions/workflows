@@ -12,6 +12,10 @@ inputs:
   target-dir:
     required: false
     default: artefacts
+  build-arg:
+    description: argument=value to supply to the builder
+    required: false
+    default: ''
   buildkitd-flags:
     required: false
     default: --oci-worker-no-process-sandbox

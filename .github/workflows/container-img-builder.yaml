@@ -136,7 +136,7 @@ on:
         type: string
       custom-login:
         required: false
-        default: true
+        default: false
         type: boolean
       login-registry-user:
         required: false
@@ -217,9 +217,10 @@ jobs:
   build:
     name: Build
     timeout-minutes: 15
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: ixxel/cd-toolbox:latest
+      options: --privileged
     steps:
     - name: Clone code
       id: clone
