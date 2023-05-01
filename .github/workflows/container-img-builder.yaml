@@ -8,6 +8,19 @@ on:
         required: false
         default: .
         type: string
+      img-name:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+      github-api-rest-token:
+        required: false
+        type: string
+      github-api-auth:
+        required: false
+        default: false
+        type: boolean
     # Checkov
       artefact:
         required: true
@@ -41,19 +54,6 @@ on:
         default: '50'
         type: string
       # Kaniko
-      img-name:
-        required: true
-        type: string
-      tag:
-        required: false
-        type: string
-      github-api-rest-token:
-        required: false
-        type: string
-      github-api-auth:
-        required: false
-        default: false
-        type: boolean
       file:
         required: false
         default: ./Dockerfile
@@ -93,6 +93,64 @@ on:
         required: false
         default: true
         type: boolean
+      # buildkit
+      buildkitd-flags:
+        required: false
+        default: --oci-worker-no-process-sandbox
+      dockerfile-frontend:
+        required: false
+        default: dockerfile.v0
+      compression-format:
+        required: false
+        default: tar
+      buildkit-inline-buildinfo-attrs:
+        required: false
+        default: true
+        type: boolean
+      buildkit-inline-cache:
+        required: false
+        default: true
+        type: boolean
+      caching:
+        required: false
+        default: true
+        type: boolean
+      cache-registry:
+        required: false
+        type: string
+      push:
+        description: Push img
+        required: false
+        default: true
+        type: boolean
+      force-login:
+        required: false
+        default: true
+        type: boolean
+      login-binary:
+        required: false
+        default: docker
+        type: string
+      custom-login:
+        required: false
+        default: true
+        type: boolean
+      login-registry-user:
+        required: false
+        type: string
+      login-registry-pwd:
+        required: false
+        type: string
+      docker-hub-login:
+        required: false
+        default: true
+        type: boolean
+      docker-io-user:
+        required: false
+        type: string
+      docker-io-pwd:
+        required: false
+        type: string
       # Grype
       # image-ref:
       #   description: image reference
@@ -166,25 +224,47 @@ jobs:
     - name: Set version
       id: set-version
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
-    - name: Kaniko build
-      id: kaniko-build
-      uses: ixxeL-actions/workflows/.github/actions/kaniko@main
+    - name: Buildkit build
+      id: buildkit-build
+      uses: ixxeL-actions/workflows/.github/actions/buildkit@main
       with:
         workingdir: ${{ inputs.workingdir }}
         img-name: ${{ inputs.img-name }}
         tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
         github-api-rest-token: ${{ inputs.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
-        file: ${{ inputs.file }}
+        dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
         build-arg: ${{ inputs.build-arg }}
-        target-dir: ${{ inputs.target-dir }}
-        single-snapshot: ${{ inputs.single-snapshot }}
-        new-run: ${{ inputs.new-run }}
-        skip-unused-stages: ${{ inputs.skip-unused-stages }}
-        snapshot-mode: ${{ inputs.snapshot-mode }}
-        no-push: ${{ inputs.no-push }}
-        verbosity: ${{ inputs.verbosity }}
-        compressed-caching: ${{ inputs.compressed-caching }}
+        push: ${{ inputs.push }}
+        caching: ${{ inputs.caching }}
+        cache-registry: ${{ inputs.cache-registry }}
+        force-login: ${{ inputs.force-login }}
+        login-binary: ${{ inputs.login-binary }}
+        custom-login: ${{ inputs.custom-login }}
+        login-registry-user: ${{ inputs.login-registry-user }}
+        login-registry-pwd: ${{ inputs.login-registry-pwd }}
+        docker-hub-login: ${{ inputs.docker-hub-login }}
+        docker-io-user: ${{ inputs.docker-io-user }}
+        docker-io-pwd: ${{ inputs.docker-io-pwd }}
+    # - name: Kaniko build
+    #   id: kaniko-build
+    #   uses: ixxeL-actions/workflows/.github/actions/kaniko@main
+    #   with:
+    #     workingdir: ${{ inputs.workingdir }}
+    #     img-name: ${{ inputs.img-name }}
+    #     tag: ${{ steps.set-version.outputs.PROJECT_VERSION }}
+    #     github-api-rest-token: ${{ inputs.github-api-rest-token }}
+    #     github-api-auth: ${{ inputs.github-api-auth }}
+    #     file: ${{ inputs.file }}
+    #     build-arg: ${{ inputs.build-arg }}
+    #     target-dir: ${{ inputs.target-dir }}
+    #     single-snapshot: ${{ inputs.single-snapshot }}
+    #     new-run: ${{ inputs.new-run }}
+    #     skip-unused-stages: ${{ inputs.skip-unused-stages }}
+    #     snapshot-mode: ${{ inputs.snapshot-mode }}
+    #     no-push: ${{ inputs.no-push }}
+    #     verbosity: ${{ inputs.verbosity }}
+    #     compressed-caching: ${{ inputs.compressed-caching }}
     - name: Grype scan
       id: grype-scan
       uses: ixxeL-actions/workflows/.github/actions/grype@main

@@ -38,31 +38,73 @@ inputs:
   github-api-rest-token:
     description: Github API token
     required: false
+  caching:
+    description: Usin cache registry
+    required: false
+    default: true
+  cache-registry:
+    description: Cache registry
+    required: false
+    default: true
+  push:
+    description: Push img
+    required: false
+    default: true
+  force-login:
+    description: Using docker login
+    required: false
+    default: true
+  login-binary:
+    description: Using docker login
+    required: false
+    default: docker
+  custom-login:
+    description: Using docker login for specific registry
+    required: false
+    default: true
+  login-registry-user:
+    description: User for custom registry
+    required: false
+  login-registry-pwd:
+    description: Pwd for custom registry
+    required: false
+  docker-hub-login:
+    description: Using docker login for docker hub
+    required: false
+    default: true
+  docker-io-user:
+    description: User for docker hub
+    required: false
+  docker-io-pwd:
+    description: Pwd for docker hub
+    required: false
 
 runs:
   using: composite
   steps:
-  - id: buildkit-build
+  - id: prepare
     run: |
       set +e
       echo -e "${BLUE}[ STEP - BUILDING IMAGE ] > Building docker image ${{ inputs.img-name }}:${{ inputs.tag }} with Buildkit.${BLANK}"
       echo -e "${CYAN}[ INFO ] > Buildkit version.${BLANK}"
       buildctl --version
 
+      function assert_result()
+      {
+        if [[ $? = 0 ]]
+        then
+          echo -e "${GREEN}[ SUCCESS ] > $1 success ! ${BLANK}"
+        else
+          echo -e "${RED}[ FAIL ] > $1 failed ! ${BLANK}"
+          exit 1
+        fi
+      }
+
+
       echo -e "${CYAN}[ INFO ] > Exporting Buildkit BUILDKITD_FLAGS --> ${{ inputs.buildkitd-flags }} ${BLANK}"
       export BUILDKITD_FLAGS=${{ inputs.buildkitd-flags }}
 
       mkdir -p ~/.docker
-      # echo "{\"auths\":{\"https://$DST_REGISTRY\":{\"auth\":\"$(printf "%s:%s" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')\"}}}" > ~/.docker/config.json
-      # echo "{\"auths\": {\"$CI_REGISTRY\": {\"auth\": \"$auth\"}}}" > ~/.docker/config.json
-
-      if [[ -n ${INSECURE_REGISTRY} ]]
-      then
-        echo -e "${CYAN}[ INFO ] > Adding insecure registry ${INSECURE_REGISTRY}${BLANK}"
-        # sed -i "s/}$/, \n\"insecure-registries\": [\"$INSECURE_REGISTRY\"]}/" ~/.docker/config.json
-        echo "{\"insecure-registries\": [ \"https://$INSECURE_REGISTRY\" ]}" >> ~/.docker/config.json
-        cat ~/.docker/config.json
-      fi
 
       if [[ ${{ inputs.github-api-auth }} = true ]]
       then
@@ -84,14 +126,87 @@ runs:
       fi
       mkdir -p ${{ inputs.target-dir }}
 
-      echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag}}.${BLANK}"
-      buildctl-daemonless.sh build \
-          --frontend=${{ inputs.dockerfile-frontend }} \
-          --local context=${{ inputs.workingdir }} \
-          --local dockerfile=${{ inputs.workingdir }} \
-          --export-cache type=inline \
-          --output type=${{ inputs.compression-format }},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
+      BUILD_ARG=${{ inputs.build-arg }}
+      if [ "$BUILD_ARG" ]
+      then
+        [[ ! "$BUILD_ARG" =~ ^\|.+ ]] || BUILD_ARG="${BUILD_ARG:1}"
+        full_str=${BUILD_ARG//|/ --opt build-arg:}
+        BUILD_ARGS="--opt build-arg:$full_str"
+        echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
+        echo "${BUILD_ARGS}"
+      fi
 
+      if [[ ${{ inputs.force-login }} = true ]]
+      then
+        if [[ ${{ inputs.login-binary }} = "docker" ]]
+        then
+          echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
+          ARGS="--tls-verify=${LOGIN_TLS_VERIFY}"
+          export CONFIG_FILE="/run/containers/0/auth.json"
+        else
+          export CONFIG_FILE="~/.docker/config.json"
+        fi
+        if [[ ${{ inputs.custom-login }} = true ]]
+        then
+          echo -e "${CYAN}[ INFO ] > Login to ${{ inputs.login-registry }} as user ${{ inputs.login-registry-user }}${BLANK}"
+          ${{ inputs.login-binary }} login ${{ inputs.login-registry }} -u ${{ inputs.login-registry-user }} -p ${{ inputs.login-registry-pwd }} ${ARGS}
+          assert_result "Login"
+        fi
+        if [[ ${{ inputs.docker-hub-login }} = true ]]
+        then
+          echo -e "${CYAN}[ INFO ] > Login to docker.io as user ${{ inputs.docker-io-user }}${BLANK}"
+          ${{ inputs.login-binary }} login docker.io -u ${{ inputs.docker-io-user }} -p ${{ inputs.docker-io-pwd }} ${ARGS}
+          assert_result "Login"
+          cat ${CONFIG_FILE} | jq '(.auths |= (. + {"https://index.docker.io/v1/":."docker.io"}|del(."docker.io")))' | sponge ${CONFIG_FILE}
+        fi
+        ln "${CONFIG_FILE}" ~/.docker/config.json
+        cat ~/.docker/config.json | jq -C
+      fi
+
+  - id: buildkit-build
+    run: |
+
+      CACHE_REGISTRY=$(echo ${{ inputs.cache-registry }} | sed 's/\/$//')
+      CACHES_REPO=""
+      if [[ ${{ inputs.caching }} = true ]]
+      then
+        echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${PURPLE}${{ inputs.img-name }}:${{ inputs.tag}}${YELLOW}${BLANK}"
+        if [[ ${{ inputs.push }} = true ]]
+        then
+          echo -e "${CYAN}[ INFO ] > Push mode on. Pushing image ${PURPLE}${{ inputs.img-name }}:${{ inputs.tag}}${YELLOW} to registry ${{ inputs.cache-registry }}${BLANK}"
+          buildctl-daemonless.sh build \
+                                --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache \
+                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache,mode=max,push=true \
+                                --frontend=${{ inputs.dockerfile-frontend }} \
+                                --local context=${{ inputs.workingdir }}\
+                                --local dockerfile=${{ inputs.workingdir }}\
+                                --output type=image,name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},push=${{ inputs.push }} \
+                                ${BUILD_ARGS}
+          assert_result "Final ${{ inputs.img-name }}:${{ inputs.tag}} build"
+
+        else
+          echo -e "${CYAN}[ INFO ] > Tarball mode on${BLANK}"
+          buildctl-daemonless.sh build ${TARGET_DIR} \
+                                  ${CACHES_REPO} \
+                                  --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:latest \
+                                  --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}} \
+                                  --export-cache type=inline \
+                                  --frontend=${{ inputs.dockerfile-frontend }} \
+                                  --local context=${{ inputs.workingdir }}\
+                                  --local dockerfile=${{ inputs.workingdir }}\
+                                  --output type=image,name=${{ inputs.img-name }}:${{ inputs.tag}},dest=${TARGET_DIR}/${{ inputs.img-name }}.tar
+        fi
+      else
+        echo -e "${CYAN}[ INFO ] > No multi stage option activated abd no cache option activated${BLANK}"
+        echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.img-name }}:${{ inputs.tag}} with buildkit${BLANK}"
+        buildctl-daemonless.sh build \
+                              --frontend=${{ inputs.dockerfile-frontend }} \
+                              --local context=${{ inputs.workingdir }} \
+                              --local dockerfile=${{ inputs.workingdir }} \
+                              --export-cache type=inline \
+                              --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${TARGET_DIR}/${{ inputs.img-name }}.tar \
+                              ${BUILD_ARGS}
+      fi
       if [[ $? = 0 ]]
       then
         size=$(du -sh ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar | awk '{print $1}')
