@@ -103,6 +103,7 @@ runs:
           exit 1
         fi
       }
+      whoami
 
 
       echo -e "${CYAN}[ INFO ] > Exporting Buildkit BUILDKITD_FLAGS --> ${{ inputs.buildkitd-flags }} ${BLANK}"
@@ -144,6 +145,7 @@ runs:
       then
         if [[ ${{ inputs.login-binary }} = "docker" ]]
         then
+          export DOCKER_CONFIG=/root/.docker/config.json
           echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
           ARGS="--tls-verify=false"
           export CONFIG_FILE="/run/containers/0/auth.json"
@@ -163,8 +165,8 @@ runs:
           assert_result "Login"
           cat ${CONFIG_FILE} | jq '(.auths |= (. + {"https://index.docker.io/v1/":."docker.io"}|del(."docker.io")))' | sponge ${CONFIG_FILE}
         fi
-        ln "${CONFIG_FILE}" ~/.docker/config.json
-        cat ~/.docker/config.json | jq -C
+        ln "${CONFIG_FILE}" ${DOCKER_CONFIG}
+        cat ${DOCKER_CONFIG} | jq -C
       fi
     shell: bash
     env:
