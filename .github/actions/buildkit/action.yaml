@@ -19,9 +19,6 @@ inputs:
     description: argument=value to supply to the builder
     required: false
     default: ''
-  buildkitd-flags:
-    required: false
-    default: --oci-worker-no-process-sandbox
   dockerfile-frontend:
     required: false
     default: dockerfile.v0

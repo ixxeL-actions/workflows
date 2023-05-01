@@ -56,9 +56,9 @@ on:
         default: '50'
         type: string
       # buildkit
-      buildkitd-flags:
+      oci-worker-snapshotter:
         required: false
-        default: --oci-worker-no-process-sandbox
+        default: fuse-overlayfs
         type: string
       dockerfile-frontend:
         required: false
@@ -211,6 +211,7 @@ jobs:
         docker-hub-login: ${{ inputs.docker-hub-login }}
         docker-io-user: ${{ inputs.docker-io-user }}
         docker-io-pwd: ${{ secrets.docker-io-pwd }}
+        oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
     - name: Grype scan
       id: grype-scan
       uses: ixxeL-actions/workflows/.github/actions/grype@main
