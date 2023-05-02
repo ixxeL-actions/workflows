@@ -212,14 +212,6 @@ jobs:
       image: ixxel/cd-toolbox:latest
       options: --privileged
     steps:
-    # - name: Set variables
-    #   id: setvars
-    #   run: |
-    #     if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" || "${{github.base_ref}}" == "master" || "${{github.ref}}" == "refs/heads/master" ]]; then
-    #       echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
-    #     elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
-    #       echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
-    #     fi
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
@@ -230,6 +222,14 @@ jobs:
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
       with:
         component: ${{ inputs.component }}
+    - name: Set variables
+      id: setvars
+      run: |
+        if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" || "${{github.base_ref}}" == "master" || "${{github.ref}}" == "refs/heads/master" ]]; then
+          echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
+        elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
+          echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
+        fi
     - name: Buildkit build
       id: buildkit-build
       uses: ixxeL-actions/workflows/.github/actions/buildkit@main
