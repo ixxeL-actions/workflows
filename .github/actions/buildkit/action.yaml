@@ -156,7 +156,7 @@ runs:
         echo "${BUILD_ARGS}"
       fi
 
-      if [[ ${{ inputs.force-login }} = true ]]
+      if [[ "${{ inputs.custom-login }}" = true || "${{ inputs.docker-hub-login }}" = true ]]
       then
         if [[ ${{ inputs.login-binary }} = "docker" ]]
         then
