@@ -183,8 +183,11 @@ jobs:
       id: setvars
       run: |
         if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
-          echo "PUSH_IMG=false" >> $GITHUB_OUTPUT
+          echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
         fi
+        CREATION_DATE=$(TZ=Europe/Paris date --iso-8601=second)
+        BUILD_ARG+=${{ inputs.build-arg }}|CREATION_DATE=$CREATION_DATE
+        echo "BUILD_ARG=$BUILD_ARG" >> $GITHUB_OUTPUT
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
@@ -202,8 +205,8 @@ jobs:
         github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
-        build-arg: ${{ inputs.build-arg }}
-        push: ${{ steps.setvars.outputs.PUSH_IMG }}
+        build-arg: ${{ steps.setvars.outputs.BUILD_ARG }}
+        push: ${{ steps.setvars.outputs.AUTO_PUSH }}
         caching: ${{ inputs.caching }}
         cache-registry: ${{ inputs.cache-registry }}
         force-login: ${{ inputs.force-login }}
