@@ -190,6 +190,7 @@ jobs:
           echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
         fi
         CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
+        BUILD_ARG=''
         BUILD_ARG+=CREATION_DATE=$CREATION_DATE|${{ inputs.build-arg }}
         echo "BUILD_ARG=$BUILD_ARG" >> $GITHUB_OUTPUT
     - name: Clone code
