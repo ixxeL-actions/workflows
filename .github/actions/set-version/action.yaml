@@ -48,6 +48,9 @@ runs:
         branch_tail=$(git merge-base main $GITHUB_REF_NAME)
         last_tag=''
 
+        echo -e "${CYAN}[ INFO ] Git merge-base with ${PURPLE}main${CYAN} and ${PURPLE}$GITHUB_REF_NAME ${CYAN}${BLANK}"
+        git merge-base $GITHUB_REF_NAME main
+
         # For each commit of the branch
         echo -e "${CYAN}[ INFO ] Analyzing each commit for tag${BLANK}"
         git cherry $branch_tail -v
