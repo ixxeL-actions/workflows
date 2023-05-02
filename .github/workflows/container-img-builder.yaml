@@ -25,6 +25,7 @@ on:
         type: boolean
       build-arg:
         required: false
+        default: "CI=true"
         type: string
       target-dir:
         required: false
