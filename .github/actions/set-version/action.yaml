@@ -31,9 +31,8 @@ runs:
         git config --list
 
         git fetch --all --tags --force
-        git pull origin $GITHUB_REF_NAME
-        git pull --no-rebase origin main
-        git fetch --all --tags --force
+        git fetch origin main:main
+        git fetch --all --tags --force origin main:main
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
         git branch --set-upstream-to origin/$GITHUB_REF_NAME
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}main${BLANK}"
