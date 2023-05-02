@@ -33,6 +33,9 @@ on:
         required: false
         default: artefacts
         type: string
+      component:
+        required: true
+        type: string
     # Checkov
       artefact:
         required: true
@@ -225,6 +228,8 @@ jobs:
     - name: Set version
       id: set-version
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
+      with:
+        component: ${{ inputs.component }}
     # - name: Buildkit build
     #   id: buildkit-build
     #   uses: ixxeL-actions/workflows/.github/actions/buildkit@main

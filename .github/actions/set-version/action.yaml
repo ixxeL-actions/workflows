@@ -7,6 +7,8 @@ inputs:
     description: Check certificates
     required: false
     default: false
+  component:
+    required: true
 outputs:
   PROJECT_VERSION:
     description: version tag
@@ -41,6 +43,7 @@ runs:
         # git checkout --track origin/$GITHUB_REF_NAME
         # # git branch --set-upstream-to origin/$GITHUB_REF_NAME
 
+        echo -e "${CYAN}[ INFO ] List of tags${BLANK}"
         git tag --list
         # Defaulting to maj.min.0
         proj_version="v${BASH_REMATCH[2]}.0"
@@ -58,8 +61,7 @@ runs:
 
         cherry=$(git cherry $branch_tail | cut -d' ' -f2)
         cherry="$branch_tail $cherry"
-        echo -e "${CYAN}[ INFO ] cherry reformated${BLANK}"
-        echo $cherry
+        COMPONENT=${{ inputs.component }}
         for commit in $cherry
         do
           tmp_tag=$(git tag --points-at $commit)
@@ -68,8 +70,11 @@ runs:
             echo -e "${CYAN}[ INFO ] Tmp tag not empty${BLANK}"
             if [ "$GITHUB_SHA" != "$commit" ]
             then
-              last_tag="$tmp_tag"
-              echo -e "${CYAN}[ INFO ] Tag ${YELLOW}$last_tag${CYAN} found at commit ${YELLOW}$commit${BLANK}"
+              if ! [[ "$tmp_tag" =~ ^${COMPONENT}-v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
+              then
+                last_tag="$tmp_tag"
+                echo -e "${CYAN}[ INFO ] Tag ${YELLOW}$last_tag${CYAN} found at commit ${YELLOW}$commit${BLANK}"
+              fi
             else
               echo -e "${RED}[ ERROR ] Your current commit ${PURPLE}$GITHUB_SHA${RED} is actually your last tag ${PURPLE}$tmp_tag${RED}. Cannot perform tag on a commit already tagged.${BLANK}"
               exit 1
@@ -85,7 +90,7 @@ runs:
             echo -e "${RED}[ ERROR ] > Last tag ${PURPLE}$last_tag${RED} is not in Semantic Versioning (vMaj.Min.Patch ie: v1.0.0). Please perform manual correction${BLANK}"
             exit 1
           else
-            proj_version="v${BASH_REMATCH[1]}$(( ${BASH_REMATCH[2]} + 1 ))"
+            proj_version="${COMPONENT}-v${BASH_REMATCH[1]}$(( ${BASH_REMATCH[2]} + 1 ))"
             proj_short_version=$proj_version
           fi
         fi
