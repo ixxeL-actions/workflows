@@ -58,11 +58,14 @@ runs:
 
         cherry=$(git cherry $branch_tail | cut -d' ' -f2)
         cherry="$branch_tail $cherry"
+        echo -e "${CYAN}[ INFO ] cherry reformated${BLANK}"
+        echo $cherry
         for commit in $cherry
         do
           tmp_tag=$(git tag --points-at $commit)
           if [ "$tmp_tag" != '' ]
           then
+            echo -e "${CYAN}[ INFO ] Tmp tag not empty${BLANK}"
             if [ "$GITHUB_SHA" != "$commit" ]
             then
               last_tag="$tmp_tag"
