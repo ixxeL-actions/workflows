@@ -257,7 +257,7 @@ jobs:
     #     verbose: ${{ inputs.verbose }}
     - name: git tag
       id: git-tag
-      if: ${{ github.ref =~ "refs/heads/release\/.*" }} || ${{ github.base_ref =~ "/^release\/.*/" }}
+      if: contains( github.ref, 'release' ) || contains( github.base_ref, 'release' )
       uses: ixxeL-actions/workflows/.github/actions/git-tag@main
       with:
         git-token: ${{ secrets.git-token }}
