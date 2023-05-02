@@ -65,6 +65,7 @@ runs:
         cherry="$branch_tail $cherry"
         for commit in $cherry
         do
+          echo -e "${CYAN}[ INFO ] Analyzing commit ${YELLOW}$commit${BLANK}"
           tmp_tag=$(git tag --points-at $commit)
           if [ "$tmp_tag" != '' ]
           then
