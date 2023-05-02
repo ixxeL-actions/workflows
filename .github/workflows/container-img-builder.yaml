@@ -189,7 +189,7 @@ jobs:
         if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
           echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
         fi
-        CREATION_DATE=$(TZ=Europe/Paris date --iso-8601=second)
+        CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
         BUILD_ARG+=${{ inputs.build-arg }}|CREATION_DATE=$CREATION_DATE
         echo "BUILD_ARG=$BUILD_ARG" >> $GITHUB_OUTPUT
     - name: Clone code
