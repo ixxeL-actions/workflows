@@ -38,6 +38,7 @@ runs:
 
         # Defaulting to maj.min.0
         proj_version="v${BASH_REMATCH[2]}.0"
+        proj_short_version=$proj_version
 
         # Looking for previous tag
         echo -e "${CYAN}[ INFO ] Git merge-base with ${PURPLE}main${CYAN} and ${PURPLE}$GITHUB_REF_NAME ${CYAN}${BLANK}"
