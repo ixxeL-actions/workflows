@@ -31,7 +31,7 @@ runs:
   - id: grype-scan
     run: |
       set +e
-      REPO_URL=${{ inputs.repo-url }}
+      # REPO_URL=${{ inputs.repo-url }}
       echo -e "${BLUE}[ STEP - TAG GIT REPO ] > Tagging git repo ${REPO_URL}${BLANK}"
       echo -e "${CYAN}[ INFO ] > Git version.${BLANK}"
       git version

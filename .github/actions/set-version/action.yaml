@@ -31,11 +31,10 @@ runs:
         git config --list
 
         git fetch --all --tags --force
-        echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
-        git branch --set-upstream-to origin/$GITHUB_REF_NAME
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}main${BLANK}"
-        # git branch --set-upstream-to origin/main
         git checkout --track origin/main
+        echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
+        git checkout --track origin/$GITHUB_REF_NAME
 
 
         # Defaulting to maj.min.0
@@ -47,9 +46,6 @@ runs:
         git merge-base main $GITHUB_REF_NAME
         branch_tail=$(git merge-base main $GITHUB_REF_NAME)
         last_tag=''
-
-        echo -e "${CYAN}[ INFO ] Git merge-base with ${PURPLE}main${CYAN} and ${PURPLE}$GITHUB_REF_NAME ${CYAN}${BLANK}"
-        git merge-base $GITHUB_REF_NAME main
 
         # For each commit of the branch
         echo -e "${CYAN}[ INFO ] Analyzing each commit for tag${BLANK}"
