@@ -36,6 +36,7 @@ runs:
         git fetch --all --tags --force
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}main${BLANK}"
         git checkout --track origin/main
+        git fetch --all --tags --force
 
         # Defaulting to maj.min.0
         proj_version="v${BASH_REMATCH[2]}.0"
