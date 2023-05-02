@@ -76,6 +76,9 @@ runs:
                 last_tag="$tmp_tag"
                 echo -e "${CYAN}[ INFO ] Tag ${YELLOW}$last_tag${CYAN} found at commit ${YELLOW}$commit${BLANK}"
               fi
+            elif [[ "$tmp_tag" =~ ^[a-zA-Z]+-?v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
+            then
+              echo -e "${CYAN}[ INFO ] Tag ${YELLOW}$tmp_tag${CYAN} from another component found at commit ${YELLOW}$commit${BLANK}"
             else
               echo -e "${RED}[ ERROR ] Your current commit ${PURPLE}$GITHUB_SHA${RED} is actually your last tag ${PURPLE}$tmp_tag${RED}. Cannot perform tag on a commit already tagged.${BLANK}"
               exit 1
