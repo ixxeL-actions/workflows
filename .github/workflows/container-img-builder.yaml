@@ -221,7 +221,7 @@ jobs:
       id: clone
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        fetch-depth: '0'
     - name: Set version
       id: set-version
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
