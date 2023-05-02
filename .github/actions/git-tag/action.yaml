@@ -84,7 +84,7 @@ runs:
         echo -e "${RED}[ ERROR ] Could not add tag${BLANK}"
         exit 1
       fi
-      git -C ${{ inputs.git-workdir }} push ${{ inputs.tag-value }} --push-option ${{ inputs.push-option }}
+      git -C ${{ inputs.git-workdir }} push origin ${{ inputs.tag-value }} --push-option ${{ inputs.push-option }}
 
       if [ $? -eq 0 ]
       then
