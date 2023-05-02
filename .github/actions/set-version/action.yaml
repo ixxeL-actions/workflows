@@ -69,7 +69,7 @@ runs:
           tmp_tag=$(git tag --points-at $commit)
           if [ "$tmp_tag" != '' ]
           then
-            echo -e "${CYAN}[ INFO ] Tmp tag not empty${BLANK}"
+            echo -e "${CYAN}[ INFO ] Tmp tag ${YELLOW}$tmp_tag${CYAN} for commit ${YELLOW}$commit${CYAN} not empty${BLANK}"
             if [ "$GITHUB_SHA" != "$commit" ]
             then
               if [[ "$tmp_tag" =~ ^${COMPONENT}-v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
