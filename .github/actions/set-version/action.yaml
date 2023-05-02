@@ -33,6 +33,7 @@ runs:
         git fetch --all --tags --force
         git fetch origin main:main
         git fetch --all --tags --force origin main:main
+        git fetch --all --tags --force origin $GITHUB_REF_NAME:$GITHUB_REF_NAME
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
         git branch --set-upstream-to origin/$GITHUB_REF_NAME
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}main${BLANK}"
