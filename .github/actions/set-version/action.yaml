@@ -25,6 +25,8 @@ runs:
       set +e
       if [[ "$GITHUB_REF_NAME" =~ ^(release\/)([0-9]+\.[0-9]+)$ ]]
       then
+        COMPONENT=${{ inputs.component }}
+        echo -e "${CYAN}[ INFO ] finding tag for component ${COMPONENT}${BLANK}"
         echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
         git config --global --add safe.directory $GITHUB_WORKSPACE
         # git config --global user.email "${GITLAB_USER_EMAIL}"
@@ -46,7 +48,7 @@ runs:
         echo -e "${CYAN}[ INFO ] List of tags${BLANK}"
         git tag --list
         # Defaulting to maj.min.0
-        proj_version="v${BASH_REMATCH[2]}.0"
+        proj_version="${COMPONENT}-v${BASH_REMATCH[2]}.0"
         proj_short_version=$proj_version
 
         # Looking for previous tag
@@ -61,7 +63,6 @@ runs:
 
         cherry=$(git cherry $branch_tail | cut -d' ' -f2)
         cherry="$branch_tail $cherry"
-        COMPONENT=${{ inputs.component }}
         for commit in $cherry
         do
           tmp_tag=$(git tag --points-at $commit)
