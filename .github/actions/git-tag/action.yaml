@@ -60,7 +60,7 @@ runs:
       # git config --global user.email "${GITLAB_USER_EMAIL}"
       git config --global user.name "${GITHUB_ACTOR}"
       git config --global http.sslVerify ${{ inputs.tls-verify }}
-      git config -C ${{ inputs.git-workdir }} --list
+      git config --list
 
       echo -e "${YELLOW}[ EXECUTING ] > Showing repo information.${BLANK}"
       echo -e "${CYAN}[ INFO ] > git status.${BLANK}"
