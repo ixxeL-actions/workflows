@@ -31,11 +31,10 @@ runs:
         git config --list
 
         git fetch --all --tags --force
+        echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
+        git branch --set-upstream-to origin/$GITHUB_REF_NAME
         echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}main${BLANK}"
         git checkout --track origin/main
-        echo -e "${CYAN}[ INFO ] Checkout track ${PURPLE}$GITHUB_REF_NAME${BLANK}"
-        git checkout --track origin/$GITHUB_REF_NAME
-
 
         # Defaulting to maj.min.0
         proj_version="v${BASH_REMATCH[2]}.0"
