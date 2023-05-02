@@ -26,6 +26,10 @@ on:
       build-arg:
         required: false
         type: string
+      target-dir:
+        required: false
+        default: artefacts
+        type: string
     # Checkov
       artefact:
         required: true
