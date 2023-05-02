@@ -11,7 +11,6 @@ inputs:
     required: true
   component:
     required: false
-    default: build
   target-dir:
     required: false
     default: artefacts
@@ -189,6 +188,15 @@ runs:
         cat "${CONFIG_FILE}" | jq -C
       fi
 
+      if [[ -n ${{ inputs.component }} ]]
+      then
+        CACHE_TAG="${{ inputs.component }}-cache"
+        LATEST_TAG="${{ inputs.component }}-latest"
+      else
+        CACHE_TAG="cache"
+        LATEST_TAG="latest"
+      fi
+
       CACHE_REGISTRY=$(echo ${{ inputs.cache-registry }} | sed 's/\/$//')
       if [[ ${{ inputs.caching }} = true ]]
       then
@@ -197,21 +205,21 @@ runs:
         then
           echo -e "${CYAN}[ INFO ] > Push mode on. Pushing image ${PURPLE}${{ inputs.img-name }}:${{ inputs.tag}}${YELLOW} to registry ${{ inputs.cache-registry }}${BLANK}"
           buildctl-daemonless.sh build \
-                                --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.component }}-cache \
-                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.component }}-cache,mode=max,push=true \
+                                --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${CACHE_TAG} \
+                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${CACHE_TAG},mode=max,push=true \
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
                                 --opt filename=./${{ inputs.dockerfile-name }} \
-                                --output type=image,\"name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},${{ inputs.cache-registry }}/${{ inputs.img-name }}:latest\",push=${{ inputs.push }} \
+                                --output type=image,\"name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},${{ inputs.cache-registry }}/${{ inputs.img-name }}:${LATEST_TAG}\",push=${{ inputs.push }} \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
         else
           echo -e "${CYAN}[ INFO ] > Tarball mode on. Compressing image ${PURPLE}${{ inputs.img-name }}:${{ inputs.tag}}${YELLOW} to tarball ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar${BLANK}"
           buildctl-daemonless.sh build \
-                                --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.component }}-cache \
-                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.component }}-cache,mode=max,push=true \
+                                --import-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${CACHE_TAG} \
+                                --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${CACHE_TAG},mode=max,push=true \
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
