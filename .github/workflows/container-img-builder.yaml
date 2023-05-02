@@ -160,6 +160,7 @@ on:
       # git tag
       git-workdir:
         required: false
+        default: .
         type: string
       tag-msg:
         required: false
@@ -263,6 +264,6 @@ jobs:
         # git-token: ${{ secrets.git-token }}
         tag-msg: 'test'
         tag-value: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
-        git-workdir: ${{ inputs.workingdir }}
+        git-workdir: ${{ inputs.git-workdir }}
         push-option: ${{ inputs.push-option }}
         repo-url: ${{ inputs.repo-url }}
