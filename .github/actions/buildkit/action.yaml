@@ -142,16 +142,16 @@ runs:
       fi
       mkdir -p ${{ inputs.target-dir }}
 
-      # BUILD_ARG=CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
-      # BUILD_ARG+="|${{ inputs.build-arg }}"
-      # if [ "$BUILD_ARG" ]
-      # then
-      #   [[ ! "$BUILD_ARG" =~ ^\|.+ ]] || BUILD_ARG="${BUILD_ARG:1}"
-      #   full_str=${BUILD_ARG//|/ --opt build-arg:}
-      #   BUILD_ARGS="--opt build-arg:$full_str"
-      #   echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
-      #   echo "${BUILD_ARGS}"
-      # fi
+      BUILD_ARG=CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
+      BUILD_ARG+="|${{ inputs.build-arg }}"
+      if [ "$BUILD_ARG" ]
+      then
+        [[ ! "$BUILD_ARG" =~ ^\|.+ ]] || BUILD_ARG="${BUILD_ARG:1}"
+        full_str=${BUILD_ARG//|/ --opt build-arg:}
+        BUILD_ARGS="--opt build-arg:$full_str"
+        echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
+        echo "${BUILD_ARGS}"
+      fi
 
       if [[ ${{ inputs.force-login }} = true ]]
       then
