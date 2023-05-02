@@ -199,7 +199,7 @@ runs:
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
-                                --opt filename=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
+                                --opt filename=./${{ inputs.dockerfile-name }} \
                                 --output type=image,name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},push=${{ inputs.push }} \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
@@ -212,7 +212,7 @@ runs:
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
-                                --opt filename=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
+                                --opt filename=./${{ inputs.dockerfile-name }}
                                 --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
@@ -225,7 +225,7 @@ runs:
                               --frontend=${{ inputs.dockerfile-frontend }} \
                               --local context=${{ inputs.workingdir }} \
                               --local dockerfile=${{ inputs.workingdir }} \
-                              --opt filename=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
+                              --opt filename=./${{ inputs.dockerfile-name }}
                               --export-cache type=inline \
                               --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
                               --metadata-file metadata.json \
