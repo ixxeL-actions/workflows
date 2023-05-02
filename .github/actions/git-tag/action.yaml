@@ -19,6 +19,8 @@ inputs:
   push-option:
     required: false
     default: ci.skip
+  repo-url:
+    required: true
 
 runs:
   using: composite
@@ -31,24 +33,24 @@ runs:
       echo -e "${CYAN}[ INFO ] > Git version.${BLANK}"
       git version
 
-      [[ $REPO_URL == *.git ]] || REPO_URL+=.git
-      regex_pattern="((git@|https:\/\/).+[:\/]*.*\.git)"
+      # [[ $REPO_URL == *.git ]] || REPO_URL+=.git
+      # regex_pattern="((git@|https:\/\/).+[:\/]*.*\.git)"
 
-      if ! [[ ${REPO_URL} =~ $regex_pattern ]]
-      then
-        echo -e "${RED}[ ERROR ] Git URL does not match '$regex_pattern'${BLANK}"
-        exit 1
-      fi
+      # if ! [[ ${REPO_URL} =~ $regex_pattern ]]
+      # then
+      #   echo -e "${RED}[ ERROR ] Git URL does not match '$regex_pattern'${BLANK}"
+      #   exit 1
+      # fi
 
-      if [[ -z ${{ inputs.git-token }} ]]
-      then
-        echo -e "${CYAN}[ INFO ] > No token provided, pushing without authentication.${BLANK}"
-        PUSH_URL=${REPO_URL}
-      else
-        echo -e "${CYAN}[ INFO ] > Token has been provided, pushing with authentication.${BLANK}"
-        PUSH_URL=$(echo "${REPO_URL}" | sed -e 's|\(https://\)\([^/]*@\)*|\1github-ci-token:'${{ inputs.git-token }}'@|')
-      fi
-      echo -e "${CYAN}[ INFO ] > Reworked URL --> ${PUSH_URL}.${BLANK}"
+      # if [[ -z ${{ inputs.git-token }} ]]
+      # then
+      #   echo -e "${CYAN}[ INFO ] > No token provided, pushing without authentication.${BLANK}"
+      #   PUSH_URL=${REPO_URL}
+      # else
+      #   echo -e "${CYAN}[ INFO ] > Token has been provided, pushing with authentication.${BLANK}"
+      #   PUSH_URL=$(echo "${REPO_URL}" | sed -e 's|\(https://\)\([^/]*@\)*|\1github-ci-token:'${{ inputs.git-token }}'@|')
+      # fi
+      # echo -e "${CYAN}[ INFO ] > Reworked URL --> ${PUSH_URL}.${BLANK}"
 
       TAG_MSG=${{ inputs.tag-msg }}
       if [ "${TAG_MSG}" == '' ]; then TAG_MSG="Release: ${{ inputs.tag-value }}"; fi
@@ -79,12 +81,11 @@ runs:
         echo -e "${RED}[ ERROR ] Could not add tag${BLANK}"
         exit 1
       fi
-      git -C ${{ inputs.git-workdir }} push $PUSH_URL ${{ inputs.tag-value }} --push-option ${PUSH_OPTION}
+      git -C ${{ inputs.git-workdir }} push ${{ inputs.tag-value }} --push-option ${PUSH_OPTION}
 
       if [ $? -eq 0 ]
       then
         echo -e "${GREEN}[ SUCCESS ] New tag added to origin: ${{ inputs.tag-value }}${BLANK}"
-        echo "NEW_TAG=${TAG_VALUE}" >> git-tag.env
         exit 0
       else
         echo -e "${RED}[ ERROR ] Could not add tag${BLANK}"

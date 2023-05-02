@@ -169,6 +169,8 @@ on:
         required: false
         default: ci.skip
         type: string
+      repo-url:
+        required: true
 
   workflow_dispatch:
 
@@ -263,3 +265,4 @@ jobs:
         tag-value: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
         git-workdir: ${{ inputs.workingdir }}
         push-option: ${{ inputs.push-option }}
+        repo-url: ${{ inputs.repo-url }}
