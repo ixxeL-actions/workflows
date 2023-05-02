@@ -200,7 +200,7 @@ runs:
                                 --local context=${{ inputs.workingdir }} \
                                 --local dockerfile=${{ inputs.workingdir }} \
                                 --opt filename=./${{ inputs.dockerfile-name }} \
-                                --output type=image,name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},push=${{ inputs.push }} \
+                                --output type=image,\"name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},${{ inputs.cache-registry }}/${{ inputs.img-name }}:latest\",push=${{ inputs.push }} \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
           assert_result "${{ inputs.img-name }}:${{ inputs.tag}} build"
