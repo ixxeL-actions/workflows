@@ -71,7 +71,7 @@ runs:
               last_tag="$tmp_tag"
               echo -e "${CYAN}[ INFO ] Tag ${YELLOW}$last_tag${CYAN} found at commit ${YELLOW}$commit${BLANK}"
             else
-              echo -e "${RED}[ ERROR ] Your current commit ${PURPLE}$GITHUB_SHA${RED} is actually your lagit ast tag ${PURPLE}$tmp_tag${RED}. Cannot perform tag on a commit already tagged.${BLANK}"
+              echo -e "${RED}[ ERROR ] Your current commit ${PURPLE}$GITHUB_SHA${RED} is actually your last tag ${PURPLE}$tmp_tag${RED}. Cannot perform tag on a commit already tagged.${BLANK}"
               exit 1
             fi
           fi
