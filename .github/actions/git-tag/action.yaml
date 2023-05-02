@@ -19,8 +19,8 @@ inputs:
   push-option:
     required: false
     default: ci.skip
-  repo-url:
-    required: true
+  # repo-url:
+  #   required: true
 
 runs:
   using: composite

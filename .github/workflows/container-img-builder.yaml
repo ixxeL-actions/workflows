@@ -169,8 +169,8 @@ on:
         required: false
         default: ci.skip
         type: string
-      repo-url:
-        required: true
+      # repo-url:
+      #   required: true
 
   workflow_dispatch:
 
@@ -204,57 +204,57 @@ jobs:
       image: ixxel/cd-toolbox:latest
       options: --privileged
     steps:
-    - name: Set variables
-      id: setvars
-      run: |
-        if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" || "${{github.base_ref}}" == "master" || "${{github.ref}}" == "refs/heads/master" ]]; then
-          echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
-        elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
-          echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
-        fi
+    # - name: Set variables
+    #   id: setvars
+    #   run: |
+    #     if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" || "${{github.base_ref}}" == "master" || "${{github.ref}}" == "refs/heads/master" ]]; then
+    #       echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
+    #     elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
+    #       echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
+    #     fi
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
     - name: Set version
       id: set-version
       uses: ixxeL-actions/workflows/.github/actions/set-version@main
-    - name: Buildkit build
-      id: buildkit-build
-      uses: ixxeL-actions/workflows/.github/actions/buildkit@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        img-name: ${{ inputs.img-name }}
-        tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
-        target-dir: ${{ inputs.target-dir }}
-        github-api-rest-token: ${{ secrets.github-api-rest-token }}
-        github-api-auth: ${{ inputs.github-api-auth }}
-        dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
-        dockerfile-name: ${{ inputs.dockerfile-name }}
-        build-arg: ${{ inputs.build-arg }}
-        push: ${{ steps.setvars.outputs.AUTO_PUSH }}
-        caching: ${{ inputs.caching }}
-        cache-registry: ${{ inputs.cache-registry }}
-        force-login: ${{ inputs.force-login }}
-        login-binary: ${{ inputs.login-binary }}
-        custom-login: ${{ inputs.custom-login }}
-        login-registry-user: ${{ inputs.login-registry-user }}
-        login-registry-pwd: ${{ inputs.login-registry-pwd }}
-        docker-hub-login: ${{ inputs.docker-hub-login }}
-        docker-io-user: ${{ inputs.docker-io-user }}
-        docker-io-pwd: ${{ secrets.docker-io-pwd }}
-        oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
-    - name: Grype scan
-      id: grype-scan
-      uses: ixxeL-actions/workflows/.github/actions/grype@main
-      continue-on-error: true
-      with:
-        image-ref: ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
-        transport: ${{ inputs.transport }}
-        fail-on: ${{ inputs.fail-on }}
-        output: ${{ inputs.output }}
-        scope: ${{ inputs.scope }}
-        template: ${{ inputs.template }}
-        verbose: ${{ inputs.verbose }}
+    # - name: Buildkit build
+    #   id: buildkit-build
+    #   uses: ixxeL-actions/workflows/.github/actions/buildkit@main
+    #   with:
+    #     workingdir: ${{ inputs.workingdir }}
+    #     img-name: ${{ inputs.img-name }}
+    #     tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
+    #     target-dir: ${{ inputs.target-dir }}
+    #     github-api-rest-token: ${{ secrets.github-api-rest-token }}
+    #     github-api-auth: ${{ inputs.github-api-auth }}
+    #     dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
+    #     dockerfile-name: ${{ inputs.dockerfile-name }}
+    #     build-arg: ${{ inputs.build-arg }}
+    #     push: ${{ steps.setvars.outputs.AUTO_PUSH }}
+    #     caching: ${{ inputs.caching }}
+    #     cache-registry: ${{ inputs.cache-registry }}
+    #     force-login: ${{ inputs.force-login }}
+    #     login-binary: ${{ inputs.login-binary }}
+    #     custom-login: ${{ inputs.custom-login }}
+    #     login-registry-user: ${{ inputs.login-registry-user }}
+    #     login-registry-pwd: ${{ inputs.login-registry-pwd }}
+    #     docker-hub-login: ${{ inputs.docker-hub-login }}
+    #     docker-io-user: ${{ inputs.docker-io-user }}
+    #     docker-io-pwd: ${{ secrets.docker-io-pwd }}
+    #     oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
+    # - name: Grype scan
+    #   id: grype-scan
+    #   uses: ixxeL-actions/workflows/.github/actions/grype@main
+    #   continue-on-error: true
+    #   with:
+    #     image-ref: ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
+    #     transport: ${{ inputs.transport }}
+    #     fail-on: ${{ inputs.fail-on }}
+    #     output: ${{ inputs.output }}
+    #     scope: ${{ inputs.scope }}
+    #     template: ${{ inputs.template }}
+    #     verbose: ${{ inputs.verbose }}
     - name: git tag
       id: git-tag
       if: ${{ github.ref =~ "refs/heads/release\/.*" }} || ${{ github.base_ref =~ "/^release\/.*/" }}
