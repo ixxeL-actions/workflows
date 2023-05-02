@@ -72,6 +72,10 @@ on:
         required: false
         default: dockerfile.v0
         type: string
+      dockerfile-name:
+        required: false
+        default: Dockerfile
+        type: string
       compression-format:
         required: false
         default: tar
@@ -207,6 +211,7 @@ jobs:
         github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
+        dockerfile-name: ${{ inputs.dockerfile-name }}
         build-arg: ${{ inputs.build-arg }}
         push: ${{ steps.setvars.outputs.AUTO_PUSH }}
         caching: ${{ inputs.caching }}

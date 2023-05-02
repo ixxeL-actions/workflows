@@ -22,6 +22,9 @@ inputs:
   dockerfile-frontend:
     required: false
     default: dockerfile.v0
+  dockerfile-name:
+    required: false
+    default: Dockerfile
   compression-format:
     required: false
     default: docker-archive
@@ -195,7 +198,7 @@ runs:
                                 --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache,mode=max,push=true \
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
-                                --local dockerfile=${{ inputs.workingdir }} \
+                                --local dockerfile=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
                                 --output type=image,name=${{ inputs.cache-registry }}/${{ inputs.img-name }}:${{ inputs.tag}},push=${{ inputs.push }} \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
@@ -207,7 +210,7 @@ runs:
                                 --export-cache type=registry,ref=${{ inputs.cache-registry }}/${{ inputs.img-name }}:cache,mode=max,push=true \
                                 --frontend=${{ inputs.dockerfile-frontend }} \
                                 --local context=${{ inputs.workingdir }} \
-                                --local dockerfile=${{ inputs.workingdir }} \
+                                --local dockerfile=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
                                 --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
                                 --metadata-file metadata.json \
                                 ${BUILD_ARGS}
@@ -219,7 +222,7 @@ runs:
         buildctl-daemonless.sh build \
                               --frontend=${{ inputs.dockerfile-frontend }} \
                               --local context=${{ inputs.workingdir }} \
-                              --local dockerfile=${{ inputs.workingdir }} \
+                              --local dockerfile=${{ inputs.workingdir }}/${{ inputs.dockerfile-name }} \
                               --export-cache type=inline \
                               --output type=${COMPRESSION_FORMAT},name=${{ inputs.img-name }}:${{ inputs.tag}},mode=min,dest=${{ inputs.target-dir }}/${{ inputs.img-name }}.tar \
                               --metadata-file metadata.json \
