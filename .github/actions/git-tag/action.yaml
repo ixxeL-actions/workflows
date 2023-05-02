@@ -19,6 +19,9 @@ inputs:
   push-option:
     required: false
     default: ci.skip
+  git-email:
+    required: false
+    default: test@mail.com
   # repo-url:
   #   required: true
 
@@ -57,7 +60,7 @@ runs:
 
       echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
       git config --global --add safe.directory "$(realpath "${{ inputs.git-workdir }}")"
-      # git config --global user.email "${GITLAB_USER_EMAIL}"
+      git config --global user.email "${{ inputs.git-email }}"
       git config --global user.name "${GITHUB_ACTOR}"
       git config --global http.sslVerify ${{ inputs.tls-verify }}
       git config --list
@@ -72,7 +75,7 @@ runs:
       echo -e "${CYAN}[ INFO ] > git origin.${BLANK}"
       git -C ${{ inputs.git-workdir }} remote show origin
 
-      echo -e "${YELLOW}[ EXECUTING ] > tag and push to destination ${PUSH_URL}${BLANK}"
+      echo -e "${YELLOW}[ EXECUTING ] > tag ${PURPLE}${{ inputs.tag-value }}${YELLOW} and push to destination ${PUSH_URL}${BLANK}"
       git -C ${{ inputs.git-workdir }} tag -a ${{ inputs.tag-value }} -m "${TAG_MSG}"
       if [ $? -eq 0 ]
       then

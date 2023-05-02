@@ -170,6 +170,10 @@ on:
         required: false
         default: ci.skip
         type: string
+      git-email:
+        required: false
+        default: test@mail.com
+        type: string
       # repo-url:
       #   required: true
 
@@ -267,3 +271,4 @@ jobs:
         git-workdir: ${{ inputs.git-workdir }}
         push-option: ${{ inputs.push-option }}
         repo-url: ${{ inputs.repo-url }}
+        git-email: ${{ inputs.git-email }}
