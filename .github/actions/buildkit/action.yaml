@@ -235,6 +235,7 @@ runs:
                               ${BUILD_ARGS}
       fi
       cat metadata.json | jq -C
+      rm metadata.json
       if [[ $? = 0 ]]
       then
         size=$(du -sh ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar | awk '{print $1}')
