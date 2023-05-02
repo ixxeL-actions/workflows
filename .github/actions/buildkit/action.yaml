@@ -122,8 +122,6 @@ runs:
       export BUILDKITD_FLAGS=${BUILDKITD_FLAGS}
       echo -e "${CYAN}[ INFO ] > Displaying Buildkit BUILDKITD_FLAGS --> ${BUILDKITD_FLAGS} ${BLANK}"
 
-      mkdir -p ~/.docker
-
       if [[ ${{ inputs.github-api-auth }} = true ]]
       then
         echo -e "${CYAN}[ INFO ] > Authenticating to Github API${BLANK}"
@@ -159,6 +157,7 @@ runs:
         if [[ ${{ inputs.login-binary }} = "docker" ]]
         then
           export DOCKER_CONFIG=/root/.docker
+          mkdir -p ${DOCKER_CONFIG}
           echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
           ARGS="--tls-verify=false"
           # export CONFIG_FILE="/run/containers/0/auth.json"
