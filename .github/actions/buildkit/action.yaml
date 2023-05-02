@@ -142,7 +142,8 @@ runs:
       fi
       mkdir -p ${{ inputs.target-dir }}
 
-      BUILD_ARG=${{ inputs.build-arg }}
+      BUILD_ARG=CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
+      BUILD_ARG+="|${{ inputs.build-arg }}"
       if [ "$BUILD_ARG" ]
       then
         [[ ! "$BUILD_ARG" =~ ^\|.+ ]] || BUILD_ARG="${BUILD_ARG:1}"

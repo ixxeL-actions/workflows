@@ -190,10 +190,6 @@ jobs:
         if [[ "${{github.base_ref}}" == "main" || "${{github.ref}}" == "refs/heads/main" ]]; then
           echo "AUTO_PUSH=false" >> $GITHUB_OUTPUT
         fi
-        CREATION_DATE=$(TZ='Europe/Paris' date -Iseconds)
-        BUILD_ARG=CREATION_DATE="$CREATION_DATE"
-        BUILD_ARG+="|${{ inputs.build-arg }}"
-        echo "BUILD_ARG=$BUILD_ARG" >> $GITHUB_OUTPUT
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
@@ -211,7 +207,7 @@ jobs:
         github-api-rest-token: ${{ secrets.github-api-rest-token }}
         github-api-auth: ${{ inputs.github-api-auth }}
         dockerfile-frontend: ${{ inputs.dockerfile-frontend }}
-        build-arg: ${{ steps.setvars.outputs.BUILD_ARG }}
+        build-arg: ${{ inputs.build-arg }}
         push: ${{ steps.setvars.outputs.AUTO_PUSH }}
         caching: ${{ inputs.caching }}
         cache-registry: ${{ inputs.cache-registry }}
