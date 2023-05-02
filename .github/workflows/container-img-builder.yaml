@@ -7,8 +7,8 @@ on:
         required: false
       docker-io-pwd:
         required: false
-      git-token:
-        required: true
+      # git-token:
+      #   required: true
     inputs:
     # General
       workingdir:
@@ -260,7 +260,7 @@ jobs:
       if: contains( github.ref, 'release' ) || contains( github.base_ref, 'release' )
       uses: ixxeL-actions/workflows/.github/actions/git-tag@main
       with:
-        git-token: ${{ secrets.git-token }}
+        # git-token: ${{ secrets.git-token }}
         tag-msg: 'test'
         tag-value: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
         git-workdir: ${{ inputs.workingdir }}

@@ -3,8 +3,8 @@ name: Grype scan
 description: Scanning docker image with Grype
 author: ixxeL
 inputs:
-  git-token:
-    required: true
+  # git-token:
+  #   required: true
   tag-msg:
     required: false
     default: 'ci'
