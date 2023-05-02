@@ -193,6 +193,8 @@ jobs:
         BUILD_ARG=''
         BUILD_ARG+="CREATION_DATE="$CREATION_DATE"|${{ inputs.build-arg }}"
         echo "BUILD_ARG=$BUILD_ARG" >> $GITHUB_OUTPUT
+      with:
+        build-arg: ${{ inputs.build-arg }}
     - name: Clone code
       id: clone
       uses: actions/checkout@v3
