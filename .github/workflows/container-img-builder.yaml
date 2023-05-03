@@ -7,6 +7,8 @@ on:
         required: false
       docker-io-pwd:
         required: false
+      registry-password:
+        required: false
       # git-token:
       #   required: true
     inputs:
@@ -258,13 +260,14 @@ jobs:
         fi
     - name: Podman login
       id: podman-login
+      if: ${{ podman-registry != null }} && ${{ secrets.registry-password != null }}
       uses: ixxeL-actions/workflows/.github/actions/podman-login@main
       with:
         podman-docker: ${{ inputs.podman-docker }}
         docker-config: ${{ inputs.docker-config }}
         registry: ${{ inputs.podman-registry }}
         username: ${{ inputs.podman-username }}
-        password: ${{ inputs.podman-password }}
+        password: ${{ secrets.registry-password }}
         tls-verify: ${{ inputs.tls-verify }}
         verbose: ${{ inputs.podman-verbose }}
         docker-hub-login: ${{ inputs.docker-hub-login }}
