@@ -80,14 +80,13 @@ runs:
             for tmp_tag in $tmp_tags
             do
               echo -e "${CYAN}[ INFO ] Commit ${YELLOW}$commit${CYAN} contains a tag ${YELLOW}$tmp_tag${CYAN}${BLANK}"
-              # if [ "$GITHUB_SHA" != "$commit" ]
-              # then
               if [[ "$GITHUB_SHA" != "$commit" && "$tmp_tag" =~ ^${PREFIX}v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
               then
                 last_tag="$tmp_tag"
                 echo -e "${CYAN}[ INFO ] Tag ${RED}$last_tag${CYAN} found at commit ${RED}$commit${BLANK}"
               elif [[ "$GITHUB_SHA" = "$commit" && "$tmp_tag" =~ ^${PREFIX}v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
               then
+                echo -e "${CYAN}[ INFO ] Tag ${RED}$last_tag${CYAN} found at current commit ${RED}$commit${BLANK}"
                 echo -e "${RED}[ ERROR ] Your current commit ${PURPLE}$GITHUB_SHA${RED} is actually your last tag ${PURPLE}$tmp_tag${RED}. Cannot perform tag on a commit already tagged.${BLANK}"
                 exit 1
               elif [[ "$tmp_tag" =~ ^[a-zA-Z]+-v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
