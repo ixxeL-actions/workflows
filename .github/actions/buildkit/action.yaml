@@ -54,7 +54,6 @@ inputs:
   cache-registry:
     description: Cache registry
     required: false
-    default: true
   push:
     description: Push img
     required: false

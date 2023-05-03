@@ -1,6 +1,6 @@
 ---
-name: Grype scan
-description: Scanning docker image with Grype
+name: Git tag
+description: Tagging git repository
 author: ixxeL
 inputs:
   # git-token:
