@@ -13,7 +13,7 @@ on:
       #   required: true
     inputs:
     # General
-      ci-image:
+      build-image:
         required: false
         default: ixxel/toolbox:builder-latest
         type: string
@@ -219,7 +219,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
-      image: ${{ inputs.ci-image }}
+      image: ${{ inputs.build-image }}
       options: --privileged
     steps:
     - name: Clone code
@@ -270,14 +270,6 @@ jobs:
         push: ${{ steps.setvars.outputs.AUTO_PUSH }}
         caching: ${{ inputs.caching }}
         cache-registry: ${{ inputs.cache-registry }}
-        # force-login: ${{ inputs.force-login }}
-        # login-binary: ${{ inputs.login-binary }}
-        # custom-login: ${{ inputs.custom-login }}
-        # login-registry-user: ${{ inputs.login-registry-user }}
-        # login-registry-pwd: ${{ inputs.login-registry-pwd }}
-        # docker-hub-login: ${{ inputs.docker-hub-login }}
-        # docker-io-user: ${{ inputs.docker-io-user }}
-        # docker-io-pwd: ${{ secrets.docker-io-pwd }}
         oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
     - name: Grype scan
       id: grype-scan
