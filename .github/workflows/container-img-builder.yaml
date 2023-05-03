@@ -260,7 +260,7 @@ jobs:
         fi
     - name: Podman login
       id: podman-login
-      if: ${{ podman-registry != null }} && ${{ secrets.registry-password != null }}
+      if: ${{ inputs.podman-registry != null }} && ${{ secrets.registry-password != null }}
       uses: ixxeL-actions/workflows/.github/actions/podman-login@main
       with:
         podman-docker: ${{ inputs.podman-docker }}
