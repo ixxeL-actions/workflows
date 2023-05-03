@@ -1,14 +1,14 @@
 ---
 name: Set project version
 description: Determine the actual version tag
-author: ixxeL
+author: ixxel
 inputs:
   tls-verify:
     description: Check certificates
     required: false
     default: false
   component:
-    required: true
+    required: false
 outputs:
   PROJECT_VERSION:
     description: version tag
@@ -25,8 +25,19 @@ runs:
       set +e
       if [[ "$GITHUB_REF_NAME" =~ ^(release\/)([0-9]+\.[0-9]+)$ ]]
       then
-        COMPONENT=${{ inputs.component }}
-        echo -e "${CYAN}[ INFO ] finding tag for component ${COMPONENT}${BLANK}"
+        # Defaulting to maj.min.0
+        if [[ -n ${{ inputs.component }} ]]
+        then
+          COMPONENT=${{ inputs.component }}
+          echo -e "${CYAN}[ INFO ] finding tag for component ${COMPONENT}${BLANK}"
+          proj_version="${COMPONENT}-v${BASH_REMATCH[2]}.0"
+          proj_short_version=$proj_version
+          PREFIX="${COMPONENT}-"
+        else
+          echo -e "${CYAN}[ INFO ] finding tag${BLANK}"
+          proj_version="v${BASH_REMATCH[2]}.0"
+          proj_short_version=$proj_version
+        fi
         echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
         git config --global --add safe.directory $GITHUB_WORKSPACE
         # git config --global user.email "${GITLAB_USER_EMAIL}"
@@ -47,9 +58,6 @@ runs:
 
         echo -e "${CYAN}[ INFO ] List of tags${BLANK}"
         git tag --list
-        # Defaulting to maj.min.0
-        proj_version="${COMPONENT}-v${BASH_REMATCH[2]}.0"
-        proj_short_version=$proj_version
 
         # Looking for previous tag
         echo -e "${CYAN}[ INFO ] Git merge-base with ${PURPLE}main${CYAN} and ${PURPLE}$GITHUB_REF_NAME ${CYAN}${BLANK}"
@@ -71,10 +79,10 @@ runs:
           then
             for tmp_tag in $tmp_tags
             do
-              echo -e "${CYAN}[ INFO ] Tmp tag ${YELLOW}$tmp_tag${CYAN} for commit ${YELLOW}$commit${CYAN} not empty${BLANK}"
+              echo -e "${CYAN}[ INFO ] Commit ${YELLOW}$commit${CYAN} contains a tag ${YELLOW}$tmp_tag${CYAN}${BLANK}"
               if [ "$GITHUB_SHA" != "$commit" ]
               then
-                if [[ "$tmp_tag" =~ ^${COMPONENT}-v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
+                if [[ "$tmp_tag" =~ ^${PREFIX}v?([0-9]+\.[0-9]+\.)([0-9]+)$ ]]
                 then
                   last_tag="$tmp_tag"
                   echo -e "${CYAN}[ INFO ] Tag ${RED}$last_tag${CYAN} found at commit ${RED}$commit${BLANK}"
@@ -98,7 +106,7 @@ runs:
             echo -e "${RED}[ ERROR ] > Last tag ${PURPLE}$last_tag${RED} is not in Semantic Versioning (vMaj.Min.Patch ie: v1.0.0). Please perform manual correction${BLANK}"
             exit 1
           else
-            proj_version="${COMPONENT}-v${BASH_REMATCH[1]}$(( ${BASH_REMATCH[2]} + 1 ))"
+            proj_version="${PREFIX}v${BASH_REMATCH[1]}$(( ${BASH_REMATCH[2]} + 1 ))"
             proj_short_version=$proj_version
           fi
         fi

@@ -34,8 +34,7 @@ on:
         default: artefacts
         type: string
       component:
-        required: true
-        default: build
+        required: false
         type: string
     # Checkov
       artefact:
