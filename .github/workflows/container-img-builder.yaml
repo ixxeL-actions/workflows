@@ -75,13 +75,13 @@ on:
       docker-config:
         required: false
         type: boolean
-      registry:
+      podman-registry:
         required: true
         type: string
-      username:
+      podman-username:
         required: true
         type: string
-      password:
+      podman-password:
         required: true
         type: string
       tls-verify:
@@ -262,9 +262,9 @@ jobs:
       with:
         podman-docker: ${{ inputs.podman-docker }}
         docker-config: ${{ inputs.docker-config }}
-        registry: ${{ inputs.registry }}
-        username: ${{ inputs.username }}
-        password: ${{ inputs.password }}
+        registry: ${{ inputs.podman-registry }}
+        username: ${{ inputs.podman-username }}
+        password: ${{ inputs.podman-password }}
         tls-verify: ${{ inputs.tls-verify }}
         verbose: ${{ inputs.podman-verbose }}
         docker-hub-login: ${{ inputs.docker-hub-login }}
