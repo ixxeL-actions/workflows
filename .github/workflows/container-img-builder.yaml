@@ -135,31 +135,6 @@ on:
         required: false
         default: true
         type: boolean
-      # force-login:
-      #   required: false
-      #   default: true
-      #   type: boolean
-      # login-binary:
-      #   required: false
-      #   default: docker
-      #   type: string
-      # custom-login:
-      #   required: false
-      #   default: false
-      #   type: boolean
-      # login-registry-user:
-      #   required: false
-      #   type: string
-      # login-registry-pwd:
-      #   required: false
-      #   type: string
-      # docker-hub-login:
-      #   required: false
-      #   default: true
-      #   type: boolean
-      # docker-io-user:
-      #   required: false
-      #   type: string
       # Grype
       transport:
         description: transport type for destination (docker,docker-archive,oci-dir,oci-archive,dir,sbom,registry)

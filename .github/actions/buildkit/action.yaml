@@ -59,34 +59,6 @@ inputs:
     description: Push img
     required: false
     default: true
-  # force-login:
-  #   description: Using docker login
-  #   required: false
-  #   default: true
-  # login-binary:
-  #   description: Using docker login
-  #   required: false
-  #   default: docker
-  # custom-login:
-  #   description: Using docker login for specific registry
-  #   required: false
-  #   default: true
-  # login-registry-user:
-  #   description: User for custom registry
-  #   required: false
-  # login-registry-pwd:
-  #   description: Pwd for custom registry
-  #   required: false
-  # docker-hub-login:
-  #   description: Using docker login for docker hub
-  #   required: false
-  #   default: true
-  # docker-io-user:
-  #   description: User for docker hub
-  #   required: false
-  # docker-io-pwd:
-  #   description: Pwd for docker hub
-  #   required: false
 
 runs:
   using: composite
@@ -157,39 +129,6 @@ runs:
         echo -e "${CYAN}[ INFO ] > Build args are the following${BLANK}"
         echo "${BUILD_ARGS}"
       fi
-
-      # if [[ "${{ inputs.custom-login }}" = true || "${{ inputs.docker-hub-login }}" = true ]]
-      # then
-      #   if [[ "${{ inputs.login-binary }}" = "docker" ]]
-      #   then
-      #     export DOCKER_CONFIG=/root/.docker
-      #     mkdir -p ${DOCKER_CONFIG}
-      #     echo -e "${CYAN}[ INFO ] > Using docker cli emulated podman${BLANK}"
-      #     ARGS="--tls-verify=false"
-      #     # export CONFIG_FILE="/run/containers/0/auth.json"
-      #     export CONFIG_FILE="/root/.docker/config.json"
-      #   else
-      #     export CONFIG_FILE="~/.docker/config.json"
-      #   fi
-      #   if [[ "${{ inputs.custom-login }}" = true ]]
-      #   then
-      #     echo -e "${CYAN}[ INFO ] > Login to ${{ inputs.login-registry }} as user ${{ inputs.login-registry-user }}${BLANK}"
-      #     ${{ inputs.login-binary }} login ${{ inputs.login-registry }} -u ${{ inputs.login-registry-user }} -p ${{ inputs.login-registry-pwd }} ${ARGS}
-      #     assert_result "Login"
-      #   fi
-      #   if [[ "${{ inputs.docker-hub-login }}" = true ]]
-      #   then
-      #     echo -e "${CYAN}[ INFO ] > Login to docker.io as user ${{ inputs.docker-io-user }}${BLANK}"
-      #     ${{ inputs.login-binary }} login docker.io -u ${{ inputs.docker-io-user }} -p ${{ inputs.docker-io-pwd }} ${ARGS}
-      #     assert_result "Login"
-      #     cat ${CONFIG_FILE}  | jq '(.auths |= (. + {"https://index.docker.io/v1/":."docker.io"}|del(."docker.io")))' | sponge ${CONFIG_FILE}
-      #   fi
-      #   # ln "${CONFIG_FILE}" ${DOCKER_CONFIG}
-      #   if [[ -f "${CONFIG_FILE}" ]]
-      #   then
-      #     cat "${CONFIG_FILE}" | jq -C
-      #   fi
-      # fi
 
       if [[ -n "${{ inputs.component }}" ]]
       then
