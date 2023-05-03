@@ -68,6 +68,31 @@ on:
         required: false
         default: '50'
         type: string
+      # podman login
+      podman-docker:
+        required: false
+        type: boolean
+      docker-config:
+        required: false
+        type: boolean
+      registry:
+        required: true
+        type: string
+      username:
+        required: true
+        type: string
+      password:
+        required: true
+        type: string
+      tls-verify:
+        required: false
+        type: boolean
+      podman-verbose:
+        required: false
+        type: boolean
+      docker-hub-login:
+        required: false
+        type: boolean
       # buildkit
       oci-worker-snapshotter:
         required: false
@@ -105,31 +130,32 @@ on:
         required: false
         default: true
         type: boolean
-      force-login:
-        required: false
-        default: true
-        type: boolean
-      login-binary:
-        required: false
-        default: docker
-        type: string
-      custom-login:
-        required: false
-        default: false
-        type: boolean
-      login-registry-user:
-        required: false
-        type: string
-      login-registry-pwd:
-        required: false
-        type: string
-      docker-hub-login:
-        required: false
-        default: true
-        type: boolean
-      docker-io-user:
-        required: false
-        type: string
+      # force-login:
+      #   required: false
+      #   default: true
+      #   type: boolean
+      # login-binary:
+      #   required: false
+      #   default: docker
+      #   type: string
+      # custom-login:
+      #   required: false
+      #   default: false
+      #   type: boolean
+      # login-registry-user:
+      #   required: false
+      #   type: string
+      # login-registry-pwd:
+      #   required: false
+      #   type: string
+      # docker-hub-login:
+      #   required: false
+      #   default: true
+      #   type: boolean
+      # docker-io-user:
+      #   required: false
+      #   type: string
+      # Grype
       transport:
         description: transport type for destination (docker,docker-archive,oci-dir,oci-archive,dir,sbom,registry)
         required: false
@@ -230,6 +256,18 @@ jobs:
         elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
           echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
         fi
+    - name: Podman login
+      id: podman-login
+      uses: ixxeL-actions/workflows/.github/actions/podman-login@main
+      with:
+        podman-docker: ${{ inputs.podman-docker }}
+        docker-config: ${{ inputs.docker-config }}
+        registry: ${{ inputs.registry }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+        tls-verify: ${{ inputs.tls-verify }}
+        verbose: ${{ inputs.podman-verbose }}
+        docker-hub-login: ${{ inputs.docker-hub-login }}
     - name: Buildkit build
       id: buildkit-build
       uses: ixxeL-actions/workflows/.github/actions/buildkit@main
@@ -247,14 +285,14 @@ jobs:
         push: ${{ steps.setvars.outputs.AUTO_PUSH }}
         caching: ${{ inputs.caching }}
         cache-registry: ${{ inputs.cache-registry }}
-        force-login: ${{ inputs.force-login }}
-        login-binary: ${{ inputs.login-binary }}
-        custom-login: ${{ inputs.custom-login }}
-        login-registry-user: ${{ inputs.login-registry-user }}
-        login-registry-pwd: ${{ inputs.login-registry-pwd }}
-        docker-hub-login: ${{ inputs.docker-hub-login }}
-        docker-io-user: ${{ inputs.docker-io-user }}
-        docker-io-pwd: ${{ secrets.docker-io-pwd }}
+        # force-login: ${{ inputs.force-login }}
+        # login-binary: ${{ inputs.login-binary }}
+        # custom-login: ${{ inputs.custom-login }}
+        # login-registry-user: ${{ inputs.login-registry-user }}
+        # login-registry-pwd: ${{ inputs.login-registry-pwd }}
+        # docker-hub-login: ${{ inputs.docker-hub-login }}
+        # docker-io-user: ${{ inputs.docker-io-user }}
+        # docker-io-pwd: ${{ secrets.docker-io-pwd }}
         oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
     - name: Grype scan
       id: grype-scan
