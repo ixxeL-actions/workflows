@@ -76,6 +76,7 @@ on:
         type: boolean
       docker-config:
         required: false
+        default: true
         type: boolean
       podman-registry:
         required: true
@@ -91,9 +92,11 @@ on:
         type: boolean
       podman-verbose:
         required: false
+        default: true
         type: boolean
       docker-hub-login:
         required: false
+        default: true
         type: boolean
       # buildkit
       oci-worker-snapshotter:
