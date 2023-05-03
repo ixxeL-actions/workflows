@@ -13,6 +13,10 @@ on:
       #   required: true
     inputs:
     # General
+      ci-image:
+        required: false
+        default: ixxel/toolbox:builder-latest
+        type: string
       workingdir:
         required: false
         default: .
@@ -215,7 +219,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
-      image: ixxel/cd-toolbox:latest
+      image: ${{ inputs.ci-image }}
       options: --privileged
     steps:
     - name: Clone code
