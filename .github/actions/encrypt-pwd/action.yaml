@@ -27,6 +27,13 @@ runs:
       echo "KEY = $KEY"
 
       ENCRYPTED_TOKEN=$(gpg --symmetric --batch --passphrase "$SECRET" --output - <(echo "$KEY") | base64 -w0)
+      if [[ $? = 0 ]]
+      then
+        echo -e "${GREEN}[ SUCCESS ] > Encryption success ! ${BLANK}"
+      else
+        echo -e "${RED}[ FAIL ] > Encryption failed ! ${BLANK}"
+        exit 1
+      fi
       echo "ENCRYPTED_TOKEN=$ENCRYPTED_TOKEN" >> $GITHUB_OUTPUT
     shell: bash
     env:

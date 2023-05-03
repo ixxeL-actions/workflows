@@ -24,6 +24,13 @@ runs:
       echo -e "${YELLOW}[ EXECUTING ] > Decrypting password${BLANK}"
       SECRET="${{ inputs.hash-secret }}"
       DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "${{ inputs.token }}" | base64 -d))
+      if [[ $? = 0 ]]
+      then
+        echo -e "${GREEN}[ SUCCESS ] > Decryption success ! ${BLANK}"
+      else
+        echo -e "${RED}[ FAIL ] > Decryption failed ! ${BLANK}"
+        exit 1
+      fi
       echo "::add-mask::$DECRYPTED_TOKEN"
       echo "DECRYPTED_TOKEN=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
     shell: bash
