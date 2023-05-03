@@ -23,21 +23,21 @@ runs:
   - id: set-version
     run: |
       set +e
+      if [[ -n "${{ inputs.component }}" ]]
+      then
+        COMPONENT=${{ inputs.component }}
+        PREFIX="${COMPONENT}-"
+        echo -e "${CYAN}[ INFO ] finding tag for component ${COMPONENT}${BLANK}"
+      else
+        echo -e "${CYAN}[ INFO ] finding tag (no component name provided)${BLANK}"
+      fi
+
       if [[ "$GITHUB_REF_NAME" =~ ^(release\/)([0-9]+\.[0-9]+)$ ]]
       then
         # Defaulting to maj.min.0
-        if [[ -n "${{ inputs.component }}" ]]
-        then
-          COMPONENT=${{ inputs.component }}
-          echo -e "${CYAN}[ INFO ] finding tag for component ${COMPONENT}${BLANK}"
-          proj_version="${COMPONENT}-v${BASH_REMATCH[2]}.0"
-          proj_short_version=$proj_version
-          PREFIX="${COMPONENT}-"
-        else
-          echo -e "${CYAN}[ INFO ] finding tag${BLANK}"
-          proj_version="v${BASH_REMATCH[2]}.0"
-          proj_short_version=$proj_version
-        fi
+        proj_version="${PREFIX}v${BASH_REMATCH[2]}.0"
+        proj_short_version=$proj_version
+
         echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
         git config --global --add safe.directory $GITHUB_WORKSPACE
         # git config --global user.email "${GITLAB_USER_EMAIL}"
@@ -111,8 +111,8 @@ runs:
         fi
       else
         GITHUB_SHORT_SHA=${GITHUB_SHA:0:7}
-        proj_version="$GITHUB_SHA"
-        proj_short_version="$GITHUB_SHORT_SHA"
+        proj_version="${PREFIX}${GITHUB_SHA}"
+        proj_short_version="${PREFIX}${GITHUB_SHORT_SHA}"
       fi
       echo -e "${CYAN}[ INFO ] Using ${PURPLE}$proj_version${CYAN} for project version${BLANK}"
       echo -e "${CYAN}[ INFO ] Using ${PURPLE}$proj_short_version${CYAN} for short project version${BLANK}"
@@ -127,3 +127,4 @@ runs:
       PURPLE: \033[1;35m
       CYAN: \033[1;36m
       BLANK: \033[0m
+
