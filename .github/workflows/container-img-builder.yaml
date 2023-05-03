@@ -83,9 +83,9 @@ on:
       podman-username:
         required: true
         type: string
-      podman-password:
-        required: true
-        type: string
+      # podman-password:
+      #   required: true
+      #   type: string
       tls-verify:
         required: false
         type: boolean
