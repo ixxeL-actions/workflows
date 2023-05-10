@@ -14,10 +14,19 @@ on:
         required: false
         default: ubuntu-latest
         type: string
-      ci-image:
+      helm-image:
         description: Docker image used for CI jobs
         required: false
         default: ixxel/toolbox:helm-latest
+        type: string
+    # Update version
+      chart-update:
+        required: false
+        default: true
+        type: boolean
+      chart-increment:
+        required: false
+        default: fix
         type: string
     # helm unit tests
       with-subchart:
@@ -88,32 +97,6 @@ on:
         required: false
         default: values.yaml
         type: string
-      add-repo:
-        description: weither or not to add a repo
-        required: false
-        default: false
-        type: boolean
-      repo-url:
-        description: url of the helm repo to add
-        required: false
-        type: string
-      repo-name:
-        description: name of the helm repo to add
-        required: false
-        default: temp-repo
-        type: string
-      repo-user:
-        description: user of the helm repo to add
-        required: false
-        type: string
-      repo-pwd:
-        description: password of the helm repo to add
-        required: false
-        type: string
-      set:
-        description: argument to pass to helm chart as --set command
-        required: false
-        type: string
       stdout-mode:
         description: output template to stdout
         required: false
@@ -134,6 +117,60 @@ on:
         required: false
         default: result.yaml
         type: string
+      # helm push
+      helm-devel:
+        required: false
+        default: false
+        type: boolean
+      helm-repo-name:
+        required: false
+        default: chartmuseum
+        type: string
+      helm-repo-url:
+        required: false
+        default: https://whbox-chartmuseum.pp.dktapp.cloud
+        type: string
+      helm-repo-username:
+        required: false
+        default: root
+        type: string
+      helm-force-update:
+        required: false
+        default: true
+        type: boolean
+      helm-skip-tls:
+        required: false
+        default: true
+        type: boolean
+      helm-push-type:
+        required: false
+        default: chartmuseum
+        type: string
+      # git tag/push
+      # git-staging-dir:
+      #   required: false
+      #   default: fullstack
+      #   type: string
+      push-option:
+        required: false
+        default: ci.skip
+        type: string
+      git-workdir:
+        required: false
+        default: .
+        type: string
+      # chart update
+      evaluate-update:
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+env:
+  COMPONENT_NAME: ${{ inputs.workingdir }}
 
 jobs:
   helm-build:
@@ -146,17 +183,20 @@ jobs:
     - name: Clone code
       id: git-clone
       uses: actions/checkout@v1
+      with:
+        fetch-depth: '0'
     - name: Helm linting
       id: helm-lint
       uses: dktunited/whbox-cicd-templates/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
-    - name: Helm Datree scan
-      id: helm-datree
-      continue-on-error: true
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-datree@main
+    - name: Bump version
+      id: bump-version
+      uses: dktunited/whbox-cicd-templates/.github/actions/bump-version@main
       with:
-        workingdir: ${{ inputs.workingdir }}
+        update: ${{ inputs.chart-update }}
+        increment: ${{ inputs.chart-increment }}
+        current-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
     - name: Helm Checkov scan
       id: helm-checkov
       uses: dktunited/whbox-cicd-templates/.github/actions/checkov@main
@@ -189,11 +229,6 @@ jobs:
         strict: ${{ inputs.strict }}
         chart-name: ${{ inputs.chart-name }}
         values-file: ${{ inputs.values-file }}
-        add-repo: ${{ inputs.add-repo }}
-        repo-url: ${{ inputs.repo-url }}
-        repo-name: ${{ inputs.repo-name }}
-        repo-user: ${{ inputs.repo-user }}
-        repo-pwd: ${{ inputs.repo-pwd }}
         set: ${{ inputs.set }}
         stdout-mode: ${{ inputs.stdout-mode }}
         display-mode: ${{ inputs.display-mode }}
@@ -205,6 +240,52 @@ jobs:
       with:
         workingdir: ${{ inputs.workingdir }}
         chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
-        chart-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
+        chart-version: ${{ steps.bump-version.outputs.VERSION }}
         chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
         values-file: ${{ inputs.values-file }}
+    - name: Helm pushing
+      id: helm-push
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-push@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
+        chart-version: ${{ steps.bump-version.outputs.VERSION }}
+        chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
+        devel: ${{ inputs.helm-devel }}
+        repo-name: ${{ inputs.helm-repo-name }}
+        repo-url: ${{ inputs.helm-repo-url }}
+        repo-username: ${{ inputs.helm-repo-username }}
+        repo-password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
+        force-update: ${{ inputs.helm-force-update }}
+        skip-tls: ${{ inputs.helm-skip-tls }}
+        push-type: ${{ inputs.helm-push-type }}
+        pkg-path: ${{ steps.helm-package.outputs.PKG_PATH }}
+    - name: Chart update 
+      id: chart-update
+      uses: dktunited/whbox-cicd-templates/.github/actions/chart-update@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        evaluate-update: ${{ inputs.evaluate-update }}
+        promotion-version: ${{ steps.bump-version.outputs.VERSION }}
+    - name: Helm docs
+      id: helm-docs
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-docs@main
+      with:
+        chart-search-root: ${{ inputs.workingdir }}
+    - name: Git push
+      id: git-push
+      uses: dktunited/whbox-cicd-templates/.github/actions/git-push@main
+      with:
+        git-token: ${{ secrets.PAT }}
+        git-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+        git-workdir: ${{ inputs.git-workdir }}
+        git-staging-dir: ${{ inputs.workingdir }}
+        push-option: ${{ inputs.push-option }}
+    - name: Git tag
+      id: git-tag
+      uses: dktunited/whbox-cicd-templates/.github/actions/git-tag@main
+      with:
+        tag-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+        tag-value: ${{ steps.bump-version.outputs.VERSION }}
+        git-workdir: ${{ inputs.git-workdir }}
+        push-option: ${{ inputs.push-option }}
