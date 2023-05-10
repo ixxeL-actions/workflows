@@ -187,19 +187,19 @@ jobs:
         fetch-depth: '0'
     - name: Helm linting
       id: helm-lint
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-lint@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
       with:
         workingdir: ${{ inputs.workingdir }}
     - name: Bump version
       id: bump-version
-      uses: dktunited/whbox-cicd-templates/.github/actions/bump-version@main
+      uses: ixxeL-actions/workflows/.github/actions/bump-version@main
       with:
         update: ${{ inputs.chart-update }}
         increment: ${{ inputs.chart-increment }}
         current-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
     - name: Helm Checkov scan
       id: helm-checkov
-      uses: dktunited/whbox-cicd-templates/.github/actions/checkov@main
+      uses: ixxeL-actions/workflows/.github/actions/checkov@main
       with:
         workingdir: ${{ inputs.workingdir }}
         artefact: ${{ inputs.artefact }}
@@ -216,14 +216,14 @@ jobs:
         framework: ${{ inputs.framework }}
     - name: Helm Unit testing
       id: helm-unittest
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-unittest@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
       with:
         workingdir: ${{ inputs.workingdir }}
         with-subchart: ${{ inputs.with-subchart }}
         tests-dir: ${{ inputs.tests-dir }}
     - name: Helm Templating
       id: helm-template
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-template@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-template@main
       with:
         workingdir: ${{ inputs.workingdir }}
         strict: ${{ inputs.strict }}
@@ -236,45 +236,45 @@ jobs:
         output-file: ${{ inputs.output-file }}
     - name: Helm Packaging
       id: helm-package
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-package@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-package@main
       with:
         workingdir: ${{ inputs.workingdir }}
         chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
         chart-version: ${{ steps.bump-version.outputs.VERSION }}
         chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
         values-file: ${{ inputs.values-file }}
-    - name: Helm pushing
-      id: helm-push
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-push@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
-        chart-version: ${{ steps.bump-version.outputs.VERSION }}
-        chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
-        devel: ${{ inputs.helm-devel }}
-        repo-name: ${{ inputs.helm-repo-name }}
-        repo-url: ${{ inputs.helm-repo-url }}
-        repo-username: ${{ inputs.helm-repo-username }}
-        repo-password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
-        force-update: ${{ inputs.helm-force-update }}
-        skip-tls: ${{ inputs.helm-skip-tls }}
-        push-type: ${{ inputs.helm-push-type }}
-        pkg-path: ${{ steps.helm-package.outputs.PKG_PATH }}
+    # - name: Helm pushing
+    #   id: helm-push
+    #   uses: ixxeL-actions/workflows/.github/actions/helm-push@main
+    #   with:
+    #     workingdir: ${{ inputs.workingdir }}
+    #     chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
+    #     chart-version: ${{ steps.bump-version.outputs.VERSION }}
+    #     chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
+    #     devel: ${{ inputs.helm-devel }}
+    #     repo-name: ${{ inputs.helm-repo-name }}
+    #     repo-url: ${{ inputs.helm-repo-url }}
+    #     repo-username: ${{ inputs.helm-repo-username }}
+    #     repo-password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
+    #     force-update: ${{ inputs.helm-force-update }}
+    #     skip-tls: ${{ inputs.helm-skip-tls }}
+    #     push-type: ${{ inputs.helm-push-type }}
+    #     pkg-path: ${{ steps.helm-package.outputs.PKG_PATH }}
     - name: Chart update 
       id: chart-update
-      uses: dktunited/whbox-cicd-templates/.github/actions/chart-update@main
+      uses: ixxeL-actions/workflows/.github/actions/chart-update@main
       with:
         workingdir: ${{ inputs.workingdir }}
         evaluate-update: ${{ inputs.evaluate-update }}
         promotion-version: ${{ steps.bump-version.outputs.VERSION }}
     - name: Helm docs
       id: helm-docs
-      uses: dktunited/whbox-cicd-templates/.github/actions/helm-docs@main
+      uses: ixxeL-actions/workflows/.github/actions/helm-docs@main
       with:
         chart-search-root: ${{ inputs.workingdir }}
     - name: Git push
       id: git-push
-      uses: dktunited/whbox-cicd-templates/.github/actions/git-push@main
+      uses: ixxeL-actions/workflows/.github/actions/git-push@main
       with:
         git-token: ${{ secrets.PAT }}
         git-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
@@ -283,7 +283,7 @@ jobs:
         push-option: ${{ inputs.push-option }}
     - name: Git tag
       id: git-tag
-      uses: dktunited/whbox-cicd-templates/.github/actions/git-tag@main
+      uses: ixxeL-actions/workflows/.github/actions/git-tag@main
       with:
         tag-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
         tag-value: ${{ steps.bump-version.outputs.VERSION }}
