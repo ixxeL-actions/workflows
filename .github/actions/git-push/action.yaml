@@ -48,7 +48,7 @@ runs:
         echo -e "${CYAN}[ INFO ] > Using current ref name ${GITHUB_REF_NAME}${BLANK}"
         GIT_REPO_BRANCH=${GITHUB_REF_NAME}
       fi
-      if [[ -n ${{ inputs.repo-url }} ]]
+      if [[ -n "${{ inputs.repo-url }}" ]]
       then
         echo -e "${CYAN}[ INFO ] > Using provided repository URL for push --> ${{ inputs.repo-url }}${BLANK}"
         REPO_URL=$(echo "${{ inputs.repo-url }}" | sed 's/https:\/\///g')
