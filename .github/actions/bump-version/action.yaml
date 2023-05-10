@@ -1,0 +1,76 @@
+---
+name: Bump version
+description: Bumping semver version
+author: fspiers
+inputs:
+  update:
+    description: update the version
+    required: false
+    default: true
+  increment:
+    description: type of increment
+    required: false
+    default: fix
+  current-version:
+    description: current version to update
+    required: true
+outputs:
+  VERSION:
+    description: chart version
+    value: ${{ steps.bump-version.outputs.VERSION }}
+
+runs:
+  using: composite
+  steps:
+  - id: bump-version
+    run: |
+      set +e
+      echo -e "${BLUE}[ STEP - Bump version ] > Auto bumping version${BLANK}"
+      REGEX="^([0-9]+\.[0-9]+\.[0-9]+)$"
+      if [[ ${{ inputs.update }} = true ]]
+      then
+        echo -e "${YELLOW}[ EXECUTING ] > Version auto update has been triggered for version ${PURPLE}${{ inputs.current-version }}${YELLOW} and increment type ${PURPLE}${{ inputs.increment }}${BLANK}"
+        VERSION="${{ inputs.current-version }}"
+        if [[ ${VERSION} =~ ${REGEX} ]]
+        then
+          ver=( ${VERSION//./ } )
+          if [[ ${{ inputs.increment }} = "fix" ]]
+          then
+            echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
+            ((ver[2]++))
+          elif [[ ${{ inputs.increment }} = "minor" ]]
+          then
+            echo -e "${CYAN}[ INFO ] > Minor increment${BLANK}"
+            ((ver[1]++))
+            ver[2]=0
+          elif [[ ${{ inputs.increment }} = "major" ]]
+          then
+            echo -e "${CYAN}[ INFO ] > Major increment${BLANK}"
+            ((ver[0]++))
+            ver[2]=0
+            ver[1]=0
+          else
+            echo -e "${RED}[ ERROR ] > increment ${{ inputs.increment }} is not correct${BLANK}"
+            exit 1
+          fi
+          NEW_VERSION=${ver[0]}.${ver[1]}.${ver[2]}
+          VERSION=${NEW_VERSION}
+          echo -e "${CYAN}[ INFO ] > The new version will be --> [[ ${YELLOW}${VERSION}${CYAN} ]]${BLANK}"
+        else
+          echo -e "${RED}[ ERROR ] > Version doesn't match regex.${BLANK}"
+          exit 1
+        fi
+      else
+        echo -e "${YELLOW}[ EXECUTING ] > Version will remain the same --> ${PURPLE}${{ inputs.current-version }}${BLANK}"
+        VERSION=${{ inputs.current-version }}
+      fi
+      echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+    shell: bash
+    env:
+      RED: \033[1;31m
+      GREEN: \033[1;32m
+      YELLOW: \033[1;33m
+      BLUE: \033[1;34m
+      PURPLE: \033[1;35m
+      CYAN: \033[1;36m
+      BLANK: \033[0m

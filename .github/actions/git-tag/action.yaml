@@ -1,7 +1,7 @@
 ---
 name: Git tag
-description: Tagging git repository
-author: ixxeL
+description: Tagging git repo
+author: fspiers
 inputs:
   # git-token:
   #   required: true
@@ -18,17 +18,17 @@ inputs:
     default: false
   push-option:
     required: false
-    default: ci.skip
+    default: 'ci skip'
   git-email:
     required: false
-    default: test@mail.com
+    default: username@users.noreply.github.com
   # repo-url:
   #   required: true
 
 runs:
   using: composite
   steps:
-  - id: grype-scan
+  - id: git-tag
     run: |
       set +e
       # REPO_URL=${{ inputs.repo-url }}
@@ -55,10 +55,10 @@ runs:
       # fi
       # echo -e "${CYAN}[ INFO ] > Reworked URL --> ${PUSH_URL}.${BLANK}"
 
-      TAG_MSG=${{ inputs.tag-msg }}
+      TAG_MSG="${{ inputs.tag-msg }}"
       if [ "${TAG_MSG}" == '' ]; then TAG_MSG="Release: ${{ inputs.tag-value }}"; fi
 
-      echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${GITLAB_USER_EMAIL} and username ${GITHUB_ACTOR}.${BLANK}"
+      echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${{ inputs.git-email }} and username ${GITHUB_ACTOR}.${BLANK}"
       git config --global --add safe.directory "$(realpath "${{ inputs.git-workdir }}")"
       git config --global user.email "${{ inputs.git-email }}"
       git config --global user.name "${GITHUB_ACTOR}"

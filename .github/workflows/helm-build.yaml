@@ -1,0 +1,210 @@
+---
+name: Helm chart build
+on:
+  workflow_dispatch:
+
+  workflow_call:
+    inputs:
+    # General
+      workingdir:
+        required: false
+        type: string
+      runs-on:
+        description: OS to run jobs on
+        required: false
+        default: ubuntu-latest
+        type: string
+      ci-image:
+        description: Docker image used for CI jobs
+        required: false
+        default: ixxel/toolbox:helm-latest
+        type: string
+    # helm unit tests
+      with-subchart:
+        description: include subchart
+        required: false
+        default: true
+        type: boolean
+      tests-dir:
+        description: tests directory relative to workingdir
+        required: false
+        default: tests/*.yaml
+        type: string
+    # Checkov
+      artefact:
+        required: true
+        type: string
+      compact:
+        required: false
+        default: true
+        type: string
+      quiet:
+        required: false
+        default: false
+        type: string
+      skip-download:
+        required: false
+        default: false
+        type: string
+      format:
+        required: false
+        default: cli
+        type: string
+      soft-fail:
+        required: false
+        default: true
+        type: string
+      gate:
+        required: false
+        default: '0'
+        type: string
+      skip-path:
+        required: false
+        type: string
+      skip-framework:
+        required: false
+        type: string
+      skip-check:
+        required: false
+        type: string
+      check:
+        required: false
+        type: string
+      framework:
+        required: false
+        type: string
+    # helm template
+      strict:
+        description: use strict mode
+        required: false
+        default: true
+        type: boolean
+      chart-name:
+        description: name of the chart
+        required: false
+        type: string
+      values-file:
+        description: name of the values.yaml file
+        required: false
+        default: values.yaml
+        type: string
+      add-repo:
+        description: weither or not to add a repo
+        required: false
+        default: false
+        type: boolean
+      repo-url:
+        description: url of the helm repo to add
+        required: false
+        type: string
+      repo-name:
+        description: name of the helm repo to add
+        required: false
+        default: temp-repo
+        type: string
+      repo-user:
+        description: user of the helm repo to add
+        required: false
+        type: string
+      repo-pwd:
+        description: password of the helm repo to add
+        required: false
+        type: string
+      set:
+        description: argument to pass to helm chart as --set command
+        required: false
+        type: string
+      stdout-mode:
+        description: output template to stdout
+        required: false
+        default: true
+        type: boolean
+      display-mode:
+        description: display template result to stdout
+        required: false
+        default: true
+        type: boolean
+      output-dir:
+        description: output directory name for template file
+        required: false
+        default: helm-tpl-result
+        type: string
+      output-file:
+        description: output file name for template file
+        required: false
+        default: result.yaml
+        type: string
+
+jobs:
+  helm-build:
+    name: helm-build
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ inputs.helm-image }}
+    steps:
+    - name: Clone code
+      id: git-clone
+      uses: actions/checkout@v1
+    - name: Helm linting
+      id: helm-lint
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-lint@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+    - name: Helm Datree scan
+      id: helm-datree
+      continue-on-error: true
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-datree@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+    - name: Helm Checkov scan
+      id: helm-checkov
+      uses: dktunited/whbox-cicd-templates/.github/actions/checkov@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        artefact: ${{ inputs.artefact }}
+        compact: ${{ inputs.compact }}
+        quiet: ${{ inputs.quiet }}
+        skip-download: ${{ inputs.skip-download }}
+        format: ${{ inputs.format }}
+        soft-fail: ${{ inputs.soft-fail }}
+        gate: ${{ inputs.gate }}
+        skip-path: ${{ inputs.skip-path }}
+        skip-framework: ${{ inputs.skip-framework }}
+        skip-check: ${{ inputs.skip-check }}
+        check: ${{ inputs.check }}
+        framework: ${{ inputs.framework }}
+    - name: Helm Unit testing
+      id: helm-unittest
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-unittest@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        with-subchart: ${{ inputs.with-subchart }}
+        tests-dir: ${{ inputs.tests-dir }}
+    - name: Helm Templating
+      id: helm-template
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-template@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        strict: ${{ inputs.strict }}
+        chart-name: ${{ inputs.chart-name }}
+        values-file: ${{ inputs.values-file }}
+        add-repo: ${{ inputs.add-repo }}
+        repo-url: ${{ inputs.repo-url }}
+        repo-name: ${{ inputs.repo-name }}
+        repo-user: ${{ inputs.repo-user }}
+        repo-pwd: ${{ inputs.repo-pwd }}
+        set: ${{ inputs.set }}
+        stdout-mode: ${{ inputs.stdout-mode }}
+        display-mode: ${{ inputs.display-mode }}
+        output-dir: ${{ inputs.output-dir }}
+        output-file: ${{ inputs.output-file }}
+    - name: Helm Packaging
+      id: helm-package
+      uses: dktunited/whbox-cicd-templates/.github/actions/helm-package@main
+      with:
+        workingdir: ${{ inputs.workingdir }}
+        chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
+        chart-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
+        chart-appversion: ${{ steps.helm-lint.outputs.CHART_APP_VERSION }}
+        values-file: ${{ inputs.values-file }}
