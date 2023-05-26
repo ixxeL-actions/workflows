@@ -35,7 +35,6 @@ runs:
   - id: git-push
     run: |
       set +e
-      # 
       echo -e "${BLUE}[ STEP - TAG GIT REPO ] > Tagging git repo ${REPO_URL}${BLANK}"
       echo -e "${CYAN}[ INFO ] > Git version.${BLANK}"
       git version
@@ -48,25 +47,20 @@ runs:
         echo -e "${CYAN}[ INFO ] > Using current ref name ${GITHUB_REF_NAME}${BLANK}"
         GIT_REPO_BRANCH=${GITHUB_REF_NAME}
       fi
-      if [[ -n "${{ inputs.repo-url }}" ]]
-      then
-        echo -e "${CYAN}[ INFO ] > Using provided repository URL for push --> ${{ inputs.repo-url }}${BLANK}"
-        REPO_URL=$(echo "${{ inputs.repo-url }}" | sed 's/https:\/\///g')
-        [[ ${REPO_URL} == *.git ]] || REPO_URL+=.git
-        PUSH_URL="https://${GITHUB_ACTOR}:${{ inputs.git-token }}@${GITHUB_HOSTNAME}"
-      else
-        echo -e "${CYAN}[ INFO ] > Using current repository URL for push --> ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git${BLANK}"
-        GITHUB_HOSTNAME=$(echo "${GITHUB_SERVER_URL}" | sed 's/https:\/\///g')
-        PUSH_URL="https://${GITHUB_ACTOR}:${{ inputs.git-token }}@${GITHUB_HOSTNAME}/${GITHUB_REPOSITORY}.git"
-      fi
+      # if [[ -n "${{ inputs.repo-url }}" ]]
+      # then
+      #   echo -e "${CYAN}[ INFO ] > Using provided repository URL for push --> ${{ inputs.repo-url }}${BLANK}"
+      #   REPO_URL=$(echo "${{ inputs.repo-url }}" | sed 's/https:\/\///g')
+      #   [[ ${REPO_URL} == *.git ]] || REPO_URL+=.git
+      #   PUSH_URL="https://${GITHUB_ACTOR}:${{ inputs.git-token }}@${GITHUB_HOSTNAME}"
+      # else
+      #   echo -e "${CYAN}[ INFO ] > Using current repository URL for push --> ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git${BLANK}"
+      #   GITHUB_HOSTNAME=$(echo "${GITHUB_SERVER_URL}" | sed 's/https:\/\///g')
+      #   PUSH_URL="https://${GITHUB_ACTOR}:${{ inputs.git-token }}@${GITHUB_HOSTNAME}/${GITHUB_REPOSITORY}.git"
+      # fi
 
-      echo -e "${YELLOW}[ EXECUTING ] > setting up git config to mail ${{ inputs.git-email }} and username ${GITHUB_ACTOR}.${BLANK}"
-      git config --global --add safe.directory "$(realpath "${{ inputs.git-workdir }}")"
-      git config --global user.email "${{ inputs.git-email }}"
-      git config --global user.name "${GITHUB_ACTOR}"
-      # git config --global http.sslVerify ${{ inputs.tls-verify }}
-      git config --list
-      # git checkout --track origin/${GIT_REPO_BRANCH}
+      # echo -e "${CYAN}[ INFO ] > Setting URL origin to ${PUSH_URL}${BLANK}"
+      # git -C ${{ inputs.git-workdir }} remote set-url origin ${PUSH_URL}
 
       echo -e "${YELLOW}[ EXECUTING ] > Showing repo information.${BLANK}"
       echo -e "${CYAN}[ INFO ] > git status.${BLANK}"
@@ -81,14 +75,14 @@ runs:
       echo -e "${CYAN}[ INFO ] > Commit and push on staging directory ${{ inputs.git-staging-dir }} to ${PUSH_URL}${BLANK}"
       git -C ${{ inputs.git-workdir }} add ${{ inputs.git-staging-dir }}
       git -C ${{ inputs.git-workdir }} commit -m "${{ inputs.git-msg }}"
-      git -C ${{ inputs.git-workdir }} remote set-url origin ${PUSH_URL}
+      # git -C ${{ inputs.git-workdir }} remote set-url origin ${PUSH_URL}
       git -C ${{ inputs.git-workdir }} push origin --push-option ${{ inputs.push-option }} HEAD:${GIT_REPO_BRANCH}
 
       if [[ $? = 0 ]]
       then
         echo -e "${GREEN}[ SUCCESS ] > Git commit/push succeeded.${BLANK}"
         echo -e "${CYAN}[ INFO ] > Saving current commit SHA${BLANK}"
-        CURRENT_COMMIT=$(git -C ${{ inputs.git-workdir }} rev-parse HEAD)
+        CURRENT_COMMIT=$(git -C ${{ inputs.git-workdir }} rev-parse origin/${GIT_REPO_BRANCH})
         echo "GIT_PUSHED_COMMIT_SHA=${CURRENT_COMMIT}" >> git-simple-push.env
         echo -e "${GREEN}[ SUCCESS ] > Commit SHA is ${YELLOW}${CURRENT_COMMIT}${BLANK}"
         exit 0
