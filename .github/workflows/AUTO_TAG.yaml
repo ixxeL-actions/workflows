@@ -9,7 +9,7 @@ on:
 
 jobs:
   retag-img:
-    uses: ixxeL-actions/workflows/.github/workflows/auto-tag@main
+    uses: ixxeL-actions/workflows/.github/workflows/auto-tag.yaml@main
     with:
       new-ref: ${{ inputs.new-ref }}
     secrets: inherit
