@@ -2,10 +2,9 @@
 name: Helm chart build
 on:
   workflow_dispatch:
-
   workflow_call:
     inputs:
-    # General
+      # General
       workingdir:
         required: false
         default: .
@@ -30,7 +29,7 @@ on:
         required: false
         default: main
         type: string
-    # helm unit tests
+        # helm unit tests
       with-subchart:
         description: include subchart
         required: false
@@ -41,7 +40,7 @@ on:
         required: false
         default: tests/*.yaml
         type: string
-    # Checkov
+        # Checkov
       artefact:
         required: true
         type: string
@@ -84,7 +83,7 @@ on:
       framework:
         required: false
         type: string
-    # helm template
+        # helm template
       strict:
         description: use strict mode
         required: false
@@ -145,7 +144,6 @@ on:
         required: false
         default: result.yaml
         type: string
-
 jobs:
   helm-lint:
     name: helm-lint
@@ -155,13 +153,13 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      uses: actions/checkout@v3
-    - name: Helm linting
-      id: helm-lint
-      uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Helm linting
+        id: helm-lint
+        uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
     outputs:
       chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
       chart-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
@@ -174,13 +172,13 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      uses: actions/checkout@v3
-    - name: Helm Datree scan
-      continue-on-error: true
-      uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Helm Datree scan
+        continue-on-error: true
+        uses: ixxeL-actions/workflows/.github/actions/helm-datree@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
   checkov:
     name: checkov-scan
     # needs: [prepare]
@@ -189,24 +187,24 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      uses: actions/checkout@v3
-    - name: Checkov Helm scan
-      uses: ixxeL-actions/workflows/.github/actions/checkov@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        artefact: ${{ inputs.artefact }}
-        compact: ${{ inputs.compact }}
-        quiet: ${{ inputs.quiet }}
-        skip-download: ${{ inputs.skip-download }}
-        format: ${{ inputs.format }}
-        soft-fail: ${{ inputs.soft-fail }}
-        gate: ${{ inputs.gate }}
-        skip-path: ${{ inputs.skip-path }}
-        skip-framework: ${{ inputs.skip-framework }}
-        skip-check: ${{ inputs.skip-check }}
-        check: ${{ inputs.check }}
-        framework: ${{ inputs.framework }}
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Checkov Helm scan
+        uses: ixxeL-actions/workflows/.github/actions/checkov@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          artefact: ${{ inputs.artefact }}
+          compact: ${{ inputs.compact }}
+          quiet: ${{ inputs.quiet }}
+          skip-download: ${{ inputs.skip-download }}
+          format: ${{ inputs.format }}
+          soft-fail: ${{ inputs.soft-fail }}
+          gate: ${{ inputs.gate }}
+          skip-path: ${{ inputs.skip-path }}
+          skip-framework: ${{ inputs.skip-framework }}
+          skip-check: ${{ inputs.skip-check }}
+          check: ${{ inputs.check }}
+          framework: ${{ inputs.framework }}
   helm-unittest:
     name: helm-unittest
     # needs: [prepare]
@@ -215,14 +213,14 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      uses: actions/checkout@v3
-    - name: Helm unit testing
-      uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        with-subchart: ${{ inputs.with-subchart }}
-        tests-dir: ${{ inputs.tests-dir }}
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Helm unit testing
+        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          with-subchart: ${{ inputs.with-subchart }}
+          tests-dir: ${{ inputs.tests-dir }}
   helm-template:
     name: helm-template
     # needs: [prepare]
@@ -231,26 +229,26 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      id: clone
-      uses: actions/checkout@v3
-    - name: Helm templating
-      uses: ixxeL-actions/workflows/.github/actions/helm-template@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        strict: ${{ inputs.strict }}
-        chart-name: ${{ inputs.chart-name }}
-        values-file: ${{ inputs.values-file }}
-        add-repo: ${{ inputs.add-repo }}
-        repo-url: ${{ inputs.repo-url }}
-        repo-name: ${{ inputs.repo-name }}
-        repo-user: ${{ inputs.repo-user }}
-        repo-pwd: ${{ inputs.repo-pwd }}
-        set: ${{ inputs.set }}
-        stdout-mode: ${{ inputs.stdout-mode }}
-        display-mode: ${{ inputs.display-mode }}
-        output-dir: ${{ inputs.output-dir }}
-        output-file: ${{ inputs.output-file }}
+      - name: Clone code
+        id: clone
+        uses: actions/checkout@v3
+      - name: Helm templating
+        uses: ixxeL-actions/workflows/.github/actions/helm-template@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          strict: ${{ inputs.strict }}
+          chart-name: ${{ inputs.chart-name }}
+          values-file: ${{ inputs.values-file }}
+          add-repo: ${{ inputs.add-repo }}
+          repo-url: ${{ inputs.repo-url }}
+          repo-name: ${{ inputs.repo-name }}
+          repo-user: ${{ inputs.repo-user }}
+          repo-pwd: ${{ inputs.repo-pwd }}
+          set: ${{ inputs.set }}
+          stdout-mode: ${{ inputs.stdout-mode }}
+          display-mode: ${{ inputs.display-mode }}
+          output-dir: ${{ inputs.output-dir }}
+          output-file: ${{ inputs.output-file }}
   helm-package:
     name: helm-package
     needs: [helm-lint]
@@ -259,14 +257,14 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      id: clone
-      uses: actions/checkout@v3
-    - name: Helm Packaging
-      uses: ixxeL-actions/workflows/.github/actions/helm-package@main
-      with:
-        workingdir: ${{ inputs.workingdir }}
-        chart-name: ${{ needs.helm-lint.outputs.chart-name }}
-        chart-version: ${{ needs.helm-lint.outputs.chart-version }}
-        chart-appversion: ${{ needs.helm-lint.outputs.chart-appversion }}
-        values-file: ${{ inputs.values-file }}
+      - name: Clone code
+        id: clone
+        uses: actions/checkout@v3
+      - name: Helm Packaging
+        uses: ixxeL-actions/workflows/.github/actions/helm-package@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          chart-name: ${{ needs.helm-lint.outputs.chart-name }}
+          chart-version: ${{ needs.helm-lint.outputs.chart-version }}
+          chart-appversion: ${{ needs.helm-lint.outputs.chart-appversion }}
+          values-file: ${{ inputs.values-file }}
