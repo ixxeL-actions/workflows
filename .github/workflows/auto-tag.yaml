@@ -114,7 +114,6 @@ jobs:
             BASE_VERSION=$(echo "${{ inputs.new-ref }}" | grep -Eo "^v?[0-9]{1})
             echo "BASE_VERSION=$BASE_VERSION" >> $GITHUB_OUTPUT
           fi
-        uses: null
       - name: Git tag
         id: git-tag
         if: inputs.update-base-tag == 'true'

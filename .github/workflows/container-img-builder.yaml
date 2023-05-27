@@ -238,7 +238,6 @@ jobs:
           elif [[ "${{github.base_ref}}" =~ "/^release\/.*/" || "${{github.ref}}" =~ "refs/heads/release\/.*" ]]; then
             echo "AUTO_PUSH=true" >> $GITHUB_OUTPUT
           fi
-        uses: null
       - name: Podman login
         id: podman-login
         if: ${{ inputs.podman-registry != null }}
