@@ -12,4 +12,5 @@ jobs:
     uses: ixxeL-actions/workflows/.github/workflows/auto-tag.yaml@main
     with:
       new-ref: ${{ inputs.new-ref }}
+      git-workdir: .github
     secrets: inherit

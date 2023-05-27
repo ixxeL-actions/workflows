@@ -33,6 +33,10 @@ on:
       new-ref:
         required: true
         type: string
+      git-workdir:
+        required: false
+        default: .
+        type: string
       push-option:
         required: false
         default: ci.skip
@@ -58,7 +62,7 @@ jobs:
         id: git-config
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
-          git-workdir: ${{ inputs.workingdir }}
+          git-workdir: ${{ inputs.git-workdir }}
       - name: Update changelog
         id: changelog
         uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
@@ -70,8 +74,8 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
           git-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
-          git-workdir: ${{ inputs.workingdir }}
-          git-staging-dir: ${{ inputs.workingdir }}
+          git-workdir: ${{ inputs.git-workdir }}
+          git-staging-dir: ${{ inputs.git-workdir }}
           push-option: ${{ inputs.push-option }}
       - name: Git tag
         id: git-tag
@@ -79,5 +83,5 @@ jobs:
         with:
           tag-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
           tag-value: '${{ inputs.new-ref }}'
-          git-workdir: ${{ inputs.workingdir }}
+          git-workdir: ${{ inputs.git-workdir }}
           push-option: ${{ inputs.push-option }}
