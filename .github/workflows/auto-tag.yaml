@@ -11,7 +11,7 @@ on:
       ci-image:
         description: docker image to run pipeline on
         required: false
-        default: toolbox:build-latest
+        default: ixxel/toolbox:builder-latest
         type: string
       workflows-directory:
         description: directory in which to find workflows
