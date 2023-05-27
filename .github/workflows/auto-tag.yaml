@@ -58,7 +58,7 @@ jobs:
         id: git-config
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
-          git-workdir: ${{ inputs.git-workdir }}
+          git-workdir: ${{ inputs.workingdir }}
       - name: Update changelog
         id: changelog
         uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
