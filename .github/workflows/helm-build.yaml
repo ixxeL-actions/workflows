@@ -268,6 +268,11 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/helm-docs@main
         with:
           chart-search-root: ${{ inputs.workingdir }}
+      - name: Git config
+        id: git-config
+        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        with:
+          git-workdir: ${{ inputs.git-workdir }}
       - name: Git push
         id: git-push
         uses: ixxeL-actions/workflows/.github/actions/git-push@main

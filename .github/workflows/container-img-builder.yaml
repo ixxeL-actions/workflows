@@ -281,6 +281,12 @@ jobs:
           scope: ${{ inputs.scope }}
           template: ${{ inputs.template }}
           verbose: ${{ inputs.verbose }}
+      - name: Git config
+        id: git-config
+        if: contains( github.ref, 'release' ) || contains( github.base_ref, 'release' )
+        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        with:
+          git-workdir: ${{ inputs.git-workdir }}
       - name: git tag
         id: git-tag
         if: contains( github.ref, 'release' ) || contains( github.base_ref, 'release' )
