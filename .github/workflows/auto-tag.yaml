@@ -56,25 +56,25 @@ jobs:
           token: ${{ secrets.git-token }}
       - name: substitute-ref
         id: substitute-ref
-        uses: ixxeL-actions/workflows/.github/actions/change-action-ref@main
+        uses: ixxeL-actions/workflows/.github/actions/change-action-ref@test
         with:
           workflows-directory: ${{ inputs.workflows-directory }}
           actions-source: ${{ inputs.actions-source }}
           new-ref: ${{ inputs.new-ref }}
       - name: Git config
         id: git-config
-        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        uses: ixxeL-actions/workflows/.github/actions/git-config@test
         with:
           git-workdir: ${{ inputs.workingdir }}
       - name: Update changelog
         id: changelog
-        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
+        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@test
         with:
           workingdir: ${{ inputs.workingdir }}
           release-name: ${{ inputs.new-ref }}
       - name: Git push
         id: git-push
-        uses: ixxeL-actions/workflows/.github/actions/git-push@main
+        uses: ixxeL-actions/workflows/.github/actions/git-push@test
         with:
           git-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
           git-workdir: ${{ inputs.workingdir }}
@@ -82,7 +82,7 @@ jobs:
           push-option: ${{ inputs.push-option }}
       - name: Git tag
         id: git-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/git-tag@test
         with:
           tag-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
           tag-value: '${{ inputs.new-ref }}'
