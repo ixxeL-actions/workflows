@@ -2,9 +2,9 @@
 name: Automate tag
 on:
   workflow_call:
-    # secrets:
-    #   git-token:
-    #     required: true
+    secrets:
+      git-token:
+        required: true
     inputs:
       workingdir:
         required: false
