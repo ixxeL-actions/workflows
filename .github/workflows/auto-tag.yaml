@@ -41,6 +41,19 @@ on:
         required: false
         default: ci.skip
         type: string
+      update-base-tag:
+        required: false
+        default: true
+        type: boolean
+      release-create-tag:
+        required: false
+        default: true
+        type: boolean
+      release-target-branch:
+        required: false
+        default: ${{ github.ref_name }}
+        type: string
+
 jobs:
   auto-tag:
     name: auto-tag
@@ -66,12 +79,12 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.workingdir }}
-      - name: Update changelog
-        id: changelog
-        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
-        with:
-          workingdir: ${{ inputs.workingdir }}
-          release-name: ${{ inputs.new-ref }}
+      # - name: Update changelog
+      #   id: changelog
+      #   uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
+      #   with:
+      #     workingdir: ${{ inputs.workingdir }}
+      #     release-name: ${{ inputs.new-ref }}
       - name: Git push
         id: git-push
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
@@ -80,16 +93,34 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
-      - name: Git tag
-        id: git-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
-        with:
-          tag-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
-          tag-value: ${{ inputs.new-ref }}
-          git-workdir: ${{ inputs.workingdir }}
-          push-option: ${{ inputs.push-option }}
+      # - name: Git tag
+      #   id: git-tag
+      #   uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+      #   with:
+      #     tag-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
+      #     tag-value: ${{ inputs.new-ref }}
+      #     git-workdir: ${{ inputs.workingdir }}
+      #     push-option: ${{ inputs.push-option }}
       - name: GH Release
         id: gh-release
         uses: ixxeL-actions/workflows/.github/actions/gh-release@main
         with:
           tag: ${{ inputs.new-ref }}
+          create-tag: ${{ inputs.release-create-tag }}
+          target-branch: ${{ inputs.release-target-branch }}
+      - name: Extrat Major
+        id: extract-major
+        run: |
+          if [[ "${{ inputs.new-ref }}" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+            BASE_VERSION=$(echo "${{ inputs.new-ref }}" | grep -Eo "^v?[0-9]{1})
+            echo "BASE_VERSION=$BASE_VERSION" >> $GITHUB_OUTPUT
+          fi
+      - name: Git tag
+        id: git-tag
+        if: inputs.update-base-tag == 'true'
+        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+        with:
+          tag-msg: 'update tag semver [skip ci]'
+          tag-value: ${{ steps.extract-major.outputs.BASE_VERSION }}
+          git-workdir: ${{ inputs.workingdir }}
+          push-option: ${{ inputs.push-option }}
