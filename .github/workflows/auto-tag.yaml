@@ -2,30 +2,30 @@
 name: Automate tag
 on:
   workflow_call:
-    runs-on:
-      description: OS to run jobs on
-      required: false
-      default: ubuntu-latest
-      type: string
-    ci-image:
-      description: docker image to run pipeline on
-      required: false
-      default: toolbox:build-latest
-      type: string
-    workflows-directory:
-      description: directory in which to find workflows
-      required: false
-      default: "./.github/workflows/*.yaml"
-      type: string
-    actions-source:
-      description: origin of actions
-      required: false
-      default: ixxeL-actions
-      type: string
-    new-ref:
-      required: true
-      type: string
-
+    inputs:
+      runs-on:
+        description: OS to run jobs on
+        required: false
+        default: ubuntu-latest
+        type: string
+      ci-image:
+        description: docker image to run pipeline on
+        required: false
+        default: toolbox:build-latest
+        type: string
+      workflows-directory:
+        description: directory in which to find workflows
+        required: false
+        default: "./.github/workflows/*.yaml"
+        type: string
+      actions-source:
+        description: origin of actions
+        required: false
+        default: ixxeL-actions
+        type: string
+      new-ref:
+        required: true
+        type: string
 jobs:
   auto-tag:
     name: auto-tag
@@ -34,12 +34,12 @@ jobs:
     container:
       image: ${{ inputs.ci-image }}
     steps:
-    - name: Clone code
-      uses: actions/checkout@v3
-    - name: Helm linting
-      id: helm-lint
-      uses: ixxeL-actions/workflows/.github/actions/change-action-ref@main
-      with:
-        workflows-directory: ${{ inputs.workflows-directory }}
-        actions-source: ${{ inputs.actions-source }}
-        new-ref: ${{ inputs.new-ref }}
+      - name: Clone code
+        uses: actions/checkout@v3
+      - name: Helm linting
+        id: helm-lint
+        uses: ixxeL-actions/workflows/.github/actions/change-action-ref@main
+        with:
+          workflows-directory: ${{ inputs.workflows-directory }}
+          actions-source: ${{ inputs.actions-source }}
+          new-ref: ${{ inputs.new-ref }}
