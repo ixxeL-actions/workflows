@@ -13,4 +13,5 @@ jobs:
     with:
       new-ref: ${{ inputs.new-ref }}
       git-workdir: .github
-    secrets: inherit
+    secrets:
+      git-token: ${{ secrets.PAT }}
