@@ -85,6 +85,11 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-tag@main
         with:
           tag-msg: ':package: CI release version ${{ inputs.new-ref }} from user ${GITHUB_ACTOR} [skip ci]'
-          tag-value: '${{ inputs.new-ref }}'
+          tag-value: ${{ inputs.new-ref }}
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
+      - name: GH Release
+        id: gh-release
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
+        with:
+          tag: ${{ inputs.new-ref }}

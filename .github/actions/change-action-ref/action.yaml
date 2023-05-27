@@ -4,13 +4,11 @@ description: Changing action reference
 author: fspiers
 inputs:
   workflows-directory:
-    description: update the version
+    description: directory in which to find workflows
     required: false
-    default: true
   actions-source:
-    description: type of increment
+    description: origin of actions
     required: false
-    default: fix
   new-ref:
     description: current version to update
     required: true
@@ -22,7 +20,7 @@ outputs:
 runs:
   using: composite
   steps:
-  - id: bump-version
+  - id: change-action-ref
     run: |
       for file in ${{ inputs.workflows-directory }}
       do
