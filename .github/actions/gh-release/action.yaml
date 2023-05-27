@@ -5,7 +5,7 @@ author: fspiers
 inputs:
   tag:
     required: true
-  create-tag:
+  verify-tag:
     required: false
     default: false
   target-branch:
@@ -22,7 +22,7 @@ runs:
       gh --version
 
       echo -e "${YELLOW}[ EXECUTING ] > Releasing on tag ${{ inputs.tag }}${BLANK}"
-      gh release create ${{ inputs.tag }} --generate-notes --latest --verify-tag=${{ inputs.create-tag }} --target=${{ inputs.target-branch }}
+      gh release create ${{ inputs.tag }} --generate-notes --latest --verify-tag=${{ inputs.verify-tag }} --target=${{ inputs.target-branch }}
     shell: bash
     env:
       RED: \033[1;31m

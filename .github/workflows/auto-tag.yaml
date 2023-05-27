@@ -45,9 +45,9 @@ on:
         required: false
         default: true
         type: boolean
-      release-create-tag:
+      release-verify-tag:
         required: false
-        default: true
+        default: false
         type: boolean
       release-target-branch:
         required: false
@@ -105,7 +105,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/gh-release@main
         with:
           tag: ${{ inputs.new-ref }}
-          create-tag: ${{ inputs.release-create-tag }}
+          verify-tag: ${{ inputs.release-verify-tag }}
           target-branch: ${{ inputs.release-target-branch }}
         env:
           GH_TOKEN: ${{ github.token }}
