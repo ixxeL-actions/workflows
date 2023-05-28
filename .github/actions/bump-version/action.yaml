@@ -34,7 +34,7 @@ runs:
         if [[ ${VERSION} =~ ${REGEX} ]]
         then
           ver=( ${VERSION//./ } )
-          ver=( ${VERSION//v/ } )
+          ver=( ${ver//v/ } )
           if [[ ${{ inputs.increment }} = "fix" ]]
           then
             echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
