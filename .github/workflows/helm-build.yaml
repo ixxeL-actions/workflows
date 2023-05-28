@@ -183,19 +183,19 @@ jobs:
           fetch-depth: '0'
       - name: Helm linting
         id: helm-lint
-        uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-lint@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
       - name: Bump version
         id: bump-version
-        uses: ixxeL-actions/workflows/.github/actions/bump-version@main
+        uses: ixxeL-actions/workflows/.github/actions/bump-version@v1..1
         with:
           update: ${{ inputs.chart-update }}
           increment: ${{ inputs.chart-increment }}
           current-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
       - name: Helm Checkov scan
         id: helm-checkov
-        uses: ixxeL-actions/workflows/.github/actions/checkov@main
+        uses: ixxeL-actions/workflows/.github/actions/checkov@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
           artefact: ${{ inputs.artefact }}
@@ -212,14 +212,14 @@ jobs:
           framework: ${{ inputs.framework }}
       - name: Helm Unit testing
         id: helm-unittest
-        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
           with-subchart: ${{ inputs.with-subchart }}
           tests-dir: ${{ inputs.tests-dir }}
       - name: Helm Templating
         id: helm-template
-        uses: ixxeL-actions/workflows/.github/actions/helm-template@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-template@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
           strict: ${{ inputs.strict }}
@@ -232,7 +232,7 @@ jobs:
           output-file: ${{ inputs.output-file }}
       - name: Helm Packaging
         id: helm-package
-        uses: ixxeL-actions/workflows/.github/actions/helm-package@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-package@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
@@ -258,24 +258,24 @@ jobs:
       #     pkg-path: ${{ steps.helm-package.outputs.PKG_PATH }}
       - name: Chart update
         id: chart-update
-        uses: ixxeL-actions/workflows/.github/actions/chart-update@main
+        uses: ixxeL-actions/workflows/.github/actions/chart-update@v1..1
         with:
           workingdir: ${{ inputs.workingdir }}
           evaluate-update: ${{ inputs.evaluate-update }}
           promotion-version: ${{ steps.bump-version.outputs.VERSION }}
       - name: Helm docs
         id: helm-docs
-        uses: ixxeL-actions/workflows/.github/actions/helm-docs@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-docs@v1..1
         with:
           chart-search-root: ${{ inputs.workingdir }}
       - name: Git config
         id: git-config
-        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        uses: ixxeL-actions/workflows/.github/actions/git-config@v1..1
         with:
           git-workdir: ${{ inputs.git-workdir }}
       - name: Git push
         id: git-push
-        uses: ixxeL-actions/workflows/.github/actions/git-push@main
+        uses: ixxeL-actions/workflows/.github/actions/git-push@v1..1
         with:
           git-token: ${{ secrets.PAT }}
           git-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
@@ -284,7 +284,7 @@ jobs:
           push-option: ${{ inputs.push-option }}
       - name: Git tag
         id: git-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/git-tag@v1..1
         with:
           tag-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
           tag-value: ${{ steps.bump-version.outputs.VERSION }}
