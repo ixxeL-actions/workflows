@@ -84,7 +84,7 @@ jobs:
         id: bump-version
         uses: ixxeL-actions/workflows/.github/actions/bump-version@
         with:
-          increment: ${{ inputs.chart-increment }}
+          increment: ${{ inputs.increment }}
           current-version: ${{ steps.get-last-tag.outputs.LAST_TAG }}
       - name: Substitute ref
         id: substitute-ref
