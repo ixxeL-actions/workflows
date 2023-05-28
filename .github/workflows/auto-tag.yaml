@@ -31,7 +31,7 @@ on:
         default: ixxeL-actions
         type: string
       new-ref:
-        required: true
+        required: false
         type: string
       git-workdir:
         required: false
