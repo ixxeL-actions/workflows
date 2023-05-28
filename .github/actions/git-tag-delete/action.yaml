@@ -5,6 +5,9 @@ author: fspiers
 inputs:
   tag:
     required: true
+  git-workdir:
+    required: false
+    default: .
 
 runs:
   using: composite

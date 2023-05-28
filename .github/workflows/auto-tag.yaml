@@ -121,6 +121,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-tag-delete@main
         with:
           tag: ${{ steps.extract-major.outputs.BASE_VERSION }}
+          git-workdir: ${{ inputs.workingdir }}
       - name: Git update base tag
         id: git-tag
         # if: inputs.update-base-tag == 'true'
