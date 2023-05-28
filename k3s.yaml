@@ -7,7 +7,7 @@ agents: 0
 kubeAPI:
   hostIP: "0.0.0.0"
   hostPort: "6446"
-image: rancher/k3s:v1.25.5-k3s1
+image: rancher/k3s:v1.25.5-k3s1 
 # volumes:
 #   - volume: /home/fred/k3d/k3s-bootstrap/post-deploy/:/var/lib/rancher/k3s/server/manifests/
 #     nodeFilters:
