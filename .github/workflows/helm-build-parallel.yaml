@@ -157,7 +157,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Helm linting
         id: helm-lint
-        uses: ixxeL-actions/workflows/.github/actions/helm-lint@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/helm-lint@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
     outputs:
@@ -176,7 +176,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Helm Datree scan
         continue-on-error: true
-        uses: ixxeL-actions/workflows/.github/actions/helm-datree@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/helm-datree@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
   checkov:
@@ -190,7 +190,7 @@ jobs:
       - name: Clone code
         uses: actions/checkout@v3
       - name: Checkov Helm scan
-        uses: ixxeL-actions/workflows/.github/actions/checkov@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/checkov@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
           artefact: ${{ inputs.artefact }}
@@ -216,7 +216,7 @@ jobs:
       - name: Clone code
         uses: actions/checkout@test
       - name: Helm unit testing
-        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
           with-subchart: ${{ inputs.with-subchart }}
@@ -233,7 +233,7 @@ jobs:
         id: clone
         uses: actions/checkout@test
       - name: Helm templating
-        uses: ixxeL-actions/workflows/.github/actions/helm-template@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/helm-template@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
           strict: ${{ inputs.strict }}
@@ -261,7 +261,7 @@ jobs:
         id: clone
         uses: actions/checkout@v3
       - name: Helm Packaging
-        uses: ixxeL-actions/workflows/.github/actions/helm-package@v1.0.3
+        uses: ixxeL-actions/workflows/.github/actions/helm-package@v1.0.4
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ needs.helm-lint.outputs.chart-name }}
