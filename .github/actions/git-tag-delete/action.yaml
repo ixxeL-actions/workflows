@@ -25,7 +25,7 @@ runs:
       echo -e "${CYAN}[ INFO ] > git origin.${BLANK}"
       git -C ${{ inputs.git-workdir }} remote show origin
 
-      git ls-remote --tags origin | awk -F' ' '{print $NF}' | awk -F/ '{print $NF}' | grep -Eo "^${{ inputs.tag }}"
+      git ls-remote --tags origin
       if [[ $(git ls-remote --tags origin | awk -F' ' '{print $NF}' | awk -F/ '{print $NF}' | grep -Eo "^${{ inputs.tag }}") ]]; then
         echo -e "${YELLOW}[ EXECUTING ] > Deleting tag ${{ inputs.tag }}${BLANK}"
         # git -C ${{ inputs.git-workdir }} tag -d ${{ inputs.tag }}
