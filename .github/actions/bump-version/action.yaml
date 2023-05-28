@@ -26,7 +26,7 @@ runs:
     run: |
       set +e
       echo -e "${BLUE}[ STEP - Bump version ] > Auto bumping version${BLANK}"
-      REGEX="^([0-9]+\.[0-9]+\.[0-9]+)$"
+      REGEX="^(v?[0-9]+\.[0-9]+\.[0-9]+)$"
       if [[ ${{ inputs.update }} = true ]]
       then
         echo -e "${YELLOW}[ EXECUTING ] > Version auto update has been triggered for version ${PURPLE}${{ inputs.current-version }}${YELLOW} and increment type ${PURPLE}${{ inputs.increment }}${BLANK}"
@@ -34,6 +34,7 @@ runs:
         if [[ ${VERSION} =~ ${REGEX} ]]
         then
           ver=( ${VERSION//./ } )
+          ver=( ${VERSION//v/ } )
           if [[ ${{ inputs.increment }} = "fix" ]]
           then
             echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
@@ -53,7 +54,7 @@ runs:
             echo -e "${RED}[ ERROR ] > increment ${{ inputs.increment }} is not correct${BLANK}"
             exit 1
           fi
-          NEW_VERSION=${ver[0]}.${ver[1]}.${ver[2]}
+          NEW_VERSION=v${ver[0]}.${ver[1]}.${ver[2]}
           VERSION=${NEW_VERSION}
           echo -e "${CYAN}[ INFO ] > The new version will be --> [[ ${YELLOW}${VERSION}${CYAN} ]]${BLANK}"
         else
