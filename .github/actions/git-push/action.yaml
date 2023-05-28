@@ -28,6 +28,10 @@ inputs:
     default: username@users.noreply.github.com
   # repo-url:
   #   required: true
+outputs:
+  GIT_PUSHED_COMMIT_SHA:
+    description: Commit sha of the pushed ref
+    value: ${{ steps.git-push.outputs.GIT_PUSHED_COMMIT_SHA }}
 
 runs:
   using: composite
@@ -83,7 +87,7 @@ runs:
         echo -e "${GREEN}[ SUCCESS ] > Git commit/push succeeded.${BLANK}"
         echo -e "${CYAN}[ INFO ] > Saving current commit SHA${BLANK}"
         CURRENT_COMMIT=$(git -C ${{ inputs.git-workdir }} rev-parse origin/${GIT_REPO_BRANCH})
-        echo "GIT_PUSHED_COMMIT_SHA=${CURRENT_COMMIT}" >> git-simple-push.env
+        echo "GIT_PUSHED_COMMIT_SHA=$CURRENT_COMMIT" >> $GITHUB_OUTPUT
         echo -e "${GREEN}[ SUCCESS ] > Commit SHA is ${YELLOW}${CURRENT_COMMIT}${BLANK}"
         exit 0
       else
