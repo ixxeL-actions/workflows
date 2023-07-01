@@ -7,15 +7,14 @@ on:
         required: true
         type: choice
         options:
-        - "fix"
-        - "minor"
-        - "major"
+          - "fix"
+          - "minor"
+          - "major"
         default: "fix"
         description: Kind of version bump
-
 jobs:
   auto-tag-repo:
-    uses: ixxeL-actions/workflows/.github/workflows/__auto-tag__.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__auto-tag__.yaml@v1.1.0
     with:
       increment: ${{ inputs.increment }}
       git-workdir: .github
