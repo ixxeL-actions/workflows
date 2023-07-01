@@ -287,6 +287,16 @@ jobs:
         with:
           workingdir: ${{ inputs.workingdir }}
           release-name: ${{ steps.bump-version.outputs.VERSION }}
+      - name: Git push
+        id: git-push
+        if: inputs.release
+        uses: ixxeL-actions/workflows/.github/actions/git-push@main
+        with:
+          git-token: ${{ secrets.git-token }}
+          git-msg: ':package: CI release of docker image ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+          git-workdir: ${{ inputs.git-workdir }}
+          git-staging-dir: ${{ inputs.workingdir }}
+          push-option: ${{ inputs.push-option }}
       - name: GH Release
         id: gh-release
         if: inputs.release
