@@ -8,6 +8,8 @@ inputs:
   git-workdir:
     required: false
     default: .
+  git-msg:
+    required: false
   repo-branch:
     required: false
     default: main
@@ -57,6 +59,10 @@ runs:
 
       echo -e "${YELLOW}[ EXECUTING ] > Revert commit ${PURPLE}${COMMIT_TO_REVERT}${YELLOW} and pushing to destination ${PUSH_URL} on branch ${REPO_BRANCH}${BLANK}"
       git -C ${{ inputs.git-workdir }} revert ${COMMIT_TO_REVERT} --no-edit
+      if [[ -n "${{ inputs.git-msg }}" ]]
+      then
+        git -C ${{ inputs.git-workdir }} commit --amend -m "${{ inputs.git-msg }}"
+      fi
       git -C ${{ inputs.git-workdir }} push origin --push-option ${{ inputs.push-option }} HEAD:${GIT_REPO_BRANCH}
     shell: bash
     env:

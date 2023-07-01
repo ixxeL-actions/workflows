@@ -12,15 +12,11 @@ on:
         - "major"
         default: "fix"
         description: Kind of version bump
-      # new-ref:
-      #   required: true
-      #   type: string
 
 jobs:
   auto-tag-repo:
-    uses: ixxeL-actions/workflows/.github/workflows/auto-tag.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__auto-tag__.yaml@main
     with:
-      # new-ref: ${{ inputs.new-ref }}
       increment: ${{ inputs.increment }}
       git-workdir: .github
     secrets:

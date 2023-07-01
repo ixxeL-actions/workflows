@@ -25,29 +25,48 @@ runs:
       LAST_TAG=$(git describe --abbrev=0 --tags)
       echo -e "${CYAN}[ INFO ] > Last tag is ${YELLOW}${LAST_TAG}${BLANK}"
 
-      commit_messages=$(git log --no-merges --pretty=format:"%s" --grep="^\(feat\|fix\|chore\|docs\|style\|refactor\|test\|perf\|build\|ci\|revert\)" ${LAST_TAG}..HEAD)
+      commit_messages=$(git log --no-merges --pretty=format:"%s" --oneline --grep="^\(feat\|fix\|chore\|docs\|style\|refactor\|test\|perf\|build\|ci\|revert\)" ${LAST_TAG}..HEAD)
+      echo "$commit_messages"
 
       if [[ -f ${{ inputs.workingdir }}/CHANGELOG.md ]]
       then
+        DATE=$(date +'%Y-%m-%d')
         echo -e "${CYAN}[ INFO ] > Updating current CHANGELOG.md${BLANK}"
         echo >> ${{ inputs.workingdir }}/CHANGELOG.md
-        echo "## Release ${{ inputs.release-name }}" >> ${{ inputs.workingdir }}/CHANGELOG.md
+        echo "## Release ${{ inputs.release-name }} - $DATE" >> ${{ inputs.workingdir }}/CHANGELOG.md
       else
         echo -e "${CYAN}[ INFO ] > Initializing new CHANGELOG.md${BLANK}"
         echo "# CHANGELOG" > ${{ inputs.workingdir }}/CHANGELOG.md
         echo >> ${{ inputs.workingdir }}/CHANGELOG.md
       fi
 
+      declare -A commit_categories
+      declare -a categories
+
       while IFS= read -r line; do
-        commit_type=$(echo "$line" | cut -d':' -f1)
+        commit_type=$(echo "$line" | awk -F' ' '{print $2}' | grep -Eo "(feat|fix|chore|docs|style|refactor|test|perf|build|ci|revert)")
+        full_commit_msg=$(echo "$line" |awk '{$1=""; print $0}')
         commit_message=$(echo "$line" | cut -d':' -f2-)
+        commit_sha=$(echo "$line" | awk -F' ' '{print $1}')
 
-        commit_type_header=$(echo "$commit_type" | awk '{print toupper($0)}')
-
-        echo "#### $commit_type_header" >> ${{ inputs.workingdir }}/CHANGELOG.md
-        echo "- $commit_message" >> ${{ inputs.workingdir }}/CHANGELOG.md
-        echo >> ${{ inputs.workingdir }}/CHANGELOG.md
+        if [[ -n $commit_type ]]; then
+          if [[ -z ${commit_categories[$commit_type]} ]]; then
+            echo "CREATING COMMIT CATEGORY $commit_type --> \`$commit_sha\`:$full_commit_msg"
+            commit_categories[$commit_type]="- \`$commit_sha\`:$full_commit_msg"
+            categories+=("$commit_type")
+          else
+            echo "APPEND COMMIT TO CATEGORY $commit_type --> \`$commit_sha\`:$full_commit_msg"
+            commit_categories[$commit_type]+=$'\n'"- \`$commit_sha\`:$full_commit_msg"
+          fi
+        fi
       done <<< "$commit_messages"
+
+      for category in "${categories[@]}"
+      do
+        echo "#### ${category^}" >> ${{ inputs.workingdir }}/CHANGELOG.md
+        echo "${commit_categories[$category]}" >> ${{ inputs.workingdir }}/CHANGELOG.md
+        echo "" >> ${{ inputs.workingdir }}/CHANGELOG.md
+      done
 
       if [[ $? = 0 ]]
       then

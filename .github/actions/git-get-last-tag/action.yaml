@@ -8,7 +8,10 @@ inputs:
     default: .
   pattern:
     required: false
-    default: 'v[0-9]*.[0-9]*.[0-9]*' 
+    default: 'v[0-9]*.[0-9]*.[0-9]*'
+  starting-tag:
+    required: false
+    default: 'v0.0.0'  
 outputs:
   LAST_TAG:
     description: last git tag found
@@ -38,7 +41,7 @@ runs:
       if [[ -n "${LAST_TAG}" ]]; then
         echo -e "${CYAN}[ INFO ] > Last tag is ${PURPLE}${LAST_TAG}${BLANK}"
       else
-        LAST_TAG="v1.0.0"
+        LAST_TAG="${{ inputs.starting-tag }}"
         echo -e "${CYAN}[ INFO ] > No tags found, using default tag ${PURPLE}${LAST_TAG}${BLANK}"
       fi
       echo "LAST_TAG=$LAST_TAG" >> $GITHUB_OUTPUT

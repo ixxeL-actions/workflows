@@ -62,6 +62,10 @@ jobs:
     name: auto-tag-repo
     timeout-minutes: 5
     runs-on: ${{ inputs.runs-on }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     container:
       image: ${{ inputs.ci-image }}
     steps:
@@ -92,14 +96,13 @@ jobs:
         with:
           workflows-directory: ${{ inputs.workflows-directory }}
           actions-source: ${{ inputs.actions-source }}
-          # new-ref: ${{ inputs.new-ref }}
           new-ref: ${{ steps.bump-version.outputs.VERSION }}
-      # - name: Update changelog
-      #   id: changelog
-      #   uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
-      #   with:
-      #     workingdir: ${{ inputs.workingdir }}
-      #     release-name: ${{ inputs.new-ref }}
+      - name: Update changelog
+        id: changelog
+        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          release-name: ${{ steps.bump-version.outputs.VERSION }}
       - name: Git push
         id: git-push
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
@@ -108,14 +111,6 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
-      # - name: Git tag
-      #   id: git-tag
-      #   uses: ixxeL-actions/workflows/.github/actions/git-tag@main
-      #   with:
-      #     tag-msg: ':package: CI release version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
-      #     tag-value: ${{ steps.bump-version.outputs.VERSION }}
-      #     git-workdir: ${{ inputs.workingdir }}
-      #     push-option: ${{ inputs.push-option }}
       - name: GH Release
         id: gh-release
         uses: ixxeL-actions/workflows/.github/actions/gh-release@main
@@ -156,3 +151,4 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
           commit-sha-revert: ${{ steps.git-push.outputs.GIT_PUSHED_COMMIT_SHA }}
+          git-msg: ':recycle: reverted main ref [skip ci]'

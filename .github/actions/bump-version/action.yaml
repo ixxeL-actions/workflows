@@ -33,18 +33,24 @@ runs:
         VERSION="${{ inputs.current-version }}"
         if [[ ${VERSION} =~ ${REGEX} ]]
         then
-          ver=( ${VERSION//v/ } )
-          ver=( ${ver//./ } )
-          if [[ ${{ inputs.increment }} = "fix" ]]
+          if [[ ${VERSION} == v* ]]; then
+            has_v=true
+            VERSION=( ${VERSION//v/ } )
+            echo -e "${CYAN}[ INFO ] > v prefix detected${BLANK}"
+          else
+            has_v=false
+          fi
+          ver=( ${VERSION//./ } )
+          if [[ "${{ inputs.increment }}" = "fix" ]]
           then
             echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
             ((ver[2]++))
-          elif [[ ${{ inputs.increment }} = "minor" ]]
+          elif [[ "${{ inputs.increment }}" = "minor" ]]
           then
             echo -e "${CYAN}[ INFO ] > Minor increment${BLANK}"
             ((ver[1]++))
             ver[2]=0
-          elif [[ ${{ inputs.increment }} = "major" ]]
+          elif [[ "${{ inputs.increment }}" = "major" ]]
           then
             echo -e "${CYAN}[ INFO ] > Major increment${BLANK}"
             ((ver[0]++))
@@ -54,18 +60,20 @@ runs:
             echo -e "${RED}[ ERROR ] > increment ${{ inputs.increment }} is not correct${BLANK}"
             exit 1
           fi
-          NEW_VERSION=v${ver[0]}.${ver[1]}.${ver[2]}
-          VERSION=${NEW_VERSION}
-          echo -e "${CYAN}[ INFO ] > The new version will be --> [[ ${YELLOW}${VERSION}${CYAN} ]]${BLANK}"
+          NEW_VERSION=${ver[0]}.${ver[1]}.${ver[2]}
+          if [[ "$has_v" == true ]]; then
+            NEW_VERSION="v${NEW_VERSION}"
+          fi
+          echo -e "${CYAN}[ INFO ] > The new version will be --> [[ ${YELLOW}${NEW_VERSION}${CYAN} ]]${BLANK}"
         else
           echo -e "${RED}[ ERROR ] > Version doesn't match regex.${BLANK}"
           exit 1
         fi
       else
         echo -e "${YELLOW}[ EXECUTING ] > Version will remain the same --> ${PURPLE}${{ inputs.current-version }}${BLANK}"
-        VERSION=${{ inputs.current-version }}
+        NEW_VERSION=${{ inputs.current-version }}
       fi
-      echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+      echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
     shell: bash
     env:
       RED: \033[1;31m

@@ -26,7 +26,7 @@ runs:
       do
         for line in $(yq e '.jobs[].steps[].uses | select(.) | select(.=="'"${{ inputs.actions-source }}"'*@*")' $file)
         do
-          ACTION=$(echo "$line" | awk -F/ '{print $NF}')
+          ACTION=$(echo "$line" | awk -F@ '{print $1}' | awk -F/ '{print $NF}')
           REF=$(echo "$line" | awk -F@ '{print $NF}')
           if [[ "$REF" != "${{ inputs.new-ref }}" ]]; then
             echo -e "${CYAN}[ INFO ] > File ${YELLOW}$file${CYAN} and action ${PURPLE}$ACTION${CYAN} is currently set to ref ${RED}$REF${CYAN} and will be changed to ${GREEN}${{ inputs.new-ref }}${BLANK}"
@@ -34,6 +34,21 @@ runs:
           else
             echo -e "${PURPLE}[ CANCEL ] > File ${YELLOW}$file${PURPLE} and action ${RED}$ACTION${PURPLE} is already set to ${RED}${{ inputs.new-ref }}${PURPLE} ref${BLANK}"
           fi
+        done
+
+        for key in $(yq e '.jobs | select(.) | keys' $file)
+        do
+          for line in $(yq e '.jobs."'"$key"'".uses | select(.) | select(.=="'"${{ inputs.actions-source }}"'*@*")' $file)
+          do
+            ACTION=$(echo "$line" | awk -F@ '{print $1}' | awk -F/ '{print $NF}')
+            REF=$(echo "$line" | awk -F@ '{print $NF}')
+            if [[ "$REF" != "${{ inputs.new-ref }}" ]]; then
+              echo -e "${CYAN}[ INFO ] > File ${YELLOW}$file${CYAN} and ${BLUE}workflow${CYAN} ${PURPLE}$ACTION${CYAN} is currently set to ref ${RED}$REF${CYAN} and will be changed to ${GREEN}${{ inputs.new-ref }}${BLANK}"
+              yq e -i '.jobs."'"$key"'" |= select(.uses).uses |= select(.=="'"$line"'") |= sub("'"@$REF"'", "'"@${{ inputs.new-ref }}"'")' $file
+            else
+              echo -e "${PURPLE}[ CANCEL ] > File ${YELLOW}$file${PURPLE} and ${BLUE}workflow${CYAN} ${RED}$ACTION${PURPLE} is already set to ${RED}${{ inputs.new-ref }}${PURPLE} ref${BLANK}"
+            fi
+          done
         done
       done
     shell: bash

@@ -36,19 +36,20 @@ runs:
         if [[ ${{ inputs.evaluate-update }} = true ]]
         then
           PROMOTION_VERSION=${{ inputs.promotion-version }}
-          echo -e "${YELLOW}[ EXECUTING ] > Promotion mode activated. Evaluating if upgrade is necessary for target repository${BLANK}"
-          newer_version=( "${PROMOTION_VERSION//./}" )
-          curr_version=( "${current_version//./}" )
+          echo -e "${YELLOW}[ EXECUTING ] > Evaluating if upgrade is necessary for version ${PURPLE}${PROMOTION_VERSION}${YELLOW} in target repository${BLANK}"
+
+          function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
           if [[ $PROMOTION_VERSION == "$current_version" ]]
           then
             echo -e "${GREEN}[ CHECK SUCCESS ] > Current version ${YELLOW}${current_version}${GREEN} is the same as promote version ${YELLOW}${PROMOTION_VERSION}${GREEN} Doing nothing.${BLANK}"
             exit 0
           else
-            if [[ ${newer_version[*]} -gt ${curr_version[*]} ]]
+            if [[ 10#$(version $PROMOTION_VERSION) -gt 10#$(version $current_version) ]]
             then
               echo -e "${CYAN}[ INFO ] > Promote version ${PURPLE}${PROMOTION_VERSION}${CYAN} is GREATER than current version ${PURPLE}${current_version}${BLANK}"
               echo -e "${YELLOW}[ EXECUTING ] > Proceeding upgrade${BLANK}"
-            elif [[ ${newer_version[*]} -lt ${curr_version[*]} ]]
+            elif [[ 10#$(version $PROMOTION_VERSION) -lt 10#$(version $current_version) ]]
             then
               echo -e "${GREEN}[ CHECK SUCCESS ] > Promote version ${PURPLE}${PROMOTION_VERSION}${GREEN} is LOWER than current version ${PURPLE}${current_version}${GREEN} Doing nothing.${BLANK}"
               exit 0
