@@ -219,7 +219,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
           update: ${{ inputs.auto-update-chart }}
-          increment: ${{ inputs.chart-increment }}
+          increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
           current-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
       - name: Helm Checkov scan
         id: helm-checkov

@@ -14,6 +14,9 @@ inputs:
   current-version:
     description: current version to update
     required: true
+  component:
+    description: component name
+    required: false
 outputs:
   VERSION:
     description: chart version
@@ -31,6 +34,12 @@ runs:
       then
         echo -e "${YELLOW}[ EXECUTING ] > Version auto update has been triggered for version ${PURPLE}${{ inputs.current-version }}${YELLOW} and increment type ${PURPLE}${{ inputs.increment }}${BLANK}"
         VERSION="${{ inputs.current-version }}"
+        if [[ -n "${{ inputs.component }}" ]]
+        then
+          echo -e "${CYAN}[ INFO ] > component ${{ inputs.component }} detected${BLANK}"
+          VERSION=( ${VERSION//${{ inputs.component }}-/ } )
+          echo -e "${CYAN}[ INFO ] > evaluated version is ${VERSION}${BLANK}"
+        fi
         if [[ ${VERSION} =~ ${REGEX} ]]
         then
           if [[ ${VERSION} == v* ]]; then
@@ -64,6 +73,10 @@ runs:
           if [[ "$has_v" == true ]]; then
             NEW_VERSION="v${NEW_VERSION}"
           fi
+          if [[ -n "${{ inputs.component }}" ]]
+          then
+            NEW_VERSION="${{ inputs.component }}-${NEW_VERSION}"
+          fi          
           echo -e "${CYAN}[ INFO ] > The new version will be --> [[ ${YELLOW}${NEW_VERSION}${CYAN} ]]${BLANK}"
         else
           echo -e "${RED}[ ERROR ] > Version doesn't match regex.${BLANK}"

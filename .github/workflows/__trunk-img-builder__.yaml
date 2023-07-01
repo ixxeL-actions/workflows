@@ -214,11 +214,29 @@ jobs:
         with:
           fetch-depth: '0'
           token: ${{ secrets.git-token }}
-      - name: Set version
-        id: set-version
-        uses: ixxeL-actions/workflows/.github/actions/set-version@main
+      - name: Git config
+        id: git-config
+        if: inputs.release
+        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        with:
+          git-workdir: ${{ inputs.git-workdir }}
+      - name: Get last tag
+        id: get-last-tag
+        uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
+        with:
+          git-workdir: ${{ inputs.workingdir }}
+          pattern: '${{ inputs.component }}-v[0-9]*.[0-9]*.[0-9]*'
+          starting-tag: '${{ inputs.component }}-v0.0.0'
+      - name: Detect bump
+        id: detect-bump
+        uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
+      - name: Bump version
+        id: bump-version
+        uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
           component: ${{ inputs.component }}
+          increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
+          current-version: ${{ steps.get-last-tag.outputs.LAST_TAG }}
       - name: Podman login
         id: podman-login
         if: ${{ inputs.podman-registry != null }}
@@ -238,7 +256,7 @@ jobs:
         with:
           workingdir: ${{ inputs.workingdir }}
           img-name: ${{ inputs.img-name }}
-          tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
+          tag: ${{ steps.bump-version.outputs.VERSION }}
           component: ${{ inputs.component }}
           target-dir: ${{ inputs.target-dir }}
           github-api-rest-token: ${{ secrets.github-api-rest-token }}
@@ -262,25 +280,19 @@ jobs:
           scope: ${{ inputs.scope }}
           template: ${{ inputs.template }}
           verbose: ${{ inputs.verbose }}
-      - name: Git config
-        id: git-config
-        if: inputs.release
-        uses: ixxeL-actions/workflows/.github/actions/git-config@main
-        with:
-          git-workdir: ${{ inputs.git-workdir }}
       - name: Update changelog
         id: changelog
         if: inputs.release
         uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
         with:
           workingdir: ${{ inputs.workingdir }}
-          release-name: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
+          release-name: ${{ steps.bump-version.outputs.VERSION }}
       - name: GH Release
         id: gh-release
         if: inputs.release
         uses: ixxeL-actions/workflows/.github/actions/gh-release@main
         with:
-          tag: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
+          tag: ${{ steps.bump-version.outputs.VERSION }}
           target-branch: ${{ inputs.release-target-branch }}
         env:
           GH_TOKEN: ${{ github.token }}
