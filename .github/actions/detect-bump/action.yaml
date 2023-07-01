@@ -11,6 +11,10 @@ inputs:
     description: time in second to look for last commits
     required: false
     default: 60
+  release-regex:
+    description: regex to find last release
+    required: false
+    default: '\s*:package: CI release.+'
 outputs:
   BUMP_KIND:
     description: kind of bump to proceed
@@ -48,7 +52,7 @@ runs:
         for commit_message in "${commit_messages[@]}"
         do
           filtered_commits+=("$commit_message")
-          RELEASE_REGEX="\s*:package: CI release.+"
+          RELEASE_REGEX="${{ inputs.release-regex }}"
           if [[ $commit_message =~ ${RELEASE_REGEX} ]]; then
             break
           fi

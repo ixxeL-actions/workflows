@@ -230,6 +230,8 @@ jobs:
       - name: Detect bump
         id: detect-bump
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
+        with:
+          release-regex: '\s*:package: CI release of docker image ${{ inputs.component }}.+'
       - name: Bump version
         id: bump-version
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
@@ -293,7 +295,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
           git-token: ${{ secrets.git-token }}
-          git-msg: ':package: CI release of docker image ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+          git-msg: ':package: CI release of docker image ${{ inputs.component }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
           git-workdir: ${{ inputs.git-workdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
