@@ -11,10 +11,18 @@ inputs:
     description: time in second to look for last commits
     required: false
     default: 60
+  select-regex:
+    description: regex to keep commit
+    required: false
+    default: '^(feat\s*(\(.+\))?\s*:.+|feature\s*(\(.+\))?\s*:.+)$' 
   release-regex:
     description: regex to find last release
     required: false
     default: '\s*:package: CI release.+'
+  searching-deepness:
+    description: how much commit to look for
+    required: false
+    default: 20
 outputs:
   BUMP_KIND:
     description: kind of bump to proceed
@@ -44,9 +52,11 @@ runs:
         fi
       elif [[ "${{ inputs.search-type }}" = "last-release" ]]
       then
-        REGEX="^(feat\s*(\(.+\))?\s*:.+|feature\s*(\(.+\))?\s*:.+)$"
+        REGEX="${{ inputs.select-regex }}"
+        TRIGGER_PATH=$(git diff-tree --no-commit-id --name-only -r HEAD)
 
-        mapfile -t commit_messages < <(git log --format=%s -20)
+        echo "Path that triggered the commit is $TRIGGER_PATH"
+        mapfile -t commit_messages < <(git log --format=%s -${{ inputs.searching-deepness }})
         filtered_commits=()
 
         for commit_message in "${commit_messages[@]}"
@@ -87,7 +97,7 @@ runs:
           fi
         done
       fi
-      echo -e "${CYAN}[ INFO ] > Proceeding ${PURPLE}fix${CYAN}  version bump${BLANK}"
+      echo -e "${CYAN}[ INFO ] > Proceeding ${PURPLE}fix${CYAN} version bump${BLANK}"
       echo "BUMP_KIND=fix" >> $GITHUB_OUTPUT
     shell: bash
     env:
