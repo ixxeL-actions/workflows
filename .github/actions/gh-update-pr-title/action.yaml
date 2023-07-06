@@ -4,7 +4,10 @@ description: Updating PR title
 author: fspiers
 inputs:
   tag:
-    required: true
+    required: false
+  pattern:
+    required: false
+    default: ${{ github.event.pull_request.head.ref }}
 
 runs:
   using: composite
@@ -15,10 +18,11 @@ runs:
       echo -e "${CYAN}[ INFO ] > gh version.${BLANK}"
       gh --version
 
-      HEAD_REF=${{ github.event.pull_request.head.ref }}
+      TRIGGER_PATH=$(git diff-tree --no-commit-id --name-only -r HEAD)
+      echo -e "${CYAN}[ INFO ] > Path that triggered the commit is ${YELLOW}${TRIGGER_PATH}.${BLANK}"
       PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
       PR_TITLE=$(jq --raw-output .pull_request.title "$GITHUB_EVENT_PATH")
-      NEW_TITLE="[${{ inputs.tag }}]-${HEAD_REF}"
+      NEW_TITLE="${{ inputs.pattern }}"
 
       echo -e "${YELLOW}[ EXECUTING ] > Updating PR ${PURPLE}${PR_NUMBER}${YELLOW} with title ${PURPLE}${PR_TITLE}${YELLOW} to new title ${PURPLE}${NEW_TITLE}${BLANK}"
       gh pr edit ${PR_NUMBER} -t "${NEW_TITLE}"

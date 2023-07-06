@@ -23,7 +23,7 @@ runs:
   - id: git-get-last-tag
     run: |
       set +e
-      echo -e "${BLUE}[ STEP - DELETE GIT TAG ] > Deleting git tag on origin${BLANK}"
+      echo -e "${BLUE}[ STEP - DELETE GIT TAG ] > Getting last tag${BLANK}"
       echo -e "${CYAN}[ INFO ] > Git version.${BLANK}"
       git version
 
@@ -36,7 +36,7 @@ runs:
       echo -e "${CYAN}[ INFO ] > Fetching all tags${BLANK}"
       git fetch --force --tags --all
 
-      echo -e "${YELLOW}[ EXECUTING ] > Getting last tag${BLANK}"
+      echo -e "${YELLOW}[ EXECUTING ] > Getting last tag from pattern ${PURPLE}${{ inputs.pattern }}${BLANK}"
       LAST_TAG=$(git -C ${{ inputs.git-workdir }} describe --tags --match ${{ inputs.pattern }} --abbrev=0)
       if [[ -n "${LAST_TAG}" ]]; then
         echo -e "${CYAN}[ INFO ] > Last tag is ${PURPLE}${LAST_TAG}${BLANK}"

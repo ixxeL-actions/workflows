@@ -11,7 +11,7 @@ inputs:
     description: time in second to look for last commits
     required: false
     default: 60
-  select-regex:
+  minor-regex:
     description: regex to keep commit
     required: false
     default: '^(feat\s*(\(.+\))?\s*:.+|feature\s*(\(.+\))?\s*:.+)$' 
@@ -52,10 +52,8 @@ runs:
         fi
       elif [[ "${{ inputs.search-type }}" = "last-release" ]]
       then
-        REGEX="${{ inputs.select-regex }}"
-        TRIGGER_PATH=$(git diff-tree --no-commit-id --name-only -r HEAD)
+        REGEX="${{ inputs.minor-regex }}"
 
-        echo "Path that triggered the commit is $TRIGGER_PATH"
         mapfile -t commit_messages < <(git log --format=%s -${{ inputs.searching-deepness }})
         filtered_commits=()
 

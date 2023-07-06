@@ -232,8 +232,8 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
         with:
           release-regex: '\s*:package: CI release of docker image ${{ inputs.component }}.+'
-          select-regex: '.+'
-          searching-deepness: 2
+          minor-regex: '^(feat/.+-\(${{ inputs.component }}\).*|feature/.+-\(${{ inputs.component }}\).*)$' 
+          searching-deepness: 20
       - name: Bump version
         id: bump-version
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
