@@ -49,15 +49,15 @@ on:
       compact:
         required: false
         default: true
-        type: string
+        type: boolean
       quiet:
         required: false
         default: false
-        type: string
+        type: boolean
       no-guide:
         required: false
         default: false
-        type: string
+        type: boolean
       format:
         required: false
         default: cli
@@ -69,7 +69,7 @@ on:
       soft-fail:
         required: false
         default: true
-        type: string
+        type: boolean
       gate:
         required: false
         default: '50'

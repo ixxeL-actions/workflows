@@ -58,15 +58,15 @@ on:
       compact:
         required: false
         default: true
-        type: string
+        type: boolean
       quiet:
         required: false
         default: false
-        type: string
+        type: boolean
       no-guide:
         required: false
         default: false
-        type: string
+        type: boolean
       format:
         required: false
         default: cli
@@ -78,7 +78,7 @@ on:
       soft-fail:
         required: false
         default: true
-        type: string
+        type: boolean
       gate:
         required: false
         default: '50'
@@ -216,7 +216,6 @@ jobs:
           token: ${{ secrets.git-token }}
       - name: Git config
         id: git-config
-        if: inputs.release
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.git-workdir }}
@@ -225,14 +224,16 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
         with:
           git-workdir: ${{ inputs.workingdir }}
-          pattern: '${{ inputs.component }}-v[0-9]*.[0-9]*.[0-9]*'
+          pattern: '${{ inputs.component }}-v?[0-9]+\.[0-9]+\.[0-9]+'
           starting-tag: '${{ inputs.component }}-v0.0.0'
+          branch: ${{ inputs.release-target-branch }}
       - name: Detect bump
         id: detect-bump
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
         with:
           release-regex: '\s*:package: CI release of docker image ${{ inputs.component }}.+'
-          minor-regex: '^(feat/.+-\(${{ inputs.component }}\).*|feature/.+-\(${{ inputs.component }}\).*)$' 
+          minor-regex: '^(feat/.+-\(${{ inputs.component }}\).*|feature/.+-\(${{ inputs.component }}\).*)$'
+          major-regex: '^(breaking/.+-\(${{ inputs.component }}\).*|feat!/.+-\(${{ inputs.component }}\).*|!feat/.+-\(${{ inputs.component }}\).*|feature!/.+-\(${{ inputs.component }}\).*|!feature/.+-\(${{ inputs.component }}\).*)$' 
           searching-deepness: 20
       - name: Bump version
         id: bump-version

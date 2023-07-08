@@ -12,9 +12,13 @@ inputs:
     required: false
     default: 60
   minor-regex:
-    description: regex to keep commit
+    description: regex to minor bump
     required: false
-    default: '^(feat\s*(\(.+\))?\s*:.+|feature\s*(\(.+\))?\s*:.+)$' 
+    default: '^(feat\s*(\(.+\))?\s*:.+|feature\s*(\(.+\))?\s*:.+)$'
+  major-regex:
+    description: regex to major bump
+    required: false
+    default: '^(!feat\s*(\(.+\))?\s*:.+|!feature\s*(\(.+\))?\s*:.+|feat!\s*(\(.+\))?\s*:.+|!feature!\s*(\(.+\))?\s*:.+)$' 
   release-regex:
     description: regex to find last release
     required: false
@@ -52,7 +56,8 @@ runs:
         fi
       elif [[ "${{ inputs.search-type }}" = "last-release" ]]
       then
-        REGEX="${{ inputs.minor-regex }}"
+        MINOR_REGEX="${{ inputs.minor-regex }}"
+        MAJOR_REGEX="${{ inputs.major-regex }}"
 
         mapfile -t commit_messages < <(git log --format=%s -${{ inputs.searching-deepness }})
         filtered_commits=()
@@ -69,10 +74,15 @@ runs:
         for filtered_commit in "${filtered_commits[@]}"
         do
           echo -e "${CYAN}[ INFO ] > Git commit is ${PURPLE}$filtered_commit${BLANK}"
-          if [[ ${filtered_commit} =~ ${REGEX} ]]
+          if [[ ${filtered_commit} =~ ${MINOR_REGEX} ]]
           then
             echo -e "${CYAN}[ INFO ] > Feature detected in commit, proceeding ${PURPLE}minor${CYAN} version bump${BLANK}"
             echo "BUMP_KIND=minor" >> $GITHUB_OUTPUT
+            exit 0
+          elif [[ ${filtered_commit} =~ ${MAJOR_REGEX} ]]
+          then
+            echo -e "${CYAN}[ INFO ] > Breaking change detected in commit, proceeding ${PURPLE}major${CYAN} version bump${BLANK}"
+            echo "BUMP_KIND=major" >> $GITHUB_OUTPUT
             exit 0
           fi
         done
