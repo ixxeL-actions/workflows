@@ -33,9 +33,10 @@ runs:
       do
         echo -e "${CYAN}[ INFO ] > Changed path is ${YELLOW}${file}${BLANK}"
         COMPONENT_NAME=$(echo ${file} | awk -F'/' -v nb="${{ inputs.component-path-position }}" '{print $nb}')
-        if [[ ! " ${uniq_components[@]} " =~ " $COMPONENT_NAME " ]]
-        then
-          uniq_components+=("$COMPONENT_NAME")
+        if [[ "$COMPONENT_NAME" != ".github" ]]; then
+          if [[ ! " ${uniq_components[@]} " =~ " $COMPONENT_NAME " ]]; then
+            uniq_components+=("$COMPONENT_NAME")
+          fi
         fi
       done
 
