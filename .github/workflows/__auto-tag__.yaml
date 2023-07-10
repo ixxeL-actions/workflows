@@ -117,6 +117,7 @@ jobs:
         with:
           tag: ${{ steps.bump-version.outputs.VERSION }}
           verify-tag: ${{ inputs.release-verify-tag }}
+          last-tag: ${{ steps.get-last-tag.outputs.LAST_TAG }}
           target-branch: ${{ inputs.release-target-branch }}
         env:
           GH_TOKEN: ${{ github.token }}
@@ -135,7 +136,6 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
       - name: Git update base tag
         id: git-tag
-        # if: inputs.update-base-tag == 'true'
         uses: ixxeL-actions/workflows/.github/actions/git-tag@main
         with:
           tag-msg: 'update tag semver [skip ci]'
@@ -145,7 +145,6 @@ jobs:
           commit-sha: ${{ steps.git-push.outputs.GIT_PUSHED_COMMIT_SHA }}
       - name: Git revert to main
         id: git-revert
-        # if: inputs.update-base-tag == 'true'
         uses: ixxeL-actions/workflows/.github/actions/git-revert@main
         with:
           git-workdir: ${{ inputs.workingdir }}

@@ -4,7 +4,7 @@ description: Reverting a commit
 author: fspiers
 inputs:
   tag:
-    required: true
+    required: false
   git-workdir:
     required: false
     default: .
