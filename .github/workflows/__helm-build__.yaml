@@ -208,22 +208,22 @@ jobs:
           fetch-depth: '0'
       - name: Helm linting
         id: helm-lint
-        uses: ixxeL-actions/workflows/.github/actions/helm-lint@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
         with:
           workingdir: ${{ inputs.workingdir }}
       - name: Detect bump
         id: detect-bump
-        uses: ixxeL-actions/workflows/.github/actions/detect-bump@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
       - name: Bump version
         id: bump-version
-        uses: ixxeL-actions/workflows/.github/actions/bump-version@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
           update: ${{ inputs.auto-update-chart }}
           increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
           current-version: ${{ steps.helm-lint.outputs.CHART_VERSION }}
       - name: Helm Checkov scan
         id: helm-checkov
-        uses: ixxeL-actions/workflows/.github/actions/checkov@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/checkov@main
         with:
           workingdir: ${{ inputs.workingdir }}
           artefact: ${{ inputs.checkov-artefact }}
@@ -240,14 +240,14 @@ jobs:
           framework: ${{ inputs.checkov-framework }}
       - name: Helm Unit testing
         id: helm-unittest
-        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
         with:
           workingdir: ${{ inputs.workingdir }}
           with-subchart: ${{ inputs.helm-with-subchart }}
           tests-dir: ${{ inputs.helm-tests-dir }}
       - name: Helm Templating
         id: helm-template
-        uses: ixxeL-actions/workflows/.github/actions/helm-template@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-template@main
         with:
           workingdir: ${{ inputs.workingdir }}
           strict: ${{ inputs.helm-strict }}
@@ -260,7 +260,7 @@ jobs:
           output-file: ${{ inputs.helm-output-file }}
       - name: Helm Packaging
         id: helm-package
-        uses: ixxeL-actions/workflows/.github/actions/helm-package@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-package@main
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
@@ -270,7 +270,7 @@ jobs:
       - name: Helm pushing
         id: helm-push
         if: inputs.release
-        uses: ixxeL-actions/workflows/.github/actions/helm-push@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-push@main
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ steps.helm-lint.outputs.CHART_NAME }}
@@ -288,7 +288,7 @@ jobs:
       - name: Chart update
         id: chart-update
         if: (inputs.auto-update-chart == 'true') && (inputs.release)
-        uses: ixxeL-actions/workflows/.github/actions/chart-update@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/chart-update@main
         with:
           workingdir: ${{ inputs.workingdir }}
           evaluate-update: ${{ inputs.evaluate-update }}
@@ -296,19 +296,19 @@ jobs:
       - name: Helm docs
         id: helm-docs
         if: (inputs.auto-update-chart == 'true') && (inputs.release)
-        uses: ixxeL-actions/workflows/.github/actions/helm-docs@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/helm-docs@main
         with:
           chart-search-root: ${{ inputs.workingdir }}
       - name: Git config
         id: git-config
         if: (inputs.auto-update-chart == 'true') && (inputs.release)
-        uses: ixxeL-actions/workflows/.github/actions/git-config@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.git-workdir }}
       - name: Git push
         id: git-push
         if: (inputs.auto-update-chart == 'true') && (inputs.release)
-        uses: ixxeL-actions/workflows/.github/actions/git-push@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
           git-token: ${{ secrets.PAT }}
           git-msg: ':package: CI release of helm chart ${{ env.COMPONENT_NAME }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
@@ -318,7 +318,7 @@ jobs:
       - name: GH Release
         id: gh-release
         if: (inputs.auto-tag-repo == 'true') && (inputs.auto-update-chart == 'true') && (inputs.release)
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@v1.2.0
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
         with:
           tag: ${{ env.COMPONENT_NAME }}-${{ steps.bump-version.outputs.VERSION }}
           verify-tag: ${{ inputs.release-verify-tag }}
