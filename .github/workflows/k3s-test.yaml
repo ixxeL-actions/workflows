@@ -54,7 +54,7 @@ on:
       compact:
         required: false
         default: true
-        type: string
+        type: boolean
       quiet:
         required: false
         default: false
