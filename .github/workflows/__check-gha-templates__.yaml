@@ -34,8 +34,8 @@ jobs:
     name: Check GHA templates
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # container:
-    #   image: ${{ inputs.ci-image }}
+    container:
+      image: ${{ inputs.ci-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
