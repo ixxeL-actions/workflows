@@ -28,7 +28,6 @@ on:
         required: false
         default: .github/workflows/*
         type: string
-
 jobs:
   check-gha-templates:
     name: Check GHA templates
@@ -42,7 +41,7 @@ jobs:
         shell: bash
       - name: Shellcheck GHA
         id: shellcheck-gha
-        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@main
+        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@v1.3.1
         with:
           path: ${{ inputs.shellcheck-path }}
           exclude: ${{ inputs.shellcheck-exclude }}
