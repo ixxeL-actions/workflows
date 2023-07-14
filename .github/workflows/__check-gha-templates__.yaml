@@ -34,18 +34,20 @@ jobs:
     name: Check GHA templates
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container:
-      image: ${{ inputs.ci-image }}
+    # container:
+    #   image: ${{ inputs.ci-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
+      - run: python -m pip install pre-commit
+        shell: bash
+      - run: python -m pip freeze --local
+        shell: bash
+      # - uses: actions/cache@v3
+      #   with:
+      #     path: ~/.cache/pre-commit
+      #     key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
       - run: |
-          pwd
-          ls -la
           pre-commit run --show-diff-on-failure --color=always ${{ inputs.extra_args }}
         shell: bash
       - name: Shellcheck GHA
