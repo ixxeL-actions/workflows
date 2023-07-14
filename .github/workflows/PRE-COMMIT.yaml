@@ -30,7 +30,7 @@ jobs:
       - uses: pre-commit/action@v3.0.0
       - name: Shellcheck GHA
         id: shellcheck-gha
-        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@main
         with:
           path: .github/
           exclude: ".github/workflows/*"

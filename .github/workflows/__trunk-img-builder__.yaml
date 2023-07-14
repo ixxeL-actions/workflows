@@ -216,12 +216,12 @@ jobs:
           token: ${{ secrets.git-token }}
       - name: Git config
         id: git-config
-        uses: ixxeL-actions/workflows/.github/actions/git-config@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.git-workdir }}
       - name: Get last tag
         id: get-last-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
         with:
           git-workdir: ${{ inputs.workingdir }}
           pattern: '${{ inputs.component }}-v?[0-9]+\.[0-9]+\.[0-9]+'
@@ -229,7 +229,7 @@ jobs:
           branch: ${{ inputs.release-target-branch }}
       - name: Detect bump
         id: detect-bump
-        uses: ixxeL-actions/workflows/.github/actions/detect-bump@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
         with:
           release-regex: '\s*:package: CI release of docker image ${{ inputs.component }}.+'
           minor-regex: '^(feat/.+-\(${{ inputs.component }}\).*|feature/.+-\(${{ inputs.component }}\).*)$'
@@ -237,7 +237,7 @@ jobs:
           searching-deepness: 20
       - name: Bump version
         id: bump-version
-        uses: ixxeL-actions/workflows/.github/actions/bump-version@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
           component: ${{ inputs.component }}
           increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
@@ -245,7 +245,7 @@ jobs:
       - name: Podman login
         id: podman-login
         if: ${{ inputs.podman-registry != null }}
-        uses: ixxeL-actions/workflows/.github/actions/podman-login@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/podman-login@main
         with:
           podman-docker: ${{ inputs.podman-docker }}
           docker-config: ${{ inputs.docker-config }}
@@ -257,7 +257,7 @@ jobs:
           docker-hub-login: ${{ inputs.docker-hub-login }}
       - name: Buildkit build
         id: buildkit-build
-        uses: ixxeL-actions/workflows/.github/actions/buildkit@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/buildkit@main
         with:
           workingdir: ${{ inputs.workingdir }}
           img-name: ${{ inputs.img-name }}
@@ -275,7 +275,7 @@ jobs:
           oci-worker-snapshotter: ${{ inputs.oci-worker-snapshotter }}
       - name: Grype scan
         id: grype-scan
-        uses: ixxeL-actions/workflows/.github/actions/grype@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/grype@main
         continue-on-error: true
         with:
           image-ref: ${{ inputs.target-dir }}/${{ inputs.img-name }}.tar
@@ -288,14 +288,14 @@ jobs:
       - name: Update changelog
         id: changelog
         if: inputs.release
-        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
         with:
           workingdir: ${{ inputs.workingdir }}
           release-name: ${{ steps.bump-version.outputs.VERSION }}
       - name: Git push
         id: git-push
         if: inputs.release
-        uses: ixxeL-actions/workflows/.github/actions/git-push@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
           git-token: ${{ secrets.git-token }}
           git-msg: ":package: CI release of docker image ${{ inputs.component }} version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]"
@@ -305,7 +305,7 @@ jobs:
       - name: GH Release
         id: gh-release
         if: inputs.release
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@v1.3.0
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
         with:
           tag: ${{ steps.bump-version.outputs.VERSION }}
           target-branch: ${{ inputs.release-target-branch }}
