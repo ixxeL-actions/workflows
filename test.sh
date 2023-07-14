@@ -14,3 +14,14 @@ inputs=test
 VERSION=${VERSION//${inputs}-/ }
 
 echo $VERSION
+
+
+VERSION=$(echo "$VERSION" | sed 's/v/ /g')
+
+
+ver=($(echo "$VERSION" | sed 's/\./ /g'))
+
+# ver=( ${VERSION//./ } )
+
+echo $ver
+echo ${ver[0]}.${ver[1]}.${ver[2]}

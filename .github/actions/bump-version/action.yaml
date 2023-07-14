@@ -37,19 +37,19 @@ runs:
           if [[ -n "${{ inputs.component }}" ]]
           then
             echo -e "${CYAN}[ INFO ] > component ${{ inputs.component }} detected${BLANK}"
-            VERSION=${VERSION//${{ inputs.component }}-/ }
+            VERSION=$(echo "$VERSION" | sed 's/${{ inputs.component }}-/ /g')
             echo -e "${CYAN}[ INFO ] > evaluated version is ${VERSION}${BLANK}"
           fi
           if [[ ${VERSION} =~ ${REGEX} ]]
           then
             if [[ ${VERSION} == v* ]]; then
               has_v=true
-              VERSION=( ${VERSION//v/ } )
+              VERSION=$(echo "$VERSION" | sed 's/v/ /g')
               echo -e "${CYAN}[ INFO ] > v prefix detected${BLANK}"
             else
               has_v=false
             fi
-            ver=( ${VERSION//./ } )
+            ver=($(echo "$VERSION" | sed 's/\./ /g'))
             if [[ "${{ inputs.increment }}" = "fix" ]]
             then
               echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
