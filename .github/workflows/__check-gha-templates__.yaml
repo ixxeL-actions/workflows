@@ -23,7 +23,6 @@ on:
         required: false
         default: .github/workflows/*
         type: string
-
 jobs:
   check-gha-templates:
     name: Check GHA templates
@@ -34,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v4
       - name: Pre-commit
         id: pre-commit
-        uses: ixxeL-actions/workflows/.github/actions/pre-commit@test/test
+        uses: ixxeL-actions/workflows/.github/actions/pre-commit@main
       - name: Shellcheck GHA
         id: shellcheck-gha
         uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@main
