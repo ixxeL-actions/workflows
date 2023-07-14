@@ -146,7 +146,6 @@ runs:
           LATEST_TAG="latest"
         fi
 
-        CACHE_REGISTRY=$(echo ${{ inputs.cache-registry }} | sed 's/\/$//')
         echo -e "${CYAN}[ INFO ] > Using cache tag ${YELLOW}${CACHE_TAG}${CYAN} and latest tag ${YELLOW}${LATEST_TAG}${BLANK}"
         if [[ "${{ inputs.caching }}" = true && "${{ inputs.cache-registry }}" != "" ]]
         then

@@ -37,7 +37,7 @@ runs:
           if [[ -n "${{ inputs.component }}" ]]
           then
             echo -e "${CYAN}[ INFO ] > component ${{ inputs.component }} detected${BLANK}"
-            VERSION=( ${VERSION//${{ inputs.component }}-/ } )
+            VERSION=${VERSION//${{ inputs.component }}-/ }
             echo -e "${CYAN}[ INFO ] > evaluated version is ${VERSION}${BLANK}"
           fi
           if [[ ${VERSION} =~ ${REGEX} ]]
