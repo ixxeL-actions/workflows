@@ -45,7 +45,7 @@ BLANK="\033[0m"
           fi
         done
 
-        if [[ ${#uniq_components[@]} -gt 0 ]]; then
+        if [[ ${#uniq_components[*]} -gt 0 ]]; then
           echo -e "${CYAN}[ INFO ] > Component name is ${YELLOW}${uniq_components[0]}${BLANK}"
           echo "COMPONENT_NAME=${uniq_components[0]}"
           exit 0

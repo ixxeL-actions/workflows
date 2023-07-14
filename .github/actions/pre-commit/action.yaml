@@ -37,7 +37,7 @@ runs:
         else
           VERSION=$(curl -sSLf https://github.com/mpalmer/action-validator/releases | grep -oE "v[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | uniq | sort -rV | head -1)
           echo -e "${YELLOW}[ EXECUTING ] > Installing action-validator version $VERSION${BLANK}"
-          wget https://github.com/mpalmer/action-validator/releases/download/${VERSION}/action-validator_linux_amd64
+          curl -sSfLO "https://github.com/mpalmer/action-validator/releases/download/${VERSION}/action-validator_linux_amd64"
           chmod +x action-validator_linux_amd64
           sudo mv action-validator_linux_amd64 /usr/local/bin/action-validator
         fi
