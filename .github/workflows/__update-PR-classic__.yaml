@@ -46,13 +46,6 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.workingdir }}
-      - name: Get component name
-        id: get-component-name
-        uses: ixxeL-actions/workflows/.github/actions/dynamic-fetch-component@main
-        with:
-          component-path-position: ${{ inputs.component-path-position }}
-        env:
-          GH_TOKEN: ${{ github.token }}
       - name: Get last tag
         id: get-last-tag
         uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
@@ -63,6 +56,6 @@ jobs:
         id: update-pr-title
         uses: ixxeL-actions/workflows/.github/actions/gh-update-pr-title@main
         with:
-          pattern: "${{ github.event.pull_request.head.ref }}-(${{ steps.get-component-name.outputs.COMPONENT_NAME }})"
+          pattern: ${{ inputs.pr-pattern }}
         env:
           GH_TOKEN: ${{ github.token }}

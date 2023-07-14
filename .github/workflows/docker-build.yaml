@@ -51,7 +51,6 @@ on:
         required: false
         default: true
         type: boolean
-
 jobs:
   docker-test-build:
     concurrency:

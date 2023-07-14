@@ -1,0 +1,35 @@
+name: Pre-commit check
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - "main"
+jobs:
+  pre-commit:
+    runs-on: [self-hosted, decathlon]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - id: prepare
+        run: |
+          if [[ $(action-validator --version) ]]
+          then
+              echo "skipping installation"
+          else
+            VERSION=$(curl -sSLf https://github.com/mpalmer/action-validator/releases | grep -oE "v[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}" | uniq | sort -rV | head -1)
+            wget https://github.com/mpalmer/action-validator/releases/download/${VERSION}/action-validator_linux_amd64
+            chmod +x action-validator_linux_amd64
+            sudo mv action-validator_linux_amd64 /usr/local/bin/action-validator
+          fi
+        shell: bash
+      - uses: pre-commit/action@v3.0.0
+      - name: Shellcheck GHA
+        id: shellcheck-gha
+        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@feat/refactor
+        with:
+          path: .github/
+          exclude: ".github/workflows/*"
+          severity: warning
