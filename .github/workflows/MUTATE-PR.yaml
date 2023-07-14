@@ -6,5 +6,5 @@ on:
       - opened
 jobs:
   update-pr:
-    uses: ixxeL-actions/workflows/.github/workflows/__update-PR-classic__.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__update-PR-classic__.yaml@v1.3.0
     secrets: inherit
