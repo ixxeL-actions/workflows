@@ -10,7 +10,7 @@ BLANK="\033[0m"
 ACTIONS_ORGA=ixxeL-actions
 DIR_WORKFLOWS="./.github/workflows/*.yaml"
 PROJECT_REF=$1
- 
+
 for file in $DIR_WORKFLOWS
 do
     for line in $(yq e '.jobs[].steps[].uses | select(.) | select(.=="'"$ACTIONS_ORGA"'*@*")' $file)

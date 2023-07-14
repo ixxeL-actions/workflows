@@ -72,7 +72,7 @@ jobs:
       - name: Clone code
         uses: actions/checkout@v3
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
           token: ${{ secrets.git-token }}
       - name: Git config
         id: git-config
@@ -107,7 +107,7 @@ jobs:
         id: git-push
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
-          git-msg: ':package: CI release version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+          git-msg: ":package: CI release version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]"
           git-workdir: ${{ inputs.workingdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
@@ -138,7 +138,7 @@ jobs:
         id: git-tag
         uses: ixxeL-actions/workflows/.github/actions/git-tag@main
         with:
-          tag-msg: 'update tag semver [skip ci]'
+          tag-msg: "update tag semver [skip ci]"
           tag-value: ${{ steps.extract-major.outputs.BASE_VERSION }}
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
@@ -150,4 +150,4 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
           commit-sha-revert: ${{ steps.git-push.outputs.GIT_PUSHED_COMMIT_SHA }}
-          git-msg: ':recycle: reverted main ref [skip ci]'
+          git-msg: ":recycle: reverted main ref [skip ci]"

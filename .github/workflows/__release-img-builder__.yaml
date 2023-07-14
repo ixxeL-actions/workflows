@@ -72,7 +72,7 @@ on:
         type: boolean
       gate:
         required: false
-        default: '50'
+        default: "50"
         type: string
       # podman login
       podman-docker:
@@ -168,7 +168,7 @@ on:
       verbose:
         description: increase verbosity (-v = info, -vv = debug)
         required: false
-        default: ''
+        default: ""
         type: string
       # git tag
       git-workdir:
@@ -177,7 +177,7 @@ on:
         type: string
       tag-msg:
         required: false
-        default: 'ci'
+        default: "ci"
         type: string
       push-option:
         required: false
@@ -224,7 +224,7 @@ jobs:
         id: clone
         uses: actions/checkout@v3
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
       - name: Set version
         id: set-version
         uses: ixxeL-actions/workflows/.github/actions/set-version@main
@@ -292,7 +292,7 @@ jobs:
         if: contains( github.ref, 'release' ) || contains( github.base_ref, 'release' )
         uses: ixxeL-actions/workflows/.github/actions/git-tag@main
         with:
-          tag-msg: 'CI release of ${{ inputs.component }} version ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}'
+          tag-msg: "CI release of ${{ inputs.component }} version ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}"
           tag-value: ${{ steps.set-version.outputs.PROJECT_SHORT_VERSION }}
           git-workdir: ${{ inputs.git-workdir }}
           push-option: ${{ inputs.push-option }}

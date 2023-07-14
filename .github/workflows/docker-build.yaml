@@ -55,7 +55,7 @@ on:
 jobs:
   docker-test-build:
     concurrency:
-      group: '${{ github.workflow }}-${{ github.head_ref }}'
+      group: "${{ github.workflow }}-${{ github.head_ref }}"
       cancel-in-progress: true
     if: (!contains(fromJSON('["refs/heads/master", "refs/heads/main"]'), github.ref))
     uses: ixxeL-actions/workflows/.github/workflows/__trunk-img-builder__.yaml@main
@@ -79,7 +79,7 @@ jobs:
       registry-password: ${{ secrets.DOCKER_IO_PWD }}
   docker-full-build:
     concurrency:
-      group: '${{ github.ref }}'
+      group: "${{ github.ref }}"
       cancel-in-progress: true
     if: contains(fromJSON('["refs/heads/master", "refs/heads/main"]'), github.ref)
     uses: ixxeL-actions/workflows/.github/workflows/__trunk-img-builder__.yaml@main

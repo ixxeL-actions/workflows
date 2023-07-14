@@ -6,7 +6,7 @@ on:
 
   workflow_call:
     inputs:
-    # General
+      # General
       workingdir:
         required: false
         default: .
@@ -36,7 +36,7 @@ on:
         required: false
         default: main
         type: string
-    # helm unit tests
+      # helm unit tests
       with-subchart:
         description: include subchart
         required: false
@@ -47,7 +47,7 @@ on:
         required: false
         default: tests/*.yaml
         type: string
-    # Checkov
+      # Checkov
       artefact:
         required: true
         type: string
@@ -73,7 +73,7 @@ on:
         type: string
       gate:
         required: false
-        default: '0'
+        default: "0"
         type: string
       skip-path:
         required: false
@@ -90,7 +90,7 @@ on:
       framework:
         required: false
         type: string
-    # helm template
+      # helm template
       strict:
         description: use strict mode
         required: false
@@ -233,35 +233,35 @@ jobs:
       # image: ${{ inputs.cd-image }}
       image: rancher/k3d:5.3.0-dind
     steps:
-    - name: prepare k3d
-      id: prepare-k3d
-      run: |
-        apk add curl
-        KUBECTL_VERSION=$(curl -L "https://storage.googleapis.com/kubernetes-release/release/stable.txt")
-        curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-        chmod +x ./kubectl
-        mv ./kubectl /usr/local/bin
-        # curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-        # npm install -g github-files-fetcher
-        # fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
-        # chmod +x ./run.sh
-    - name: execute k3d
-      id: execute-k3d
-      run: |
-        set +e
-        k3d cluster create --no-lb --k3s-arg '--kube-proxy-arg=conntrack-max-per-core=0@server:*' --k3s-arg '--kube-proxy-arg=conntrack-max-per-core=0@agent:*' --k3s-arg '--no-deploy=traefik'
-        sleep 1
-        k3d kubeconfig merge -s -o ./config
-        cat config
-        docker ps
-        docker logs k3d-k3s-default-server-0
-        kubectl cluster-info --kubeconfig ./config
-        kubectl get pods -A --kubeconfig ./config
-        # ./run.sh deploy
-      env:
-        CLUSTER_NAME: test-cluster-1
-        ARGS: "--servers=1 --no-lb --k3s-arg '--no-deploy=traefik'"
-        K3D_VERSION: v5.3.0
+      - name: prepare k3d
+        id: prepare-k3d
+        run: |
+          apk add curl
+          KUBECTL_VERSION=$(curl -L "https://storage.googleapis.com/kubernetes-release/release/stable.txt")
+          curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv ./kubectl /usr/local/bin
+          # curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          # npm install -g github-files-fetcher
+          # fetcher --url="https://github.com/AbsaOSS/k3d-action/blob/main/run.sh" --out=./
+          # chmod +x ./run.sh
+      - name: execute k3d
+        id: execute-k3d
+        run: |
+          set +e
+          k3d cluster create --no-lb --k3s-arg '--kube-proxy-arg=conntrack-max-per-core=0@server:*' --k3s-arg '--kube-proxy-arg=conntrack-max-per-core=0@agent:*' --k3s-arg '--no-deploy=traefik'
+          sleep 1
+          k3d kubeconfig merge -s -o ./config
+          cat config
+          docker ps
+          docker logs k3d-k3s-default-server-0
+          kubectl cluster-info --kubeconfig ./config
+          kubectl get pods -A --kubeconfig ./config
+          # ./run.sh deploy
+        env:
+          CLUSTER_NAME: test-cluster-1
+          ARGS: "--servers=1 --no-lb --k3s-arg '--no-deploy=traefik'"
+          K3D_VERSION: v5.3.0
     # - name: k3s create cluster
     #   id: k3s-create-cluster
     #   uses: AbsaOSS/k3d-action@v2
