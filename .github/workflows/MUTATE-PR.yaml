@@ -7,4 +7,5 @@ on:
 jobs:
   update-pr:
     uses: ixxeL-actions/workflows/.github/workflows/__update-PR-classic__.yaml@main
-    secrets: inherit
+    secrets:
+      git-token: ${{ secrets.PAT }}
