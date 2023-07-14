@@ -41,8 +41,11 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: ~/.cache/pre-commit
-          key: pre-commit-3|/usr/bin/|${{ hashFiles('.pre-commit-config.yaml') }}
-      - run: pre-commit run --show-diff-on-failure --color=always ${{ inputs.extra_args }}
+          key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
+      - run: |
+          pwd
+          ls -la
+          pre-commit run --show-diff-on-failure --color=always ${{ inputs.extra_args }}
         shell: bash
       - name: Shellcheck GHA
         id: shellcheck-gha
