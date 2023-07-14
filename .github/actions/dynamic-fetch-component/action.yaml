@@ -34,13 +34,13 @@ runs:
           echo -e "${CYAN}[ INFO ] > Changed path is ${YELLOW}${file}${BLANK}"
           COMPONENT_NAME=$(echo ${file} | awk -F'/' -v nb="${{ inputs.component-path-position }}" '{print $nb}')
           if [[ "$COMPONENT_NAME" != ".github" ]]; then
-            if [[ ! " ${uniq_components[@]} " =~ " $COMPONENT_NAME " ]]; then
+            if [[ ! " ${uniq_components[*]} " =~ " $COMPONENT_NAME " ]]; then
               uniq_components+=("$COMPONENT_NAME")
             fi
           fi
         done
 
-        if [[ ${#uniq_components[*]} -gt 0 ]]; then
+        if [[ ${#uniq_components[@]} -gt 0 ]]; then
           echo -e "${CYAN}[ INFO ] > Component name is ${YELLOW}${uniq_components[0]}${BLANK}"
           echo "COMPONENT_NAME=${uniq_components[0]}" >> $GITHUB_OUTPUT
           exit 0
