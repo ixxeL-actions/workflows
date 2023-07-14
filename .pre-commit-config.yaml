@@ -6,7 +6,7 @@ ci:
   autoupdate_branch: ""
   autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: weekly
-  skip: []
+  skip: [action-validator]
   submodules: false
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [commit, manual]
