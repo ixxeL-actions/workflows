@@ -72,7 +72,7 @@ jobs:
       - name: Clone code
         uses: actions/checkout@v3
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
           token: ${{ secrets.git-token }}
       - name: Git config
         id: git-config
@@ -84,11 +84,18 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
         with:
           git-workdir: ${{ inputs.workingdir }}
+      - name: Detect bump
+        id: detect-bump
+        uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
+        with:
+          release-regex: '\s*:package: CI release version ${{ steps.get-last-tag.outputs.LAST_TAG }}.+'
+          minor-regex: ^(feat/.+)$
+          major-regex: ^((((feat|fix|chore|docs|perf|refactor|build|ci|revert|style|test)!)|(!(feat|fix|chore|docs|perf|refactor|build|ci|revert|style|test)))/.+)$
       - name: Bump version
         id: bump-version
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
-          increment: ${{ inputs.increment }}
+          increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
           current-version: ${{ steps.get-last-tag.outputs.LAST_TAG }}
       - name: Substitute ref
         id: substitute-ref
@@ -107,7 +114,7 @@ jobs:
         id: git-push
         uses: ixxeL-actions/workflows/.github/actions/git-push@main
         with:
-          git-msg: ':package: CI release version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]'
+          git-msg: ":package: CI release version ${{ steps.bump-version.outputs.VERSION }} from user ${GITHUB_ACTOR} [skip ci]"
           git-workdir: ${{ inputs.workingdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
@@ -138,7 +145,7 @@ jobs:
         id: git-tag
         uses: ixxeL-actions/workflows/.github/actions/git-tag@main
         with:
-          tag-msg: 'update tag semver [skip ci]'
+          tag-msg: "update tag semver [skip ci]"
           tag-value: ${{ steps.extract-major.outputs.BASE_VERSION }}
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
@@ -150,4 +157,4 @@ jobs:
           git-workdir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
           commit-sha-revert: ${{ steps.git-push.outputs.GIT_PUSHED_COMMIT_SHA }}
-          git-msg: ':recycle: reverted main ref [skip ci]'
+          git-msg: ":recycle: reverted main ref [skip ci]"

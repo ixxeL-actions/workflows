@@ -5,7 +5,6 @@ on:
     secrets:
       git-token:
         required: false
-
 jobs:
   update-pr-title:
     uses: ixxeL-actions/workflows/.github/workflows/__update-PR__.yaml@main
