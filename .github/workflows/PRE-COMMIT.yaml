@@ -8,11 +8,13 @@ on:
       - "main"
 jobs:
   pre-commit:
-    runs-on: [self-hosted, decathlon]
+    name: Check GHA templates
+    runs-on: ubuntu-latest
     timeout-minutes: 15
+    container:
+      image: ixxel/toolbox:builder-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
       - id: prepare
         run: |
           if [[ $(action-validator --version) ]]
@@ -28,7 +30,7 @@ jobs:
       - uses: pre-commit/action@v3.0.0
       - name: Shellcheck GHA
         id: shellcheck-gha
-        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@feat/refactor
+        uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@main
         with:
           path: .github/
           exclude: ".github/workflows/*"
