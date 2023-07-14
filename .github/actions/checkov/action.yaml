@@ -176,11 +176,11 @@ runs:
         passed=$(echo ${json_result} | jq 'if type == "array" then .[] else . end | .summary?.passed?')
         failed=$(echo ${json_result} | jq 'if type == "array" then .[] else . end | .summary?.failed?')
         totalPassed=0
-        for pass in ${passed[@]}; do
+        for pass in "${passed[@]}"; do
           totalPassed=$(echo | awk "{print ${pass}+${totalPassed}}")
         done
         totalFailed=0
-        for fail in ${failed[@]}; do
+        for fail in "${failed[@]}"; do
           totalFailed=$(echo | awk "{print ${fail}+${totalFailed}}")
         done
         total=$(echo | awk "{print ${totalPassed}+${totalFailed}}")

@@ -46,7 +46,6 @@ runs:
         while IFS= read -r line; do
           commit_type=$(echo "$line" | awk -F' ' '{print $2}' | grep -Eo "(feat|fix|chore|docs|style|refactor|test|perf|build|ci|revert)")
           full_commit_msg=$(echo "$line" |awk '{$1=""; print $0}')
-          commit_message=$(echo "$line" | cut -d':' -f2-)
           commit_sha=$(echo "$line" | awk -F' ' '{print $1}')
 
           if [[ -n $commit_type ]]; then

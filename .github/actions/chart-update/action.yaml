@@ -45,11 +45,11 @@ runs:
               echo -e "${GREEN}[ CHECK SUCCESS ] > Current version ${YELLOW}${current_version}${GREEN} is the same as promote version ${YELLOW}${PROMOTION_VERSION}${GREEN} Doing nothing.${BLANK}"
               exit 0
             else
-              if [[ 10#$(version $PROMOTION_VERSION) -gt 10#$(version $current_version) ]]
+              if [[ $(version $PROMOTION_VERSION) > $(version $current_version) ]]
               then
                 echo -e "${CYAN}[ INFO ] > Promote version ${PURPLE}${PROMOTION_VERSION}${CYAN} is GREATER than current version ${PURPLE}${current_version}${BLANK}"
                 echo -e "${YELLOW}[ EXECUTING ] > Proceeding upgrade${BLANK}"
-              elif [[ 10#$(version $PROMOTION_VERSION) -lt 10#$(version $current_version) ]]
+              elif [[ $(version $PROMOTION_VERSION) < $(version $current_version) ]]
               then
                 echo -e "${GREEN}[ CHECK SUCCESS ] > Promote version ${PURPLE}${PROMOTION_VERSION}${GREEN} is LOWER than current version ${PURPLE}${current_version}${GREEN} Doing nothing.${BLANK}"
                 exit 0
