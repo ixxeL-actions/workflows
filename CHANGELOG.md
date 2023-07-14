@@ -18,9 +18,3 @@
 
 - `a0a46f5`: revert to main
 - `fcacbc7`: revert to main
-
-## Release v1.3.2 - 2023-07-15
-#### Test
-test
-- `4ca0817`: test/test (#3)
-
