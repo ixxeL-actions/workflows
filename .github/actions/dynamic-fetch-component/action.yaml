@@ -24,7 +24,7 @@ runs:
 
         PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
         echo -e "${CYAN}[ INFO ] > PR number is ${YELLOW}${PR_NUMBER}${BLANK}"
-        declare -A changed_files
+        # declare -A changed_files
         declare -a uniq_components
         changed_files=$(gh pr view ${PR_NUMBER} --json files --jq '.files.[].path')
         IFS=$'\n' read -rd '' -a files_array <<<"$changed_files"
