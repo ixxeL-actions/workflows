@@ -8,11 +8,6 @@ on:
         required: false
         default: "--all-files"
         type: string
-      ci-image:
-        description: Docker image used for CI jobs
-        required: false
-        default: ixxel/toolbox:ci-latest
-        type: string
       shellcheck-severity:
         description: Severity for shellcheck scan
         required: false
@@ -34,22 +29,12 @@ jobs:
     name: Check GHA templates
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    container:
-      image: ${{ inputs.ci-image }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-      - run: python -m pip install pre-commit
-        shell: bash
-      - run: python -m pip freeze --local
-        shell: bash
-      # - uses: actions/cache@v3
-      #   with:
-      #     path: ~/.cache/pre-commit
-      #     key: pre-commit-3|/usr/bin/python3|${{ hashFiles('.pre-commit-config.yaml') }}
-      - run: |
-          pre-commit run --show-diff-on-failure --color=always ${{ inputs.extra_args }}
-        shell: bash
+      - name: Pre-commit
+        id: pre-commit
+        uses: ixxeL-actions/workflows/.github/actions/pre-commit@test/test
       - name: Shellcheck GHA
         id: shellcheck-gha
         uses: ixxeL-actions/workflows/.github/actions/shellcheck-gha@main
