@@ -49,7 +49,7 @@ runs:
             else
               has_v=false
             fi
-            IFS=' ' read -r -a ver <<< "$(echo "$VERSION" | sed 's/\.//g')"
+            IFS=' ' read -r -a ver <<< "$(echo "$VERSION" | sed 's/\./ /g')"
             if [[ "${{ inputs.increment }}" = "fix" ]]
             then
               echo -e "${CYAN}[ INFO ] > Fix increment${BLANK}"
