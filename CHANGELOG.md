@@ -20,6 +20,7 @@
 - `fcacbc7`: revert to main
 
 ## Release v132..1 - 2023-07-15
-#### Fix
-- `99f6b0d`: fix/bumo (#4)
 
+#### Fix
+
+- `99f6b0d`: fix/bumo (#4)
