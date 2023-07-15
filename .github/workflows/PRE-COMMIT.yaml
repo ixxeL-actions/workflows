@@ -1,5 +1,5 @@
 ---
-name: Pre-commit check
+name: Check GH actions templates
 on:
   pull_request:
     types:
