@@ -90,7 +90,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
         with:
           release-regex: '\s*:package: CI release version ${{ steps.get-last-tag.outputs.LAST_TAG }}.+'
-          minor-regex: ^(feat/.+)$
+          minor-regex: ^(feat(/|:).+)$
           major-regex: ^((((feat|fix|chore|docs|perf|refactor|build|ci|revert|style|test)!)|(!(feat|fix|chore|docs|perf|refactor|build|ci|revert|style|test)))/.+)$
       - name: Bump version
         id: bump-version
