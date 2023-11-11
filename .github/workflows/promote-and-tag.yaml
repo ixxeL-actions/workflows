@@ -33,7 +33,7 @@ jobs:
       pull-requests: write
       statuses: write
     if: contains(fromJSON('["refs/heads/master", "refs/heads/main"]'), github.ref)
-    uses: ixxeL-actions/workflows/.github/workflows/__promote-and-tag__.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__promote-and-tag__.yaml@v1.3.4
     with:
       workload_identity_provider: "projects/208726332934/locations/global/workloadIdentityPools/ci-tools/providers/github"
       service_account: "github-writer@warehousebox-ntqf.iam.gserviceaccount.com"
