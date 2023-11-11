@@ -162,7 +162,7 @@ jobs:
   #   steps:
   #   - name: Clone code
   #     id: git-clone
-  #     uses: actions/checkout@v3
+  #     uses: actions/checkout@v4
   #   - name: Helm linting
   #     id: helm-lint
   #     uses: ixxeL-actions/workflows/.github/actions/helm-lint@main
