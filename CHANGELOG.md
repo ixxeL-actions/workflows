@@ -22,3 +22,8 @@
 ## Release v132..1 - 2023-07-15
 
 #### Fix
+
+## Release v1.4.0 - 2023-11-11
+#### Fix
+- `2c8678f`: fix: regex for minor bump
+
