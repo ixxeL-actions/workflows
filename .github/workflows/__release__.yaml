@@ -135,13 +135,13 @@ jobs:
           secrets: |
             ${{ inputs.vault-secret-path }} GHA_PERSONNAL_ADMIN_TOKEN | GHA_PERSONNAL_ADMIN_TOKEN
       - name: Clone code with Vault
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: inputs.vault-enabled == true
         with:
           fetch-depth: "0"
           token: ${{ steps.get-secrets.outputs.GHA_PERSONNAL_ADMIN_TOKEN }}
       - name: Clone code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: inputs.vault-enabled == false
         with:
           fetch-depth: "0"
