@@ -22,3 +22,8 @@
 ## Release v132..1 - 2023-07-15
 
 #### Fix
+
+## Release v1.3.5 - 2023-11-11
+#### Feat
+- `c82b9eb`: feat: big update (#7)
+
