@@ -199,7 +199,7 @@ jobs:
   #     image: ixxel/ci-toolbox:latest
   #   steps:
   #   - name: Clone code
-  #     uses: actions/checkout@v3
+  #     uses: actions/checkout@v4
   #   - name: Checkov scan
   #     uses: ixxeL-actions/workflows/.github/actions/checkov@main
   #     with:
@@ -222,7 +222,7 @@ jobs:
     steps:
       - name: Clone code
         id: clone
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Set version
