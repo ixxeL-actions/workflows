@@ -23,9 +23,9 @@ runs:
         echo -e "${CYAN}[ INFO ] > gcloud version.${BLANK}"
         gcloud --version
 
-        echo -e "${YELLOW}[ EXECUTING ] > Authenticating to GAR ${{ inputs.image-registry }}${BLANK}"
+        echo -e "${YELLOW}[ EXECUTING ] > Authenticating to GAR ${{ inputs.registry }}${BLANK}"
         rm ~/.docker/config.json || true
-        gcloud auth configure-docker ${{ inputs.image-registry }} --quiet
+        gcloud auth configure-docker ${{ inputs.registry }} --quiet
 
       shell: bash
       env:

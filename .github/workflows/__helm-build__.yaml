@@ -53,6 +53,17 @@ on:
         required: false
         default: tests/*.yaml
         type: string
+      # helm kubeconform
+      helm-kubeconform-version:
+        description: plugin version to download
+        required: false
+        default: ""
+        type: string
+      helm-values-file-test:
+        description: values file to test the chart against
+        required: false
+        default: values.yaml
+        type: string
         # Checkov
       checkov-artefact:
         required: false
@@ -191,7 +202,7 @@ env:
   COMPONENT_NAME: ${{ inputs.workingdir }}
 jobs:
   helm-build:
-    name: helm-build
+    name: ⚓ Helm Chart build
     timeout-minutes: 5
     runs-on: ubuntu-latest
     permissions:
@@ -203,7 +214,7 @@ jobs:
     steps:
       - name: Clone code
         id: git-clone
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Helm linting
@@ -214,6 +225,11 @@ jobs:
       - name: Detect bump
         id: detect-bump
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
+        with:
+          release-regex: '\s*:package: CI release of helm chart ${{ env.COMPONENT_NAME }}.+'
+          minor-regex: ^(feat(\/|-)[[:alnum:]_.-]+-\(${{ env.COMPONENT_NAME }}\).*)$
+          major-regex: ^((((feat|fix|chore|perf|refactor|build|ci|revert|test)!)|(!(feat|fix|chore|perf|refactor|build|ci|revert|test)))(\/|-)[[:alnum:]_.-]+-\(${{ env.COMPONENT_NAME }}\).*)$
+          searching-deepness: 20
       - name: Bump version
         id: bump-version
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
@@ -258,6 +274,13 @@ jobs:
           display-mode: ${{ inputs.helm-display-mode }}
           output-dir: ${{ inputs.helm-output-dir }}
           output-file: ${{ inputs.helm-output-file }}
+      - name: Helm Kubeconform
+        id: helm-kubeconform
+        uses: ixxeL-actions/workflows/.github/actions/helm-kubeconform@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          values-file: ${{ inputs.helm-values-file-test }}
+          plugin-version: ${{ inputs.helm-kubeconform-version }}
       - name: Helm Packaging
         id: helm-package
         uses: ixxeL-actions/workflows/.github/actions/helm-package@main
@@ -305,6 +328,13 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-config@main
         with:
           git-workdir: ${{ inputs.git-workdir }}
+      - name: Update changelog
+        id: changelog
+        if: (inputs.auto-update-chart == 'true') && (inputs.release)
+        uses: ixxeL-actions/workflows/.github/actions/generate-changelog@main
+        with:
+          workingdir: ${{ inputs.workingdir }}
+          release-name: ${{ steps.bump-version.outputs.VERSION }}
       - name: Git push
         id: git-push
         if: (inputs.auto-update-chart == 'true') && (inputs.release)
@@ -315,7 +345,7 @@ jobs:
           git-workdir: ${{ inputs.git-workdir }}
           git-staging-dir: ${{ inputs.workingdir }}
           push-option: ${{ inputs.push-option }}
-      - name: GH Release
+      - name: 🚀 GH Release
         id: gh-release
         if: (inputs.auto-tag-repo == 'true') && (inputs.auto-update-chart == 'true') && (inputs.release)
         uses: ixxeL-actions/workflows/.github/actions/gh-release@main

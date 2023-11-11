@@ -70,7 +70,7 @@ jobs:
       image: ${{ inputs.ci-image }}
     steps:
       - name: Clone code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: "0"
           token: ${{ secrets.git-token }}
@@ -84,6 +84,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
         with:
           git-workdir: ${{ inputs.workingdir }}
+          branch: ${{ inputs.release-target-branch }}
       - name: Detect bump
         id: detect-bump
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
