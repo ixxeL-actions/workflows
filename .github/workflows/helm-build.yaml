@@ -40,6 +40,9 @@ on:
         required: false
       CHARTMUSEUM_PASSWORD:
         required: false
+
+permissions: write-all
+
 jobs:
   helm-pr-build:
     concurrency:
