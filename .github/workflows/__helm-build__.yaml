@@ -210,6 +210,24 @@ on:
         required: false
         default: ${{ github.ref_name }}
         type: string
+      # Vault
+      vault-enabled:
+        required: false
+        default: false
+        type: boolean
+      vault-url:
+        required: false
+        default: https://vault.pp.dktapp.cloud
+        type: string
+      vault-namespace:
+        required: false
+        default: inix
+        type: string
+      vault-role:
+        required: false
+        default: whbox-ga-role
+        type: string
+
 env:
   COMPONENT_NAME: ${{ inputs.workingdir }}
 jobs:
