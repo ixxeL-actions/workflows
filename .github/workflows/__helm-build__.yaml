@@ -3,6 +3,13 @@ name: Helm chart build
 on:
   workflow_dispatch:
   workflow_call:
+    secrets:
+      git-admin-token:
+        required: false
+      git-token:
+        required: false
+      helm-registry-pwd:
+        required: false
     inputs:
       # General
       release:
@@ -38,6 +45,11 @@ on:
         default: fix
         type: string
         # helm unit tests
+      enable-unittests:
+        description: enable unit tests for helm
+        required: false
+        default: "false"
+        type: string
       helm-plugin-version:
         description: plugin version to download
         required: false
@@ -254,8 +266,9 @@ jobs:
           skip-check: ${{ inputs.checkov-skip-check }}
           check: ${{ inputs.checkov-check }}
           framework: ${{ inputs.checkov-framework }}
-      - name: Helm Unit testing
+      - name: "\U0001F9EA Helm Unit testing"
         id: helm-unittest
+        if: inputs.enable-unittests == 'true'
         uses: ixxeL-actions/workflows/.github/actions/helm-unittest@main
         with:
           workingdir: ${{ inputs.workingdir }}

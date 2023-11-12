@@ -1,0 +1,77 @@
+---
+name: Helm chart building
+on:
+  workflow_call:
+    inputs:
+      workingdir:
+        required: false
+        type: string
+      helm-repo-url:
+        required: false
+        default: https://whbox-chartmuseum.pp.dktapp.cloud
+        type: string
+      helm-test-dir:
+        required: false
+        default: tests/*/*.yaml
+        type: string
+      helm-values-file-test:
+        required: false
+        default: value.yaml
+        type: string
+      checkov-gate:
+        required: false
+        default: 85
+        type: number
+      auto-tag-repo:
+        description: Tag or not the repository
+        required: false
+        default: "false"
+        type: string
+      auto-update-chart:
+        required: false
+        default: "false"
+        type: string
+      chart-increment:
+        required: false
+        default: fix
+        type: string
+    secrets:
+      GHA_PERSONNAL_ADMIN_TOKEN:
+        required: false
+      CHARTMUSEUM_PASSWORD:
+        required: false
+jobs:
+  helm-pr-build:
+    concurrency:
+      group: "${{ github.workflow }}-${{ github.head_ref }}"
+      cancel-in-progress: true
+    if: (!contains(fromJSON('["refs/heads/master", "refs/heads/main"]'), github.ref))
+    uses: ixxeL-actions/workflows/.github/workflows/__helm-build__.yaml@main
+    with:
+      workingdir: ${{ inputs.workingdir }}
+      helm-tests-dir: ${{ inputs.helm-test-dir }}
+      helm-values-file-test: ${{ inputs.helm-values-file-test }}
+      auto-update-chart: ${{ inputs.auto-update-chart }}
+      release: false
+      vault-enabled: false
+    secrets:
+      git-token: ${{ github.token }}
+  helm-release:
+    concurrency:
+      group: "${{ github.ref }}"
+      cancel-in-progress: true
+    if: contains(fromJSON('["refs/heads/master", "refs/heads/main"]'), github.ref)
+    uses: ixxeL-actions/workflows/.github/workflows/__helm-build__.yaml@main
+    with:
+      workingdir: ${{ inputs.workingdir }}
+      helm-tests-dir: ${{ inputs.helm-test-dir }}
+      helm-repo-url: ${{ inputs.helm-repo-url }}
+      helm-values-file-test: ${{ inputs.helm-values-file-test }}
+      auto-update-chart: ${{ inputs.auto-update-chart }}
+      auto-tag-repo: ${{ inputs.auto-tag-repo}}
+      chart-increment: ${{ inputs.chart-increment }}
+      release: true
+    secrets:
+      git-token: ${{ github.token }}
+      git-admin-token: ${{ secrets.GHA_PERSONNAL_ADMIN_TOKEN }}
+      helm-registry-pwd: ${{ secrets.CHARTMUSEUM_PASSWORD }}
