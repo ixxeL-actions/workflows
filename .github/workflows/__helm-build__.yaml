@@ -235,10 +235,7 @@ jobs:
     name: ⚓ Helm Chart build
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+    permissions: write-all
     container:
       image: ${{ inputs.helm-image }}
     steps:
