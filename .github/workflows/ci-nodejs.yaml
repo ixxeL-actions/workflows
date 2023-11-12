@@ -91,13 +91,12 @@ on:
         required: false
         type: string
         default: test
-
 jobs:
   ci-nodejs:
     concurrency:
       group: "${{ github.workflow }}-${{ github.ref }}"
       cancel-in-progress: true
-    uses: ixxeL-actions/workflows/.github/workflows/__ci-nodejs__.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__ci-nodejs__.yaml@v2.0.4
     with:
       workingdir: ${{ inputs.workingdir }}
       workload_identity_provider: ${{ inputs.workload_identity_provider }}
