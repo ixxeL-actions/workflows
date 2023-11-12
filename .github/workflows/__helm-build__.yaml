@@ -235,7 +235,10 @@ jobs:
     name: ⚓ Helm Chart build
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: read
+      pages: write
+      # id-token: write
     container:
       image: ${{ inputs.helm-image }}
     steps:
@@ -281,6 +284,7 @@ jobs:
           skip-check: ${{ inputs.checkov-skip-check }}
           check: ${{ inputs.checkov-check }}
           framework: ${{ inputs.checkov-framework }}
+          prepare: "false"
       - name: "\U0001F9EA Helm Unit testing"
         id: helm-unittest
         if: inputs.enable-unittests == 'true'

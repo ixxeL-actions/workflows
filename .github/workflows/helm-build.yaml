@@ -41,7 +41,7 @@ on:
       CHARTMUSEUM_PASSWORD:
         required: false
 
-permissions: write-all
+# permissions: write-all
 
 jobs:
   helm-pr-build:
@@ -58,7 +58,7 @@ jobs:
       release: false
       vault-enabled: false
     secrets:
-      git-token: ${{ github.token }}
+      git-token: ${{ secrets.GHA_TOKEN }}
   helm-release:
     concurrency:
       group: "${{ github.ref }}"
@@ -75,6 +75,6 @@ jobs:
       chart-increment: ${{ inputs.chart-increment }}
       release: true
     secrets:
-      git-token: ${{ github.token }}
+      git-token: ${{ secrets.GHA_TOKEN }}
       git-admin-token: ${{ secrets.GHA_PERSONNAL_ADMIN_TOKEN }}
       helm-registry-pwd: ${{ secrets.CHARTMUSEUM_PASSWORD }}
