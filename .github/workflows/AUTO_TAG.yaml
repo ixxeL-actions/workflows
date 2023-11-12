@@ -8,7 +8,7 @@ on:
       - .github/**
 jobs:
   auto-tag-repo:
-    uses: ixxeL-actions/workflows/.github/workflows/__auto-tag__.yaml@v2.0.2
+    uses: ixxeL-actions/workflows/.github/workflows/__auto-tag__.yaml@main
     with:
       git-workdir: .github
     secrets:
