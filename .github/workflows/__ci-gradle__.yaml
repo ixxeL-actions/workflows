@@ -150,9 +150,9 @@ jobs:
     timeout-minutes: 10
     runs-on: [self-hosted, decathlon]
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
       - name: Official Gradle Wrapper Validation Action
         uses: gradle/wrapper-validation-action@v1
@@ -165,7 +165,7 @@ jobs:
           failure-threshold: info
       - name: "\U0001F6AB Cancel workflow run"
         if: failure() && inputs.quick-fail
-        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@v2.0.1
         with:
           run-id: ${{ github.run_id }}
         env:
@@ -182,9 +182,9 @@ jobs:
       discussions: write
       pull-requests: write
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -202,19 +202,19 @@ jobs:
           distribution: "temurin"
           check-latest: false
           settings-path: ${{ github.workspace }}
-      - name: 🐘 Setup Gradle
+      - name: "\U0001F418 Setup Gradle"
         if: inputs.setup-gradle == 'true'
         uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: ${{ inputs.workingdir }}
           cache-overwrite-existing: true
       - name: Unit tests (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "clean check"
       - name: Jacoco code coverage (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "jacocoTestReport"
@@ -229,7 +229,7 @@ jobs:
           path: ${{ inputs.workingdir }}/jacoco-unit.xml
       - name: "\U0001F6AB Cancel workflow run"
         if: failure() && inputs.quick-fail == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@v2.0.1
         with:
           run-id: ${{ github.run_id }}
         env:
@@ -246,9 +246,9 @@ jobs:
       discussions: write
       pull-requests: write
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -266,7 +266,7 @@ jobs:
           distribution: "temurin"
           check-latest: false
           settings-path: ${{ github.workspace }}
-      - name: 🐘 Setup Gradle
+      - name: "\U0001F418 Setup Gradle"
         if: inputs.setup-gradle == 'true'
         uses: gradle/gradle-build-action@v2
         with:
@@ -274,12 +274,12 @@ jobs:
           cache-overwrite-existing: true
       - name: Acceptance tests (Gradlew)
         id: acceptance
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "acceptance"
       - name: Jacoco code coverage (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "jacocoTestReport"
@@ -333,7 +333,7 @@ jobs:
             })
       - name: "\U0001F6AB Cancel workflow run"
         if: failure() && inputs.quick-fail == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@v2.0.1
         with:
           run-id: ${{ github.run_id }}
         env:
@@ -350,9 +350,9 @@ jobs:
       discussions: write
       pull-requests: write
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -370,19 +370,19 @@ jobs:
           distribution: "temurin"
           check-latest: false
           settings-path: ${{ github.workspace }}
-      - name: 🐘 Setup Gradle
+      - name: "\U0001F418 Setup Gradle"
         if: inputs.setup-gradle == 'true'
         uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: ${{ inputs.workingdir }}
           cache-overwrite-existing: true
       - name: Integration tests (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "integration"
       - name: Jacoco code coverage (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "jacocoTestReport"
@@ -397,7 +397,7 @@ jobs:
           path: ${{ inputs.workingdir }}/jacoco-integration.xml
       - name: "\U0001F6AB Cancel workflow run"
         if: failure() && inputs.quick-fail == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@v2.0.1
         with:
           run-id: ${{ github.run_id }}
         env:
@@ -413,9 +413,9 @@ jobs:
       discussions: write
       pull-requests: write
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -433,17 +433,17 @@ jobs:
           service_account: ${{ inputs.service_account }}
       - name: GCloud GAR Authentication
         id: gcloud-gar-auth
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@v2.0.1
         with:
           registry: ${{ inputs.gcp-base-url }}
-      - name: 🐘 Setup Gradle
+      - name: "\U0001F418 Setup Gradle"
         if: inputs.setup-gradle == 'true'
         uses: gradle/gradle-build-action@v2
         with:
           build-root-directory: ${{ inputs.workingdir }}
           cache-overwrite-existing: true
       - name: "\U0001F4E6 Build code (Gradlew)"
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "clean bootJar"
@@ -511,13 +511,13 @@ jobs:
           prisma-pass: ${{ secrets.prisma-pass }}
       - name: "\U0001F6AB Cancel workflow run"
         if: failure() && inputs.quick-fail == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-run-cancel@v2.0.1
         with:
           run-id: ${{ github.run_id }}
         env:
           GITHUB_TOKEN: ${{ secrets.git-admin-token }}
   Sonar-analysis:
-    name: "🌀 Sonar Analysis"
+    name: "\U0001F300 Sonar Analysis"
     timeout-minutes: 6
     runs-on: [self-hosted, decathlon]
     environment: ${{ inputs.environment }}
@@ -529,9 +529,9 @@ jobs:
       pull-requests: write
     if: always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure'))
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -547,7 +547,7 @@ jobs:
         with:
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
           service_account: ${{ inputs.service_account }}
-      - name: 🐘 Setup Gradle
+      - name: "\U0001F418 Setup Gradle"
         if: inputs.setup-gradle == 'true'
         uses: gradle/gradle-build-action@v2
         with:
@@ -558,7 +558,7 @@ jobs:
         with:
           path: ${{ inputs.workingdir }}/build/jacoco
       - name: Sonarqube report (Gradlew)
-        uses: ixxeL-actions/workflows/.github/actions/gradlew@main
+        uses: ixxeL-actions/workflows/.github/actions/gradlew@v2.0.1
         with:
           workingdir: ${{ inputs.workingdir }}
           cmd: "sonarqube -Dsonar.token=${{ secrets.sonar-token }} -Dsonar.scm.revision=${{ github.ref }} -Dsonar.coverage.jacoco.xmlReportPaths=build/jacoco/**/*.xml"
@@ -569,14 +569,7 @@ jobs:
     timeout-minutes: 6
     runs-on: [self-hosted, decathlon]
     environment: ${{ inputs.environment }}
-    needs:
-      [
-        static-analysis,
-        unit-tests,
-        acceptance-tests,
-        integration-tests,
-        docker-build,
-      ]
+    needs: [static-analysis, unit-tests, acceptance-tests, integration-tests, docker-build]
     permissions:
       id-token: write
       contents: read
@@ -584,9 +577,9 @@ jobs:
       pull-requests: write
     if: always() && contains(needs.*.result, 'success') && !(contains(needs.*.result, 'failure')) && (contains( github.ref, 'main' ) || contains( github.ref, 'master' )) && github.event.pull_request == null
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
       - name: Get branch name
         id: branch-name
@@ -599,12 +592,12 @@ jobs:
           service_account: ${{ inputs.service_account }}
       - name: GCloud GAR Authentication
         id: gcloud-gar-auth
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@v2.0.1
         with:
           registry: ${{ inputs.gcp-base-url }}
-      - name: 🏷️ GCloud add tag
+      - name: "\U0001F3F7️ GCloud add tag"
         id: gcloud-add-tag
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-add-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-add-tag@v2.0.1
         with:
           image-fullname: ${{ inputs.docker-target-registry }}/${{ inputs.image-name }}
           src-image-tag: sha-${{ github.sha }}
@@ -614,14 +607,7 @@ jobs:
     timeout-minutes: 6
     runs-on: [self-hosted, decathlon]
     environment: ${{ inputs.environment }}
-    needs:
-      [
-        static-analysis,
-        unit-tests,
-        acceptance-tests,
-        integration-tests,
-        docker-build,
-      ]
+    needs: [static-analysis, unit-tests, acceptance-tests, integration-tests, docker-build]
     permissions:
       id-token: write
       contents: read
@@ -640,13 +626,13 @@ jobs:
           role: ${{ inputs.vault-role }}
           secrets: |
             ${{ inputs.vault-secret-path }} GHA_PERSONNAL_ADMIN_TOKEN | GHA_PERSONNAL_ADMIN_TOKEN
-      - name: 📥 Checkout code with Vault
+      - name: "\U0001F4E5 Checkout code with Vault"
         uses: actions/checkout@v4
         if: inputs.vault-enabled == true
         with:
           fetch-depth: "0"
           token: ${{ steps.get-secrets.outputs.GHA_PERSONNAL_ADMIN_TOKEN }}
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
         if: inputs.vault-enabled == false
         with:
@@ -654,16 +640,16 @@ jobs:
           token: ${{ secrets.git-admin-token }}
       - name: Git config
         id: git-config
-        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        uses: ixxeL-actions/workflows/.github/actions/git-config@v2.0.1
         with:
           git-workdir: ${{ inputs.workingdir }}
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v7
-      - name: 🏷️ Git tag
+      - name: "\U0001F3F7️ Git tag"
         id: git-tag
         if: inputs.gh-release == 'false'
-        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/git-tag@v2.0.1
         with:
           tag-msg: "CI auto Git tag for ${{ steps.branch-name.outputs.current_branch }}-${{ github.run_number }}"
           tag-value: ${{ steps.branch-name.outputs.current_branch }}-${{ github.run_number }}
@@ -673,7 +659,7 @@ jobs:
       - name: GH Release with Vault
         id: gh-release-vault
         if: inputs.vault-enabled && inputs.gh-release == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@v2.0.1
         with:
           tag: ${{ steps.branch-name.outputs.current_branch }}-${{ github.run_number }}
           verify-tag: false
@@ -683,7 +669,7 @@ jobs:
       - name: GH Release
         id: gh-release
         if: inputs.vault-enabled == false && inputs.gh-release == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@v2.0.1
         with:
           tag: ${{ steps.branch-name.outputs.current_branch }}-${{ github.run_number }}
           verify-tag: false
@@ -695,14 +681,7 @@ jobs:
     timeout-minutes: 6
     runs-on: [self-hosted, decathlon]
     environment: ${{ inputs.environment }}
-    needs:
-      [
-        static-analysis,
-        unit-tests,
-        acceptance-tests,
-        integration-tests,
-        docker-build,
-      ]
+    needs: [static-analysis, unit-tests, acceptance-tests, integration-tests, docker-build]
     permissions:
       id-token: write
       contents: read
@@ -710,9 +689,9 @@ jobs:
       pull-requests: write
     if: failure() && (contains( github.ref, 'main' ) || contains( github.ref, 'master' )) && github.event.pull_request == null
     steps:
-      - name: 🧹 Pre-clean
+      - name: "\U0001F9F9 Pre-clean"
         uses: dktunited/.github/actions/cleaner@main
-      - name: 📥 Checkout code
+      - name: "\U0001F4E5 Checkout code"
         uses: actions/checkout@v4
       - name: ☁️ GCloud auth
         id: auth
@@ -722,11 +701,11 @@ jobs:
           service_account: ${{ inputs.service_account }}
       - name: GCloud GAR Authentication
         id: gcloud-gar-auth
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-gar-auth@v2.0.1
         with:
           registry: ${{ inputs.gcp-base-url }}
       - name: Delete image from GAR
         id: gcloud-delete-img
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-delete-img@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-delete-img@v2.0.1
         with:
           docker-img: ${{ inputs.docker-target-registry }}/${{ inputs.image-name }}:sha-${{ github.sha }}
