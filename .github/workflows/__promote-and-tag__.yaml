@@ -82,10 +82,9 @@ on:
         required: false
         default: whbox-tools/data/gh-actions
         type: string
-
 jobs:
   promote-and-release:
-    name: 🚀 Promote and Release
+    name: "\U0001F680 Promote and Release"
     runs-on: [self-hosted, decathlon]
     timeout-minutes: 15
     permissions:
@@ -125,36 +124,36 @@ jobs:
           token: ${{ secrets.git-admin-token }}
       - name: Get img SHA
         id: get-img-info
-        uses: ixxeL-actions/workflows/.github/actions/get-img-info@main
+        uses: ixxeL-actions/workflows/.github/actions/get-img-info@v2.0.3
         with:
           image-fullname: ${{ inputs.gcp-registry }}/${{ inputs.gcp-repository }}/${{ inputs.image-name }}
           image-tag: ${{ inputs.original-tag }}
       - name: Git config
         id: git-config
-        uses: ixxeL-actions/workflows/.github/actions/git-config@main
+        uses: ixxeL-actions/workflows/.github/actions/git-config@v2.0.3
         with:
           git-workdir: ${{ inputs.git-workdir }}
       - name: Get last tag
         id: get-last-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@v2.0.3
         with:
           git-workdir: ${{ inputs.git-workdir }}
           branch: ${{ inputs.release-target-branch }}
           pattern: "^${{ inputs.target-env }}*"
           starting-tag: ""
-      - name: 🏷️ Git tag
+      - name: "\U0001F3F7️ Git tag"
         id: git-tag
-        uses: ixxeL-actions/workflows/.github/actions/git-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/git-tag@v2.0.3
         with:
           tag-msg: "CI auto Git tag for ${{ inputs.gcp-registry }}/${{ inputs.gcp-repository }}/${{ inputs.image-name }} deployment to ${{ inputs.target-env }} env"
           tag-value: "${{ inputs.target-env }}-${{github.run_number}}"
           commit-sha: ${{ steps.get-img-info.outputs.IMG_SHA }}
           git-workdir: ${{ inputs.git-workdir }}
           push-option: ${{ inputs.push-option }}
-      - name: 🚀 GH Release with Vault
+      - name: "\U0001F680 GH Release with Vault"
         id: gh-release-vault
         if: inputs.vault-enabled && inputs.gh-release == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@v2.0.3
         with:
           tag: "${{ inputs.target-env }}-${{github.run_number}}"
           verify-tag: true
@@ -162,10 +161,10 @@ jobs:
           last-tag: ${{ steps.get-last-tag.outputs.LAST_TAG }}
         env:
           GH_TOKEN: ${{ steps.get-secrets.outputs.GHA_PERSONNAL_ADMIN_TOKEN }}
-      - name: 🚀 GH Release
+      - name: "\U0001F680 GH Release"
         id: gh-release
         if: inputs.vault-enabled == false && inputs.gh-release == 'true'
-        uses: ixxeL-actions/workflows/.github/actions/gh-release@main
+        uses: ixxeL-actions/workflows/.github/actions/gh-release@v2.0.3
         with:
           tag: "${{ inputs.target-env }}-${{github.run_number}}"
           verify-tag: true
@@ -173,9 +172,9 @@ jobs:
           last-tag: ${{ steps.get-last-tag.outputs.LAST_TAG }}
         env:
           GH_TOKEN: ${{ secrets.git-admin-token }}
-      - name: 🏷️ GCloud add tag
+      - name: "\U0001F3F7️ GCloud add tag"
         id: gcloud-add-tag
-        uses: ixxeL-actions/workflows/.github/actions/gcloud-add-tag@main
+        uses: ixxeL-actions/workflows/.github/actions/gcloud-add-tag@v2.0.3
         with:
           image-fullname: ${{ inputs.gcp-registry }}/${{ inputs.gcp-repository }}/${{ inputs.image-name }}
           src-image-tag: ${{ inputs.original-tag }}
