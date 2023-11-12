@@ -198,6 +198,10 @@ on:
         type: string
         # repo-url:
         #   required: true
+      release-verify-tag:
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
 jobs:
   build:
@@ -224,7 +228,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/git-get-last-tag@main
         with:
           git-workdir: ${{ inputs.workingdir }}
-          pattern: '${{ inputs.component }}-v?[0-9]+\.[0-9]+\.[0-9]+'
+          pattern: "${{ inputs.component }}-v[0-9]*.[0-9]*.[0-9]*"
           starting-tag: "${{ inputs.component }}-v0.0.0"
           branch: ${{ inputs.release-target-branch }}
       - name: Detect bump
@@ -309,5 +313,7 @@ jobs:
         with:
           tag: ${{ steps.bump-version.outputs.VERSION }}
           target-branch: ${{ inputs.release-target-branch }}
+          verify-tag: ${{ inputs.release-verify-tag }}
+          last-tag: ${{ steps.get-last-tag.outputs.LAST_TAG }}
         env:
           GH_TOKEN: ${{ github.token }}
