@@ -208,9 +208,9 @@ jobs:
     name: Build
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    container:
-      image: ${{ inputs.build-image }}
-      options: --privileged
+    # container:
+    #   image: ${{ inputs.build-image }}
+    #   options: --privileged
     steps:
       - name: Clone code
         id: clone

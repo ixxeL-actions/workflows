@@ -2,13 +2,20 @@
 name: Helm chart building
 on:
   workflow_call:
+    secrets:
+      GHA_TOKEN:
+        required: false
+      GHA_PERSONNAL_ADMIN_TOKEN:
+        required: false
+      CHARTMUSEUM_PASSWORD:
+        required: false
     inputs:
       workingdir:
         required: false
         type: string
       helm-repo-url:
         required: false
-        default: https://whbox-chartmuseum.pp.dktapp.cloud
+        default: https://chartmuseum.k8s-app.fredcorp.com
         type: string
       helm-test-dir:
         required: false
@@ -35,12 +42,6 @@ on:
         required: false
         default: fix
         type: string
-    secrets:
-      GHA_PERSONNAL_ADMIN_TOKEN:
-        required: false
-      CHARTMUSEUM_PASSWORD:
-        required: false
-
 # permissions: write-all
 
 jobs:

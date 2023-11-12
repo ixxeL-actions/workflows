@@ -166,7 +166,7 @@ on:
         type: string
       helm-repo-url:
         required: false
-        default: https://whbox-chartmuseum.pp.dktapp.cloud
+        default: https://chartmuseum.k8s-app.fredcorp.com
         type: string
       helm-repo-username:
         required: false
@@ -234,13 +234,14 @@ jobs:
   helm-build:
     name: ⚓ Helm Chart build
     timeout-minutes: 5
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    # runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: write
       # id-token: write
-    container:
-      image: ${{ inputs.helm-image }}
+    # container:
+    #   image: ${{ inputs.helm-image }}
     steps:
       - name: Clone code
         id: git-clone
@@ -335,7 +336,7 @@ jobs:
           repo-name: ${{ inputs.helm-repo-name }}
           repo-url: ${{ inputs.helm-repo-url }}
           repo-username: ${{ inputs.helm-repo-username }}
-          repo-password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
+          repo-password: ${{ secrets.helm-registry-pwd }}
           force-update: ${{ inputs.helm-force-update }}
           skip-tls: ${{ inputs.helm-skip-tls }}
           push-type: ${{ inputs.helm-push-type }}
