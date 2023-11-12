@@ -229,7 +229,7 @@ jobs:
         with:
           git-workdir: ${{ inputs.workingdir }}
           pattern: "${{ inputs.component }}-v[0-9]*.[0-9]*.[0-9]*"
-          starting-tag: "${{ inputs.component }}-v0.0.0"
+          starting-tag: ""
           branch: ${{ inputs.release-target-branch }}
       - name: Detect bump
         id: detect-bump
