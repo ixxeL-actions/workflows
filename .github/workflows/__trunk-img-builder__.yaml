@@ -236,8 +236,8 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/detect-bump@main
         with:
           release-regex: '\s*:package: CI release of docker image ${{ inputs.component }}.+'
-          minor-regex: '^(feat/.+-\(${{ inputs.component }}\).*|feature/.+-\(${{ inputs.component }}\).*)$'
-          major-regex: '^(breaking/.+-\(${{ inputs.component }}\).*|feat!/.+-\(${{ inputs.component }}\).*|!feat/.+-\(${{ inputs.component }}\).*|feature!/.+-\(${{ inputs.component }}\).*|!feature/.+-\(${{ inputs.component }}\).*)$'
+          minor-regex: '^(feat(\/|-|:)[[:alnum:]_.-]+-\(${{ inputs.component }}\).*)$'
+          major-regex: '^((((feat|fix|chore|perf|refactor|build|ci|revert|test)!)|(!(feat|fix|chore|perf|refactor|build|ci|revert|test)))(\/|-|:)[[:alnum:]_.-]+-\(${{ inputs.component }}\).*)$'
           searching-deepness: 20
       - name: Bump version
         id: bump-version
@@ -245,7 +245,7 @@ jobs:
         with:
           component: ${{ inputs.component }}
           increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
-          current-version: ${{ steps.get-last-tag.outputs.LAST_TAG }}
+          current-version: ${{ steps.get-last-tag.outputs.LAST_TAG != '' && steps.get-last-tag.outputs.LAST_TAG || format('{0}-v1.0.0', inputs.component) }}
       - name: Podman login
         id: podman-login
         if: ${{ inputs.podman-registry != null }}

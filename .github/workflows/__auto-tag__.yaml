@@ -97,7 +97,7 @@ jobs:
         uses: ixxeL-actions/workflows/.github/actions/bump-version@main
         with:
           increment: ${{ steps.detect-bump.outputs.BUMP_KIND }}
-          current-version: ${{ steps.get-last-tag.outputs.LAST_TAG }}
+          current-version: ${{ steps.get-last-tag.outputs.LAST_TAG != '' && steps.get-last-tag.outputs.LAST_TAG || 'v1.0.0' }}
       - name: Substitute ref
         id: substitute-ref
         uses: ixxeL-actions/workflows/.github/actions/change-action-ref@main
