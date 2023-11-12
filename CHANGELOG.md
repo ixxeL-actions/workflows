@@ -22,3 +22,8 @@
 ## Release v132..1 - 2023-07-15
 
 #### Fix
+
+## Release v2.0.2 - 2023-11-12
+#### Fix
+- `f0f42af`: fix/release-bump (#11)
+

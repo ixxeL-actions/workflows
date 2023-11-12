@@ -9,4 +9,4 @@ on:
       - "main"
 jobs:
   check-gha-templates:
-    uses: ixxeL-actions/workflows/.github/workflows/__check-gha-templates__.yaml@main
+    uses: ixxeL-actions/workflows/.github/workflows/__check-gha-templates__.yaml@v2.0.2

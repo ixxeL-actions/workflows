@@ -134,7 +134,7 @@ jobs:
             whbox-tools/data/chartmuseum/auth password | CHARTMUSEUM_PR_PASSWORD
       - name: Helm pull
         id: helm-pull
-        uses: ixxeL-actions/workflows/.github/actions/helm-pull@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-pull@v2.0.2
         with:
           workingdir: ${{ inputs.workingdir }}
           fetch-latest: ${{ inputs.helm-fetch-latest }}
@@ -151,7 +151,7 @@ jobs:
       - name: Helm pushing with Vault
         id: helm-push-vault
         if: inputs.vault-enabled == true
-        uses: ixxeL-actions/workflows/.github/actions/helm-push@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-push@v2.0.2
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ inputs.helm-chart-name }}
@@ -169,7 +169,7 @@ jobs:
       - name: Helm pushing
         id: helm-push
         if: inputs.vault-enabled == false
-        uses: ixxeL-actions/workflows/.github/actions/helm-push@main
+        uses: ixxeL-actions/workflows/.github/actions/helm-push@v2.0.2
         with:
           workingdir: ${{ inputs.workingdir }}
           chart-name: ${{ inputs.helm-chart-name }}
