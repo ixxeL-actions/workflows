@@ -54,7 +54,7 @@ jobs:
       id-token: write
       pull-requests: write
       statuses: write
-    uses: ixxeL-actions/workflows/.github/workflows/__promote-helm-chart__.yaml@v2.0.4
+    uses: ixxeL-actions/workflows/.github/workflows/__promote-helm-chart__.yaml@main
     with:
       workingdir: ${{ inputs.workingdir }}
       helm-pull-repo-url: ${{ inputs.helm-pull-repo-url }}

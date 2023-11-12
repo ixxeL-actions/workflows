@@ -22,9 +22,3 @@
 ## Release v132..1 - 2023-07-15
 
 #### Fix
-
-## Release v2.0.4 - 2023-11-12
-#### Chore
-build
-- `3dfd831`: chore/add-helm-build (#13)
-
