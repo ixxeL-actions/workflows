@@ -35,7 +35,7 @@ jobs:
       id-token: write
       pull-requests: write
       statuses: write
-    uses: ixxeL-actions/workflows/.github/workflows/__release__.yaml@v2.0.3
+    uses: ixxeL-actions/workflows/.github/workflows/__release__.yaml@main
     with:
       increment-type: ${{ inputs.increment-type }}
       npm-ignore-version: ${{ inputs.npm-ignore-version }}

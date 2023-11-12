@@ -22,8 +22,3 @@
 ## Release v132..1 - 2023-07-15
 
 #### Fix
-
-## Release v2.0.3 - 2023-11-12
-#### Fix
-- `e33d8c6`: fix/default-tag (#12)
-
